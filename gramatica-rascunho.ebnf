@@ -1,0 +1,96 @@
+ID = { LETRAS | '_' }, { LETRAS | DIGITOS };
+DIGITOS = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+LETRAS = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J'
+       | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T'
+       | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | 'a' | 'b' | 'c' | 'd'
+       | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n'
+       | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x'
+       | 'y' | 'z' ;
+CARACTERES = { LETRAS | DIGITOS | ? qualquer outro caracter não especial ? };
+OPERADOR_REATRIBUICAO = '='| '+=' 
+    | '-=' 
+    | '*=' 
+    | '@=' 
+    | '/=' 
+    | '%=' 
+    | '&=' 
+    | '|=' 
+    | '^=' 
+    | '<<=' 
+    | '>>=' 
+    | '**=' 
+    | '//=';
+
+texto = "'", { CARACTERES | ['"'] }, "'" | '"', { CARACTERES | ["'"] }, '"';
+TEXTOS = texto, {texto};
+
+programa = [declaracoes];
+
+declaracoes = {declaracao};
+
+declaracao = declaracao_composta | declaracao_simples;
+declaracao_simples = atribuicao | expressao | declaracao_retorne | declaracao_importacao;
+declaracao_composta = declaracao_funcao | declaracao_se;
+
+atribuicao = atribuicao_constante | atribuicao_variavel | ID, OPERADOR_REATRIBUICAO, expressao, ';';
+(* permite `var nome = inicializador;` e `var nome: tipo;` *)
+atribuicao_variavel = 'var', ID, '=', expressao, ';' | 'var', ID, ':', ID, ';';
+(* permite apenas `const nome = inicializador` *)
+atribuicao_constante = 'const', ID, '=', expressao, ';';
+
+(* FIXME: adicionar alias para importações
+Exemplos:
+`importa 'modulo'`
+`importa './arquivo'`
+`importa './arquivo', 'modulo'`
+`de './arquivo' importa *`
+`de './arquivo' importa algo`
+`de './arquivo' importa algo, outroAlgo`
+*)
+declaracao_importacao = declaracao_importacao_simples | declaracao_importacao_de;
+declaracao_importacao_simples = 'importe', texto, ';' | 'importe', texto, { ',', texto }, ';';
+declaracao_importacao_de = 'de', texto, 'importe', '*', ';' | 'de', texto, 'importe', texto, { ',', texto }, ';';
+
+declaracao_retorne = 'retorne', expressao, ';';
+
+(* declaracao_exclui = 'exclui', ';'; *)
+declaracao_funcao = 'func', ID, '(', [parametros], ')', bloco;
+
+parametros = parametro, { ',', parametro };
+parametro = ID, [':', ID];
+
+(* FIXME: possivelmente tem erros *)
+declaracao_se = 'se', '(', expressao, ')', bloco, declaracao_senao_se | 'se', '(', expressao, ')', bloco, [declaracao_senao];
+declaracao_senao_se = 'senao', 'se', '(', expressao, ')', bloco, declaracao_senao_se | 'senao', 'se', '(', expressao, ')', bloco, declaracao_senao;
+declaracao_senao = 'senao', bloco;
+
+bloco = '{', declaracoes, '}';
+
+expressao = disjuncao;
+
+disjuncao = conjuncao, { 'ou', conjuncao } | conjuncao;
+conjuncao = inversao, { 'e', inversao } | inversao;
+inversao = 'nao', inversao | comparacao;
+
+comparacao = ou_bitabit, { '==', comparacao | '!=', comparacao | '<', comparacao | '<=', comparacao | '>', comparacao | '>=', comparacao };
+
+(* OR *)
+ou_bitabit = exou_bitabit, { '|', exou_bitabit };
+(* XOR *)
+exou_bitabit = e_bitabit, { '^', e_bitabit };
+e_bitabit = deslocamento, { '&', deslocamento };
+(* SHIFT L | SHIFT R *)
+deslocamento = arit_basica, { '<<', arit_basica | '>>', arit_basica };
+
+arit_basica = termo, { '+', arit_basica | '-', arit_basica };
+termo = fator, { '*', termo | '/', termo | '//', termo | '%', termo | '@', termo };
+fator = { '+', fator | '-', fator | '~', fator } | potencia;
+potencia = primario, { '**', fator };
+
+(* FIXME: Isso nao é um bug? *)
+primario = primario, { '.', ID | '(', [argumentos], ')' } | atomo;
+
+argumentos = argumento, { ',', argumento };
+argumento = expressao;
+
+atomo = ID | 'Verdadeiro' | 'Falso' | 'Nulo' | TEXTOS | DIGITOS;

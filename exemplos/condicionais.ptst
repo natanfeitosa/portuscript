@@ -1,0 +1,17 @@
+se (Verdadeiro) {
+    imprima("Verdadeiro é definitivamente verdadeiro")
+}
+
+se (Falso) {
+    imprima("Pera, Falso é verdadeiro?")
+} senao {
+    imprima("Falso é definitivamente falso")
+}
+
+se (Falso) {
+    imprima("Pera, Falso é verdadeiro?")
+} senao se (Falso == Verdadeiro) {
+    imprima("Pera, Falso é Verdadeiro? O que a gente usou?")
+} senao {
+    imprima("Falso definitivamente não é Verdadeiro")
+}

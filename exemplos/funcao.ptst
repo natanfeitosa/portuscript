@@ -1,0 +1,20 @@
+func soma(a, b) {
+    retorne a + b;
+}
+
+func subtrai(a, b) {
+    retorne a - b;
+}
+
+func divide(a, b) {
+    retorne a / b;
+}
+
+func multiplica(a, b) {
+    retorne a * b;
+}
+
+imprima("1 + 2 =", soma(1, 2))
+imprima("1 - 2 =", subtrai(1, 2))
+imprima("1 / 2 =", divide(1, 2))
+imprima("1 * 2 =", multiplica(1, 2))
