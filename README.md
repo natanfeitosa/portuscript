@@ -18,23 +18,11 @@
 
 Os binários pré-compilados estão disponíveis para os seguintes sistemas operacionais e arquiteturas:
 
-#### Arquivos binários direto
-| Arquitetura | Darwin (macOS) | Linux | Windows |
-|-------------|----------------|-------|---------|
-| arm64    | [portuscript](dist/portuscript_darwin_arm64/portuscript) | [portuscript](dist/portuscript_linux_arm64/portuscript) | [portuscript.exe](dist/portuscript_windows_arm64/portuscript.exe) |
-| i386     | N/A                                                      | [portuscript](dist/portuscript_linux_386/portuscript)   | [portuscript.exe](dist/portuscript_windows_386/portuscript.exe) |
-| amd64_v1 | [portuscript](dist/portuscript_darwin_amd64_v1/portuscript) | [portuscript](dist/portuscript_linux_amd64_v1/portuscript)    | [portuscript.exe](dist/portuscript_windows_amd64_v1/portuscript.exe) |
+- Darwin (macOS)
+- Linux
+- Windows
 
-
-#### Arquivo binário e README compactados
-
-| Arquitetura | Darwin (macOS)                        | Linux                                  | Windows                                |
-|-------------|--------------------------------------|----------------------------------------|----------------------------------------|
-| arm64       | [Darwin_arm64.tar.gz](dist/Darwin_arm64.tar.gz) | [Linux_arm64.tar.gz](dist/Linux_arm64.tar.gz) | [Windows_arm64.zip](dist/Windows_arm64.zip) |
-| i386        | N/A                                  | [Linux_i386.tar.gz](dist/Linux_i386.tar.gz) | [Windows_i386.zip](dist/Windows_i386.zip) |
-| amd64_v1    | [Darwin_x86_64.tar.gz](dist/Darwin_x86_64.tar.gz) | [Linux_x86_64.tar.gz](dist/Linux_x86_64.tar.gz) | [Windows_x86_64.zip](dist/Windows_x86_64.zip) |
-
-Escolha o binário correspondente ao seu sistema operacional e arquitetura, faça o download e comece a usar o PortuScript imediatamente.
+Navege até a [página de lançamentos](https://github.com/natanfeitosa/portuscript/releases) e escolha o binário correspondente ao seu sistema operacional e arquitetura, faça o download e comece a usar o PortuScript imediatamente.
 
 ### Compilar a partir do Código Fonte
 
