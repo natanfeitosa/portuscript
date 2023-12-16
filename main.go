@@ -12,7 +12,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const Version = "0.0.1"
+var (
+    Commit   string = "-"
+    Datetime string = "0000-00-00T00:00:00"
+    Version  string = "dev"
+)
+
 const LongDescription = `
 	Uma linguagem orientada a objetos e eventos completamente em português que visa
 facilitar os estudos por parte de novos aventureiros no mundo da programação
@@ -67,7 +72,7 @@ func main() {
 				return
 			}
 
-			playground.Inicializa()
+			playground.Inicializa(Version, Datetime, Commit)
 		},
 	}
 

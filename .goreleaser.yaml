@@ -24,7 +24,7 @@ builds:
       - linux
       - windows
       - darwin
-    ldflags: -s -w -X build.Version={{.Version}} -X build.Commit={{.Commit}} -X build.Datetime={{.Date}} -X main.builtBy=goreleaser
+    ldflags: -s -w -X main.Version={{.Version}} -X main.Commit={{.Commit}} -X main.Datetime={{.Date}} -X main.builtBy=goreleaser
 
 archives:
   - format: tar.gz

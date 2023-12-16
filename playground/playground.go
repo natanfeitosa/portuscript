@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/natanfeitosa/portuscript/build"
 	"github.com/natanfeitosa/portuscript/parser"
 	"github.com/natanfeitosa/portuscript/ptst"
 	"github.com/peterh/liner"
@@ -47,7 +46,7 @@ Bem vindos ao Portuscript v%s.
 (%s) [%s]
 `
 
-func Inicializa() {
+func Inicializa(version, datetime, commit string) {
 	finalizado := false
 	finalizar := func() {
 		finalizado = true
@@ -76,7 +75,7 @@ func Inicializa() {
 	imprima.O__chame__(
 		ptst.Tupla{
 			ptst.Texto(
-				fmt.Sprintf(strings.Trim(banner, "\n "), build.Version, build.Datetime, build.Commit),
+				fmt.Sprintf(strings.Trim(banner, "\n "), version, datetime, commit),
 			),
 		},
 	)
