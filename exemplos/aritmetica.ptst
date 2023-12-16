@@ -1,0 +1,13 @@
+const ano = 2023;
+
+imprima("2023 + 2023 =", ano + ano)
+imprima("2023 + 2023 + 10 =", ano + ano + 10)
+imprima()
+
+imprima("2023 * 2023 =", ano * ano)
+imprima("2023 * 2023 * 10 =", ano * ano * 10)
+imprima()
+
+imprima("2023 - 2023 =", ano - ano)
+imprima("2023 - 2023 - 2023 =", ano - ano - ano)
+imprima()

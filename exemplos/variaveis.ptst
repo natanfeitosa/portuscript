@@ -1,0 +1,11 @@
+var nome = "Portuscript";
+const ano = 2023;
+
+imprima("nome:", nome)
+imprima("ano:", ano)
+
+nome = nome + ", a melhor linguagem em portugues";
+
+imprima()
+imprima("nome:", nome)
+imprima("ano:", ano)

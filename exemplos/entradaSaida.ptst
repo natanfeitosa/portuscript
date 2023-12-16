@@ -1,0 +1,8 @@
+# a função leia sempre retorna um tipo Texto
+var ano = leia("Em ano estamos? ");
+
+se ("2023" == ano) {
+    imprima("Wow, ainda estamos no ano de criação")
+}
+
+imprima("Ano lido:", ano)
