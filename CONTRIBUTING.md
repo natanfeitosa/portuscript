@@ -51,6 +51,8 @@ Os tipos de commit que você pode usar são:
 -   **ci:** (alterações nos scripts de CI/CD)
 -   **perf:** (melhorias de desempenho)
 -   **exemplo:** (adição de exemplo)
+-   **merge:** (merge entre branchs)
+-   **config:** (adição/atualização de configurações)
 
 Por exemplo, ao adicionar uma nova funcionalidade, você pode fazer um commit da seguinte forma:
 
