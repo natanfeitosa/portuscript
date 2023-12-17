@@ -71,6 +71,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteBloco(node.(*parser.Bloco))
 	case *parser.RetorneNode:
 		return i.visiteRetorneNode(node.(*parser.RetorneNode))
+	case *parser.Enquanto:
+		return i.visiteEnquanto(node.(*parser.Enquanto))
 	}
 
 	return nil, nil
@@ -269,6 +271,27 @@ func (i *Interpretador) visiteBloco(node *parser.Bloco) (Objeto, error) {
 // FIXME: adicionar erro para caso não esteja dentro de função
 func (i *Interpretador) visiteRetorneNode(node *parser.RetorneNode) (Objeto, error) {
 	return i.visite(node.Expressao)
+}
+
+func (i *Interpretador) visiteEnquanto(node *parser.Enquanto) (Objeto, error) {
+	for {
+		condicao, err := i.visite(node.Condicao)
+		if err != nil {
+			return nil, err
+		}
+
+		if condicao, err = NewBooleano(condicao); err != nil {
+			return nil, err
+		}
+
+		if !condicao.(Booleano) {
+			break
+		}
+
+		i.visite(node.Corpo)
+	}
+
+	return nil, nil
 }
 
 func (i *Interpretador) criarErro(tipo *Tipo, args Objeto) error {

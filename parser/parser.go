@@ -107,6 +107,10 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 		return p.parseExpressaoSe()
 	}
 
+	if val == "enquanto" {
+		return p.parseEnquanto()
+	}
+
 	return p.parseExpressao()
 }
 
@@ -736,4 +740,30 @@ func (p *Parser) parseChamadaFuncao() (*ChamadaFuncao, error) {
 	}
 
 	return chamada, nil
+}
+
+func (p *Parser) parseEnquanto() (*Enquanto, error) {
+	if err := p.consume("enquanto"); err != nil {
+		return nil, err
+	}
+
+	if err := p.consume("("); err != nil {
+		return nil, err
+	}
+
+	condicao, err := p.parseExpressao()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := p.consume(")"); err != nil {
+		return nil, err
+	}
+
+	corpo, err := p.parseBloco()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Enquanto{Condicao: condicao, Corpo: corpo}, nil
 }
