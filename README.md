@@ -64,7 +64,7 @@ Explore o diretório [exemplos](/exemplos/) para encontrar uma variedade de scri
 O diretório gramatica contém informações detalhadas sobre a gramática da linguagem. Consulte para uma compreensão mais profunda da estrutura da linguagem.
 
 ## Contribuindo
-Sinta-se à vontade para contribuir para o desenvolvimento do PortuScript. Para mais informações, consulte o Guia de Contribuição.
+Sinta-se à vontade para contribuir para o desenvolvimento do PortuScript. Para mais informações, consulte o [Guia de Contribuição](/CONTRIBUTING.md).
 
 > Este projeto está em constante evolução. Se você encontrar problemas ou tiver sugestões, por favor, abra uma [issue](https://github.com/natanfeitosa/portuscript/issues).
 
