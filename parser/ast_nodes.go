@@ -65,9 +65,9 @@ type ExpressaoSe struct {
 	Alternativa BaseNode // Corpo do else ou if else (opcional)
 }
 
-type ExpressaoEnquanto struct {
+type Enquanto struct {
 	Condicao BaseNode // Condição do while
-	Corpo    Bloco    // Corpo do while
+	Corpo    *Bloco    // Corpo do while
 }
 
 type TextoLiteral struct {
@@ -105,7 +105,7 @@ func (*Bloco) isExpr()               {}
 func (*RetorneNode) isExpr()         {}
 func (*ChamadaFuncao) isExpr()       {}
 func (*ExpressaoSe) isExpr()         {}
-func (*ExpressaoEnquanto) isExpr()   {}
+func (*Enquanto) isExpr()            {}
 func (*TextoLiteral) isExpr()        {}
 func (*InteiroLiteral) isExpr()      {}
 func (*DecimalLiteral) isExpr()      {}
