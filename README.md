@@ -1,6 +1,7 @@
 # PortuScript
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Open Source Helpers](https://www.codetriage.com/natanfeitosa/portuscript/badges/users.svg)](https://www.codetriage.com/natanfeitosa/portuscript)
 
 ## Sobre
 
