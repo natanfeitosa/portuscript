@@ -1,0 +1,28 @@
+var parcela1 = 2;
+
+imprima("Vamos ver a tabuada de multiplicação do", parcela1)
+
+var parcela2 = 1;
+
+enquanto(parcela2 < 11) {
+    imprima(parcela1, "*", parcela2, "=", parcela1 * parcela2)
+    parcela2 = parcela2 + 1;
+}
+
+imprima()
+imprima("Agora a tabuada de adição")
+
+parcela1 = 1;
+
+enquanto(parcela1 < 11) {
+    imprima()
+    imprima("Tabuada de:", parcela1)
+    parcela2 = 1;
+
+    enquanto(parcela2 < 11) {
+        imprima(parcela1, "+", parcela2, "=", parcela1 + parcela2)
+        parcela2 = parcela2 + 1;
+    }
+
+    parcela1 = parcela1 + 1;
+}
