@@ -72,5 +72,8 @@ changelog:
     - title: Melhorias de Desempenho
       regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
       order: 5
+    - title: Adições de exemplos
+      regexp: '^.*?exemplo(\([[:word:]]+\))??!?:.+$'
+      order: 6
     - title: Outros
       order: 999
