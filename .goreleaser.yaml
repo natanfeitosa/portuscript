@@ -44,6 +44,33 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - "^doc:"
-      - "^test:"
-      - "^exemplo:"
+      - "^merge"
+      - "^config"
+      - "^chore"
+      - "^style"
+      - "^ci"
+  #     - "^test"
+  #     - "^refactor"
+  #     - "^doc"
+  #     - "^exemplo"
+  groups:
+    - title: Adições de Recursos (Features)
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: Correções de Bugs
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Alterações na Documentação
+      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: Refatorações de Código
+      regexp: '^.*?refactor(\([[:word:]]+\))??!?:.+$'
+      order: 3
+    - title: Adição/Atualização de Testes
+      regexp: '^.*?test(\([[:word:]]+\))??!?:.+$'
+      order: 4
+    - title: Melhorias de Desempenho
+      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      order: 5
+    - title: Outros
+      order: 999
