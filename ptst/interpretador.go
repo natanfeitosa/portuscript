@@ -73,6 +73,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteRetorneNode(node.(*parser.RetorneNode))
 	case *parser.Enquanto:
 		return i.visiteEnquanto(node.(*parser.Enquanto))
+	case *parser.AcessoMembro:
+		return i.visiteAcessoMembro(node.(*parser.AcessoMembro))
 	}
 
 	return nil, nil
@@ -292,6 +294,22 @@ func (i *Interpretador) visiteEnquanto(node *parser.Enquanto) (Objeto, error) {
 	}
 
 	return nil, nil
+}
+
+func (i *Interpretador) visiteAcessoMembro(node *parser.AcessoMembro) (Objeto, error) {
+	dono, err := i.visite(node.Dono)
+	if err != nil {
+		return nil, err
+	}
+
+	// membro, err := i.visite(node.Membro)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	membro := node.Membro.(*parser.Identificador).Nome
+	
+	return ObtemItemS(dono, membro)
 }
 
 func (i *Interpretador) criarErro(tipo *Tipo, args Objeto) error {

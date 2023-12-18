@@ -229,6 +229,9 @@ func (l *Lexer) ProximoToken() Token {
 		return Token{TokenBitABitNao, "~"}
 	case "\"":
 		return Token{TokenTexto, l.lerTexto()}
+	case ".":
+		l.avancar()
+		return Token{TokenPonto, "."}
 	default:
 		if compartilhado.ContemApenasLetras(l.caractere) || l.caractere == "_" {
 			identificador := l.lerIdentificador()

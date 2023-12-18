@@ -644,9 +644,18 @@ func (p *Parser) parsePotencia() (BaseNode, error) {
 func (p *Parser) parsePrimario() (BaseNode, error) {
 	// FIXME
 	atom, err := p.parseAtomo()
-
 	if err != nil {
 		return nil, err
+	}
+
+	for p.token.Tipo == lexer.TokenPonto {
+		p.avancar()
+		membro, err := p.parseAtomo()
+		if err != nil {
+			return nil, err
+		}
+
+		atom = &AcessoMembro{atom, membro}
 	}
 
 	if p.token.Tipo == lexer.TokenAbreParenteses {

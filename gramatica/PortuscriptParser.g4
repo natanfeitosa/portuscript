@@ -68,7 +68,7 @@ fator: (MAIS | MENOS | NAO_BIT_A_BIT)* potencia;
 
 potencia: primario (POTENCIA fator)?;
 
-primario: primario (PONTO ID | ABRE_PARENTESES argumentos? FECHA_PARENTESES) | atomo;
+primario: atomo (PONTO primario | ABRE_PARENTESES argumentos? FECHA_PARENTESES) | atomo;
 
 argumentos: argumento (VIRGULA argumento)*;
 
