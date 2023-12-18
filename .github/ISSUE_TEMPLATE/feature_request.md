@@ -1,7 +1,8 @@
 ---
 name: Feature request
-about: "Proponha um novo recurso para o Portuscript. Descreva o recurso desejado, explique sua motivação e como ele pode agregar valor ao projeto. Esteja preparado para discutir e colaborar para aprimorar a proposta."
-title: "Recurso: [Breve descrição do recurso]"
+about: Proponha um novo recurso para o Portuscript. Descreva o recurso desejado, explique
+  sua motivação e como ele pode agregar valor ao projeto.
+title: 'Recurso: [Breve descrição do recurso]'
 labels: enhancement
 assignees: ''
 

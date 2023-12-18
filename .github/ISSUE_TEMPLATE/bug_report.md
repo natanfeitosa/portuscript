@@ -1,7 +1,9 @@
 ---
 name: Bug report
-about: "Reporte um bug no Portuscript para nos ajudar a identificar e corrigir problemas. Certifique-se de seguir as instruções abaixo para garantir uma descrição clara do bug e do comportamento esperado."
-title: "Bug: [Breve descrição do bug]"
+about: Reporte um bug no Portuscript para nos ajudar a identificar e corrigir problemas.
+  Certifique-se de seguir as instruções abaixo para garantir uma descrição clara do
+  bug e do comportamento esperado.
+title: 'Bug: [Breve descrição do bug]'
 labels: bug
 assignees: ''
 
