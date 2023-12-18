@@ -1,0 +1,7 @@
+const num = 2023;
+
+imprima(num)
+imprima()
+imprima(num.__doc__)
+imprima()
+imprima(num.__doc__.__doc__)
