@@ -67,6 +67,8 @@ const (
 
 	TokenDeslocEsquerda // <<
 	TokenDeslocDireita  // >>
+
+	TokenPonto // .
 )
 
 // Token representa um token com seu tipo e valor.

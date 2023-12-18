@@ -67,7 +67,7 @@ type ExpressaoSe struct {
 
 type Enquanto struct {
 	Condicao BaseNode // Condição do while
-	Corpo    *Bloco    // Corpo do while
+	Corpo    *Bloco   // Corpo do while
 }
 
 type TextoLiteral struct {
@@ -94,6 +94,11 @@ type Anotacao struct {
 	Corpo string
 }
 
+type AcessoMembro struct {
+	Dono   BaseNode
+	Membro BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -112,3 +117,4 @@ func (*DecimalLiteral) isExpr()      {}
 func (*ConstanteLiteral) isExpr()    {}
 func (*Identificador) isExpr()       {}
 func (*Anotacao) isExpr()            {}
+func (*AcessoMembro) isExpr()        {}
