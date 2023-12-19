@@ -133,13 +133,11 @@ func (i *Interpretador) visiteDeclFuncao(node *parser.DeclFuncao) (Objeto, error
 }
 
 func (i *Interpretador) visiteChamadaFuncao(node *parser.ChamadaFuncao) (Objeto, error) {
-	simbolo, err := i.Contexto.ObterSimbolo(node.Nome)
+	objeto, err := i.visite(node.Identificador)
 
 	if err != nil {
-		err.(*Erro).AdicionarContexto(i.Contexto)
 		return nil, err
 	}
-
 	// if !simbolo.isFuncao() {
 	// 	return nil, NewErroF(TipagemErro, "'%s' não é um chamável tipo função", simbolo.Nome)
 	// }
@@ -156,7 +154,7 @@ func (i *Interpretador) visiteChamadaFuncao(node *parser.ChamadaFuncao) (Objeto,
 		args = append(args, arg)
 	}
 
-	return Chamar(simbolo.Valor, args)
+	return Chamar(objeto, args)
 }
 
 func (i *Interpretador) visiteTextoLiteral(node *parser.TextoLiteral) (Objeto, error) {
@@ -308,7 +306,6 @@ func (i *Interpretador) visiteAcessoMembro(node *parser.AcessoMembro) (Objeto, e
 	// }
 
 	membro := node.Membro.(*parser.Identificador).Nome
-	
 	return ObtemItemS(dono, membro)
 }
 
