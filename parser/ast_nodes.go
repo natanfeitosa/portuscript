@@ -55,8 +55,8 @@ type RetorneNode struct {
 }
 
 type ChamadaFuncao struct {
-	Nome       string     // Nome da função a ser chamada
-	Argumentos []BaseNode // Argumentos da função
+	Identificador BaseNode   // Nome da função a ser chamada
+	Argumentos    []BaseNode // Argumentos da função
 }
 
 type ExpressaoSe struct {

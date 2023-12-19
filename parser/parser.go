@@ -363,22 +363,6 @@ func (p *Parser) parseVariavel() (*DeclVar, error) {
 	return decl, nil
 }
 
-// func (p *Parser) parseExpressao() (BaseNode, error) {
-// 	switch p.token.Tipo {
-// 	case lexer.TokenTexto:
-// 		return &TextoLiteral{p.token.Valor}, nil
-// 	case lexer.TokenDecimal:
-// 		return &DecimalLiteral{p.token.Valor}, nil
-// 	case lexer.TokenInteiro:
-// 		return &InteiroLiteral{p.token.Valor}, nil
-// 	// case :
-
-// 	default:
-// 		// FIXME: e se for expressao unaria, binaria ou ternária? Ou talvez apenas recuperando variavel
-// 		return p.parseChamadaFuncao()
-// 	}
-// }
-
 func (p *Parser) parseExpressao() (BaseNode, error) {
 	return p.parseDisjuncao()
 }
@@ -659,7 +643,7 @@ func (p *Parser) parsePrimario() (BaseNode, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenAbreParenteses {
-		chamada := &ChamadaFuncao{Nome: atom.(*Identificador).Nome}
+		chamada := &ChamadaFuncao{Identificador: atom}
 
 		if err := p.consume("("); err != nil {
 			return nil, err
@@ -718,37 +702,6 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 
 	// fmt.Printf("%t", p.token)
 	return nil, fmt.Errorf("O token '%v' não é reconhecido.", p.token.Valor)
-}
-
-func (p *Parser) parseChamadaFuncao() (*ChamadaFuncao, error) {
-	chamada := &ChamadaFuncao{Nome: p.token.Valor}
-	p.avancar()
-
-	if err := p.consume("("); err != nil {
-		return nil, err
-	}
-
-	for p.token.Tipo != lexer.TokenFechaParenteses {
-		expressao, err := p.parseExpressao()
-
-		if err != nil {
-			return nil, err
-		}
-
-		chamada.Argumentos = append(chamada.Argumentos, expressao)
-
-		p.avancar() // Talvez uma virgula ou fechamento de parenteses
-		if p.token.Tipo == lexer.TokenVirgula {
-			p.avancar()
-		}
-
-		if p.token.Tipo != lexer.TokenFechaParenteses && p.proximoToken.Tipo != lexer.TokenFechaParenteses {
-			// FIXME: lança um erro se o token atual não for virgula e o
-			// próximo também não for o fechamento dos parentess
-		}
-	}
-
-	return chamada, nil
 }
 
 func (p *Parser) parseEnquanto() (*Enquanto, error) {
