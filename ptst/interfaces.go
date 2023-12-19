@@ -34,7 +34,7 @@ type I__obtem_attributo__ interface {
 }
 
 type I_Mapa interface {
-	Mapa() Mapa
+	ObtemMapa() Mapa
 }
 
 type I_ObtemDoc interface {

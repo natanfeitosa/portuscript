@@ -58,7 +58,7 @@ func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 	// FIXME: adicionar um proxy para métodos nativos
 
 	if I, ok := inst.(I_Mapa); ok {
-		mapa := I.Mapa()
+		mapa := I.ObtemMapa()
 		
 		if res, ok := mapa[Texto(nome)]; ok {
 			return res, nil
