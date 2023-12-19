@@ -32,6 +32,10 @@ func (i Inteiro) Tipo() *Tipo {
 	return TipoInteiro
 }
 
+func (t Inteiro) ObtemMapa() Mapa {
+	return t.Tipo().Mapa
+}
+
 func (i Inteiro) O__texto__() (Objeto, error) {
 	return Texto(fmt.Sprintf("%d", i)), nil
 }
@@ -163,3 +167,4 @@ var _ conversaoEntreTipos = (*Inteiro)(nil)
 var _ aritmeticaMatematica = (*Inteiro)(nil)
 var _ comparacaoRica = (*Inteiro)(nil)
 var _ aritmeticaBooleana = (*Inteiro)(nil)
+var _ I_Mapa = (*Inteiro)(nil)
