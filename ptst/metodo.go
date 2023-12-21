@@ -45,9 +45,19 @@ func (m *Metodo) O__chame__(args Tupla) (Objeto, error) {
 	return m.Chamar(Objeto(m.Modulo), args)
 }
 
+// FIXME: isso deve retornar um proxy
+func (m *Metodo) O__obtem__(inst Objeto, dono *Tipo) (Objeto, error) {
+	if inst != Nulo {
+		return newMetodoProxy(inst, m), nil
+	}
+
+	return m, nil
+}
+
 var _ I__chame__ = (*Metodo)(nil)
 var _ I_Chamar = (*Metodo)(nil)
 var _ I_ObtemDoc = (*Metodo)(nil)
+var _ I__obtem__ = (*Metodo)(nil)
 
 // Copiado de https://github.com/go-python/gpython/blob/main/py/method.go#L97C1-L115C2
 func NewMetodo(nome string, chamavel interface{}, doc string) (*Metodo, error) {
