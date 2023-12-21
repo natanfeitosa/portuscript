@@ -34,7 +34,7 @@ func TestExpresaoSe(t *testing.T) {
 			Corpo: &parser.Bloco{
 				Declaracoes: []parser.BaseNode{
 					&parser.ChamadaFuncao{
-						Nome: "imprima",
+						Identificador: &parser.Identificador{"imprima"},
 						Argumentos: []parser.BaseNode{
 							&parser.TextoLiteral{
 								Valor: "\"Verdadeiro é definitivamente verdadeiro\"",
