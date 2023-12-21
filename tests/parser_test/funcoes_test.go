@@ -164,7 +164,7 @@ func TestDeclareFuncaoComRetornoVazio(t *testing.T) {
 func TestChamadaFuncaoComArgumentos(t *testing.T) {
 	esperada := &parser.Programa{}
 	chamada := &parser.ChamadaFuncao{
-		Nome: "nenhumaOperacao",
+		Identificador: &parser.Identificador{"nenhumaOperacao"},
 		Argumentos: []parser.BaseNode{
 			&parser.InteiroLiteral{Valor: "2023"},
 			&parser.TextoLiteral{Valor: "\"portuscript\""},
@@ -184,7 +184,7 @@ func TestChamadaFuncaoComArgumentos(t *testing.T) {
 func TestChamadaFuncaoSemArgumentos(t *testing.T) {
 	esperada := &parser.Programa{}
 	chamada := &parser.ChamadaFuncao{
-		Nome: "nenhumaOperacao",
+		Identificador: &parser.Identificador{"nenhumaOperacao"},
 	}
 	esperada.Declaracoes = append(esperada.Declaracoes, chamada)
 
@@ -206,19 +206,27 @@ func TestDeclareChameFuncaoComArgumentos(t *testing.T) {
 					{Nome: "a"},
 					{Nome: "b"},
 				},
+				Corpo: &parser.Bloco{
+					Declaracoes: []parser.BaseNode{
+						&parser.RetorneNode{
+							Expressao: &parser.OpBinaria{
+								Esq: &parser.Identificador{Nome: "a"},
+								Operador: "+",
+								Dir: &parser.Identificador{Nome: "b"},
+							},
+						},
+					},
+				},
 			},
 			&parser.ChamadaFuncao{
-				Nome: "imprima",
+				Identificador: &parser.Identificador{Nome: "imprima"},
 				Argumentos: []parser.BaseNode{
 					&parser.TextoLiteral{Valor: "\"2 + 2 =\""},
 					&parser.ChamadaFuncao{
-						Nome: "soma",
+						Identificador: &parser.Identificador{Nome: "soma"},
 						Argumentos: []parser.BaseNode{
-							&parser.OpBinaria{
-								Dir: &parser.InteiroLiteral{Valor: "2"},
-								Operador: "+",
-								Esq: &parser.InteiroLiteral{Valor: "2"},
-							},
+							&parser.InteiroLiteral{Valor: "2"},
+							&parser.InteiroLiteral{Valor: "2"},
 						},
 					},
 				},
