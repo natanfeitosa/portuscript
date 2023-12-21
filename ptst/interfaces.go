@@ -33,6 +33,11 @@ type I__obtem_attributo__ interface {
 	O__obtem_attributo__(nome string) (Objeto, error)
 }
 
+// FIXME: inst é a instacia; e dono, o objeto vindo do método `Tipo()`
+type I__obtem__ interface {
+	O__obtem__(inst Objeto, dono *Tipo) (Objeto, error)
+}
+
 type I_Mapa interface {
 	ObtemMapa() Mapa
 }

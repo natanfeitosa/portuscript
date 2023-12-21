@@ -88,21 +88,23 @@ func (t Texto) String() string {
 	return string(t)
 }
 
-func (t Texto) ObtemMapa() Mapa {
-	return t.Tipo().Mapa
-}
+// func (t Texto) ObtemMapa() Mapa {
+// 	return t.Tipo().Mapa
+// }
 
 var _ I__texto__ = (*Texto)(nil)
 var _ I__booleano__ = (*Texto)(nil)
 var _ I__igual__ = (*Texto)(nil)
+
 // var _ I__ou__ = (*Texto)(nil)
 // var _ I__inteiro__ = (*Texto)(nil)
 // var _ I__decimal__ = (*Texto)(nil)
 var _ I__adiciona__ = (*Texto)(nil)
 var _ I__multiplica__ = (*Texto)(nil)
+
 // var _ I__subtrai__ = (*Texto)(nil)
 // var _ I__divide__ = (*Texto)(nil)
-var _ I_Mapa = (*Texto)(nil)
+// var _ I_Mapa = (*Texto)(nil)
 
 func init() {
 	TipoTexto.Mapa["junta"] = NewMetodoOuPanic("junta", func(inst Objeto, iter Objeto) (Objeto, error) {

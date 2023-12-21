@@ -19,7 +19,10 @@ func emb_imprima_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 	}
 
 	// resultado, err := ptst.Chamar(junta, args)
-	resultado, err := junta.(*ptst.Metodo).Chamar(separador, args.(ptst.Tupla))
+	resultado, err := ptst.Chamar(
+		junta,
+		args.(ptst.Tupla),
+	)
 
 	if err != nil {
 		return nil, err
@@ -70,10 +73,10 @@ func emb_doc_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 	}
 
 	if obj, ok := arg.(ptst.I_ObtemDoc); ok {
-		return imp.Valor.(*ptst.Metodo).Chamar(mod, ptst.Tupla{ptst.Texto(obj.ObtemDoc())})
+		return ptst.Chamar(imp.Valor, ptst.Tupla{ptst.Texto(obj.ObtemDoc())})
 	}
 
-	return imp.Valor.(*ptst.Metodo).Chamar(mod, ptst.Tupla{ptst.Texto(arg.Tipo().ObtemDoc())})
+	return ptst.Chamar(imp.Valor, ptst.Tupla{ptst.Texto(arg.Tipo().ObtemDoc())})
 }
 
 var emb_doc_doc = "doc(objeto) -> Obtem a documentação do objeto"

@@ -65,6 +65,16 @@ func (b *Tipo) Monta() error {
 	return nil
 }
 
+// G vem de `Genérico`
+func (b *Tipo) G_ObtemAtributoOuNil(nome string) Objeto {
+	if obj, ok := b.Mapa[nome]; ok {
+		return obj
+	}
+
+	// FIXME: não deviamos olhar nas bases?
+	return nil
+}
+
 var TipoTipo *Tipo = NewTipo(
 	"Tipo",
 	"Tipo raiz para todos os objetos (interno).",

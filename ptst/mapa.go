@@ -1,6 +1,6 @@
 package ptst
 
-type Mapa map[Texto]Objeto
+type Mapa map[string]Objeto
 
 var TipoMapa = NewTipo(
 	"Mapa",

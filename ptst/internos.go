@@ -60,8 +60,15 @@ func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 	if I, ok := inst.(I_Mapa); ok {
 		mapa := I.ObtemMapa()
 		
-		if res, ok := mapa[Texto(nome)]; ok {
+		if res, ok := mapa[nome]; ok {
 			return res, nil
+		}
+	}
+
+	tipo := inst.Tipo()
+	if obj := tipo.G_ObtemAtributoOuNil(nome); obj != nil {
+		if desc, ok := obj.(I__obtem__); ok {
+			return desc.O__obtem__(inst, tipo)
 		}
 	}
 
