@@ -1,6 +1,10 @@
 package ptst
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/natanfeitosa/portuscript/compartilhado"
+)
 
 type Inteiro int64
 
@@ -14,18 +18,21 @@ Chama obj.__inteiro__() ou se esse não for encontrado, um erro pode ser lançad
 
 func NewInteiro(obj Objeto) (Objeto, error) {
 	switch b := obj.(type) {
-	case Inteiro:
-		return b, nil
 	case nil:
 		return Inteiro(0), nil
+	case Inteiro:
+		return b, nil
+	case Texto:
+		num, _ := compartilhado.StringParaInt(string(b))
+		return Inteiro(num), nil
 	default:
 		if O, ok := b.(I__inteiro__); ok {
 			return O.O__inteiro__()
 		}
-	}
 
-	// FIXME: ?????
-	return nil, nil
+		// FIXME: isso está certo?
+		return nil, nil
+	}
 }
 
 func (i Inteiro) Tipo() *Tipo {

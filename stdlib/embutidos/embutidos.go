@@ -81,22 +81,29 @@ func emb_doc_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 
 var emb_doc_doc = "doc(objeto) -> Obtem a documentação do objeto"
 
-// func emb_sair_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-// 	targs := args.(ptst.Tupla)
+func emb_int_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
+	targs := args.(ptst.Tupla)
 
-// 	if len(targs) > 1 {
-// 		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao sair() esperava receber no máximo 1 argumento, mas recebeu um número de %v", len(targs))
-// 	}
+	if len(targs) < 1 {
+		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao int() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(targs))
+	}
 
-// 	if !ptst.MesmoTipo(targs[0], ptst.Inteiro(0)) {
-// 		return nil, ptst.NewErroF(ptst.TipagemErro, "O tipo de argumento esperado na funçao sair() era 'Inteiro', mas foi recebido o tipo '%s'", targs[0].Tipo().Nome)
-// 	}
+	return ptst.NewInteiro(targs[0])
+}
 
-// 	os.Exit(int(targs[0].(ptst.Inteiro)))
-// 	return nil, nil
-// }
+var emb_int_doc = "int(objeto) -> Recebe um objeto e retorna uma representação numérica do tipo inteiro, se possível"
 
-// var emb_sair_doc = ""
+func emb_texto_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
+	targs := args.(ptst.Tupla)
+
+	if len(targs) < 1 {
+		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao texto() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(targs))
+	}
+
+	return ptst.NewTexto(targs[0])
+}
+
+var emb_texto_doc = "texto(objeto) -> Recebe um objeto e retorna uma representação no tipo texto, se possível"
 
 func init() {
 	constantes := ptst.Mapa{
@@ -109,7 +116,8 @@ func init() {
 		ptst.NewMetodoOuPanic("imprima", emb_imprima_fn, emb_imprima_doc),
 		ptst.NewMetodoOuPanic("leia", emb_leia_fn, emb_leia_doc),
 		ptst.NewMetodoOuPanic("doc", emb_doc_fn, emb_doc_doc),
-		// ptst.NewMetodoOuPanic("sair", emb_sair_fn, emb_sair_doc),
+		ptst.NewMetodoOuPanic("int", emb_int_fn, emb_int_doc),
+		ptst.NewMetodoOuPanic("texto", emb_texto_fn, emb_texto_doc),
 	}
 
 	ptst.RegistraModuloImpl(
