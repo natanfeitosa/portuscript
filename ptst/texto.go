@@ -1,6 +1,9 @@
 package ptst
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Texto string
 
@@ -13,12 +16,17 @@ Chama obj.__texto__() ou obj.__repr__(), se nenhum dos dois for encontrado, um e
 	`,
 )
 
-func NewTexto(obj Objeto) (Objeto, error) {
-	switch obj.(type) {
-	case Texto:
-		return obj, nil
+func NewTexto(arg any) (Objeto, error) {
+	switch obj := arg.(type) {
 	case nil:
 		return Texto(""), nil
+	case string:
+		obj = strings.ReplaceAll(obj, "\\n", "\n")
+		obj = strings.ReplaceAll(obj, "\\r", "\r")
+		obj = strings.ReplaceAll(obj, "\\t", "\t")
+		return Texto(obj), nil
+	case Texto:
+		return obj, nil
 	default:
 		if O, ok := obj.(I__texto__); ok {
 			return O.O__texto__()

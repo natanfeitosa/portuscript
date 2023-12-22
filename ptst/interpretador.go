@@ -163,7 +163,7 @@ func (i *Interpretador) visiteChamadaFuncao(node *parser.ChamadaFuncao) (Objeto,
 }
 
 func (i *Interpretador) visiteTextoLiteral(node *parser.TextoLiteral) (Objeto, error) {
-	return Texto(node.Valor[1 : len(node.Valor)-1]), nil
+	return NewTexto(node.Valor[1 : len(node.Valor)-1])
 }
 
 func (i *Interpretador) visiteInteiroLiteral(node *parser.InteiroLiteral) (Objeto, error) {
