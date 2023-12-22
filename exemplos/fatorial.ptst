@@ -1,0 +1,14 @@
+# Função para calcular o fatorial de um número
+func fatorial(n) {
+    se (n == 0 ou n == 1) {
+        # Caso base: o fatorial de 0 e 1 é 1
+        retorne 1;
+    } senao {
+        # Caso geral: n! = n * (n-1)!
+        retorne n * fatorial(n - 1);
+    }
+}
+
+# Exemplo de uso da função
+var resultado = fatorial(5);
+imprima("O fatorial de 5 é:", resultado)

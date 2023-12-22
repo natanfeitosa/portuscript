@@ -1,0 +1,40 @@
+imprima("Bem vindos ao seu ATM de sempre")
+imprima()
+
+var saldo = 0;
+
+enquanto(Verdadeiro) {
+    imprima("[[[ Menu do sistema ]]]")
+    imprima("[s] - Sai do sistema")
+    imprima("[D] - Efetua depósito")
+    imprima("[S] - Efetua saque")
+    imprima("[V] - Exibe saldo")
+    imprima("[E] - Exibe mensagem personalizada")
+    imprima()
+
+    const entrada = leia("O que queres fazer agora? Indique a opção: ");
+    # imprima("Opção selecionada:", entrada)
+    imprima()
+
+    se (entrada == "s") {
+        imprima("Saindo do sistema...")
+        pare
+    } senao {
+        se (entrada == "D") {
+            const valor = int(leia("Quanto deseja depositar? Indique o valor: "));
+            saldo = saldo + valor;
+        } senao se (entrada == "S") {
+            const valor = int(leia("Quanto deseja sacar? Indique o valor: "));
+            saldo = saldo - valor;
+        } senao se (entrada == "V") {
+            imprima("Seu saldo atualmente é de:", saldo)
+        }  senao {
+            const mensagem = leia("Qual sua mensagem? Digite aqui: ");
+            imprima("Sua mensagem:", mensagem)
+        }
+    }
+
+    imprima()
+}
+
+imprima("Agradecemos a preferência")
