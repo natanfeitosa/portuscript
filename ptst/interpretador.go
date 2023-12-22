@@ -6,9 +6,10 @@ import (
 )
 
 type Interpretador struct {
-	Ast      parser.BaseNode
-	Contexto *Contexto
-	Caminho  Texto
+	Ast          parser.BaseNode
+	Contexto     *Contexto
+	Caminho      Texto
+	ValorRetorno Objeto
 }
 
 func (i *Interpretador) Inicializa() (Objeto, error) {
@@ -38,8 +39,9 @@ func (i *Interpretador) Visite(nodes []parser.BaseNode) (Objeto, error) {
 			return nil, err
 		}
 
-		if _, ok := node.(*parser.RetorneNode); ok {
-			return resultado, nil
+		// Verifica se há um valor de retorno
+		if i.ValorRetorno != nil {
+			return i.ValorRetorno, nil
 		}
 	}
 
@@ -276,7 +278,13 @@ func (i *Interpretador) visiteBloco(node *parser.Bloco) (Objeto, error) {
 
 // FIXME: adicionar erro para caso não esteja dentro de função
 func (i *Interpretador) visiteRetorneNode(node *parser.RetorneNode) (Objeto, error) {
-	return i.visite(node.Expressao)
+	// Se encontrarmos um retorne, definimos o valor de retorno no interpretador
+	valor, err := i.visite(node.Expressao)
+	if err != nil {
+		return nil, err
+	}
+	i.ValorRetorno = valor
+	return valor, nil
 }
 
 func (i *Interpretador) visiteEnquanto(node *parser.Enquanto) (Objeto, error) {
