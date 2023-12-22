@@ -258,9 +258,9 @@ func (l *Lexer) ProximoToken() Token {
 				return Token{TokenFalso, identificador}
 			case "Nulo":
 				return Token{TokenNulo, identificador}
-			case "Pare":
+			case "pare":
 				return Token{TokenPare, identificador}
-			case "Continue":
+			case "continue":
 				return Token{TokenContinue, identificador}
 			default:
 				return Token{TokenIdentificador, identificador}
