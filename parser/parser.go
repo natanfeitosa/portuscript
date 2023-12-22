@@ -111,6 +111,16 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 		return p.parseEnquanto()
 	}
 
+	if val == "pare" {
+		p.avancar()
+		return &PareNode{}, nil
+	}
+
+	if val == "continue" {
+		p.avancar()
+		return &ContinueNode{}, nil
+	}
+
 	return p.parseExpressao()
 }
 

@@ -21,6 +21,8 @@ const (
 	TokenEnquanto
 	TokenPara
 	TokenRetorne
+	TokenPare
+	TokenContinue
 
 	TokenVerdadeiro // Verdadeiro
 	TokenFalso      // Falso

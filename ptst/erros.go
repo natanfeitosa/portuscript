@@ -21,6 +21,10 @@ var (
 	TipagemErro      = TipoErro.NewTipo("TipagemErro", "Tipo de argumento inapropriado.")
 	NomeErro         = TipoErro.NewTipo("NomeErro", "Erro de nome que não pode ser achado.")
 	ImportacaoErro   = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
+
+	// Apenas para fins de controle, não são necessariamente erros
+	ErroContinue = TipoErro.NewTipo("ErroContinue", "Erro utilizado para representar a instrução 'continue' em loops")
+	ErroPare     = TipoErro.NewTipo("ErroPare", "Erro utilizado para representar a instrução 'pare' em loops")
 )
 
 func NewErro(tipo *Tipo, args Objeto) *Erro {
@@ -29,6 +33,10 @@ func NewErro(tipo *Tipo, args Objeto) *Erro {
 
 func NewErroF(tipo *Tipo, format string, p ...any) *Erro {
 	return &Erro{Base: tipo, Mensagem: Texto(fmt.Sprintf(format, p...))}
+}
+
+func (e *Erro) Tipo() *Tipo {
+	return e.Base
 }
 
 func (e *Erro) AdicionarContexto(contexto *Contexto) {

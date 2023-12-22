@@ -99,6 +99,10 @@ type AcessoMembro struct {
 	Membro BaseNode
 }
 
+type PareNode struct {}
+
+type ContinueNode struct {}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -118,3 +122,5 @@ func (*ConstanteLiteral) isExpr()    {}
 func (*Identificador) isExpr()       {}
 func (*Anotacao) isExpr()            {}
 func (*AcessoMembro) isExpr()        {}
+func (*PareNode) isExpr()        {}
+func (*ContinueNode) isExpr()        {}
