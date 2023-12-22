@@ -75,6 +75,10 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteEnquanto(node.(*parser.Enquanto))
 	case *parser.AcessoMembro:
 		return i.visiteAcessoMembro(node.(*parser.AcessoMembro))
+	case *parser.PareNode:
+		return i.visitePareNode(node.(*parser.PareNode))
+	case *parser.ContinueNode:
+		return i.visiteContinueNode(node.(*parser.ContinueNode))
 	}
 
 	return nil, nil
@@ -288,7 +292,21 @@ func (i *Interpretador) visiteEnquanto(node *parser.Enquanto) (Objeto, error) {
 			break
 		}
 
-		i.visite(node.Corpo)
+		_, err = i.visite(node.Corpo)
+		if err != nil {
+			if objErr, ok := err.(*Erro); ok {
+				switch objErr.Tipo() {
+				case ErroContinue:
+					// Continue para a próxima iteração do loop
+					continue
+				case ErroPare:
+					// Pare o loop
+					return nil, nil
+				}
+			}
+
+			return nil, err
+		}
 	}
 
 	return nil, nil
@@ -307,6 +325,14 @@ func (i *Interpretador) visiteAcessoMembro(node *parser.AcessoMembro) (Objeto, e
 
 	membro := node.Membro.(*parser.Identificador).Nome
 	return ObtemItemS(dono, membro)
+}
+
+func (i *Interpretador) visitePareNode(node *parser.PareNode) (Objeto, error) {
+	return nil, NewErro(ErroPare, nil)
+}
+
+func (i *Interpretador) visiteContinueNode(node *parser.ContinueNode) (Objeto, error) {
+	return nil, NewErro(ErroContinue, nil)
 }
 
 func (i *Interpretador) criarErro(tipo *Tipo, args Objeto) error {

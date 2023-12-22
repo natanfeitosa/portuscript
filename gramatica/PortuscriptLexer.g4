@@ -14,6 +14,8 @@ FUNC: 'func';
 OU: 'ou';
 E: 'e';
 NAO: 'nao';
+PARE: 'pare';
+CONTINUE: 'continue';
 
 NOVA_LINHA: '\r'? '\n';
 DIGITOS:

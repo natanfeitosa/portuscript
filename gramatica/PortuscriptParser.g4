@@ -10,7 +10,7 @@ declaracoes: declaracao+;
 
 declaracao: declaracao_composta | declaracao_simples;
 
-declaracao_simples: atribuicao | expressao | declaracao_retorne | declaracao_importacao;
+declaracao_simples: atribuicao | expressao | declaracao_retorne | declaracao_importacao | PARE | CONTINUE;
 
 declaracao_composta: declaracao_funcao | declaracao_se;
 
