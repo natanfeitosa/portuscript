@@ -263,12 +263,15 @@ func (i *Interpretador) visiteExpressaoSe(node *parser.ExpressaoSe) (Objeto, err
 }
 
 func (i *Interpretador) visiteBloco(node *parser.Bloco) (Objeto, error) {
+	i.Contexto = i.Contexto.NewContexto()
+
 	for _, decl := range node.Declaracoes {
 		if _, err := i.visite(decl); err != nil {
 			return nil, err
 		}
 	}
 
+	i.Contexto = i.Contexto.Pai
 	return nil, nil
 }
 
