@@ -24,4 +24,9 @@ func (mp *MetodoProxy) O__chame__(args Tupla) (Objeto, error) {
 	return Chamar(mp.Metodo, args)
 }
 
+func (mp *MetodoProxy) ObtemDoc() string {
+	return mp.Metodo.(*Metodo).ObtemDoc()
+}
+
 var _ I__chame__ = (*MetodoProxy)(nil)
+var _ I_ObtemDoc = (*MetodoProxy)(nil)
