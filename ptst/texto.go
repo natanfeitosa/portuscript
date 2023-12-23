@@ -132,4 +132,9 @@ func init() {
 
 		return Texto(saida), nil
 	}, `concatena o iterável recebido com o texto da instancia`)
+
+	TipoTexto.Mapa["titulo"] = NewMetodoOuPanic("titulo", func(inst Objeto, iter Objeto) (Objeto, error) {
+		titularizado := strings.Title(strings.ToLower(string(inst.(Texto))))
+		return Texto(titularizado), nil
+	}, "transforma a primeira letra da frase em maiúsculo")
 }
