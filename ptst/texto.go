@@ -141,4 +141,8 @@ func init() {
 	TipoTexto.Mapa["maiusculas"] = NewMetodoOuPanic("maiusculas", func(inst Objeto, iter Objeto) (Objeto, error) {
 		return Texto(strings.ToUpper(string(inst.(Texto)))), nil
 	}, "transforma todas as letras em maiúsculas")
+
+	TipoTexto.Mapa["minusculas"] = NewMetodoOuPanic("minusculas", func(inst Objeto, iter Objeto) (Objeto, error) {
+		return Texto(strings.ToLower(string(inst.(Texto)))), nil
+	}, "transforma todas as letras em minúsculas")
 }
