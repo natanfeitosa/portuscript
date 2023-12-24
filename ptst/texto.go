@@ -133,16 +133,16 @@ func init() {
 		return Texto(saida), nil
 	}, `concatena o iterável recebido com o texto da instancia`)
 
-	TipoTexto.Mapa["titulo"] = NewMetodoOuPanic("titulo", func(inst Objeto, iter Objeto) (Objeto, error) {
+	TipoTexto.Mapa["titulo"] = NewMetodoOuPanic("titulo", func(inst Objeto) (Objeto, error) {
 		titularizado := strings.Title(strings.ToLower(string(inst.(Texto))))
 		return Texto(titularizado), nil
 	}, "retorna uma cópia do texto com a primeira letra da frase em maiúsculo")
 
-	TipoTexto.Mapa["maiusculas"] = NewMetodoOuPanic("maiusculas", func(inst Objeto, iter Objeto) (Objeto, error) {
+	TipoTexto.Mapa["maiusculas"] = NewMetodoOuPanic("maiusculas", func(inst Objeto) (Objeto, error) {
 		return Texto(strings.ToUpper(string(inst.(Texto)))), nil
 	}, "retorna uma cópia do texto com todas as letras em maiúsculas")
 
-	TipoTexto.Mapa["minusculas"] = NewMetodoOuPanic("minusculas", func(inst Objeto, iter Objeto) (Objeto, error) {
+	TipoTexto.Mapa["minusculas"] = NewMetodoOuPanic("minusculas", func(inst Objeto) (Objeto, error) {
 		return Texto(strings.ToLower(string(inst.(Texto)))), nil
 	}, "retorna uma cópia do texto com todas as letras em minúsculas")
 }
