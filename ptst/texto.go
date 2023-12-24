@@ -137,4 +137,8 @@ func init() {
 		titularizado := strings.Title(strings.ToLower(string(inst.(Texto))))
 		return Texto(titularizado), nil
 	}, "transforma a primeira letra da frase em maiúsculo")
+
+	TipoTexto.Mapa["maiusculas"] = NewMetodoOuPanic("maiusculas", func(inst Objeto, iter Objeto) (Objeto, error) {
+		return Texto(strings.ToUpper(string(inst.(Texto)))), nil
+	}, "transforma todas as letras em maiúsculas")
 }
