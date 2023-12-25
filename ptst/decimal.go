@@ -99,5 +99,15 @@ func (d Decimal) O__divide__(outro Objeto) (Objeto, error) {
 	return outroInt.(Decimal) - d, nil
 }
 
+// FIXME: adicionar erro de divisão por zero
+func (d Decimal) O__divide_inteiro__(b Objeto) (Objeto, error) {
+	bInt, err := NewInteiro(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return Inteiro(d) / bInt.(Inteiro), nil
+}
+
 var _ conversaoEntreTipos = (*Decimal)(nil)
 var _ aritmeticaMatematica = (*Decimal)(nil)

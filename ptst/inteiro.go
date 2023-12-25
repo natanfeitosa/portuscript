@@ -99,6 +99,16 @@ func (i Inteiro) O__divide__(b Objeto) (Objeto, error) {
 	return Decimal(i) / bInt.(Decimal), nil
 }
 
+// FIXME: adicionar erro de divisão por zero
+func (i Inteiro) O__divide_inteiro__(b Objeto) (Objeto, error) {
+	bInt, err := NewInteiro(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return i / bInt.(Inteiro), nil
+}
+
 func (i Inteiro) O__menor_que__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return nil, NewErroF(TipagemErro, "A operação '<' não é suportada entre os tipos '%s' e '%s'", i.Tipo().Nome, b.Tipo().Nome)
