@@ -59,6 +59,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteTextoLiteral(node.(*parser.TextoLiteral))
 	case *parser.InteiroLiteral:
 		return i.visiteInteiroLiteral(node.(*parser.InteiroLiteral))
+	case *parser.DecimalLiteral:
+		return i.visiteDecimalLiteral(node.(*parser.DecimalLiteral))
 	case *parser.OpBinaria:
 		return i.visiteOpBinaria(node.(*parser.OpBinaria))
 	case *parser.Identificador:
@@ -167,6 +169,10 @@ func (i *Interpretador) visiteTextoLiteral(node *parser.TextoLiteral) (Objeto, e
 
 func (i *Interpretador) visiteInteiroLiteral(node *parser.InteiroLiteral) (Objeto, error) {
 	return NewInteiro(node.Valor)
+}
+
+func (i *Interpretador) visiteDecimalLiteral(node *parser.DecimalLiteral) (Objeto, error) {
+	return NewDecimal(node.Valor)
 }
 
 func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) {
