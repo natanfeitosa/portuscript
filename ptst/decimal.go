@@ -1,6 +1,10 @@
 package ptst
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/natanfeitosa/portuscript/compartilhado"
+)
 
 type Decimal float64
 
@@ -12,20 +16,26 @@ Chama obj.__decimal__() ou se esse não for encontrado, um erro pode ser lançad
 	`,
 )
 
-func NewDecimal(obj Objeto) (Objeto, error) {
+func NewDecimal(obj any) (Objeto, error) {
 	switch b := obj.(type) {
-	case Decimal:
-		return b, nil
 	case nil:
 		return Decimal(0), nil
+	case Decimal:
+		return b, nil
+	case Texto:
+		num, _ := compartilhado.StringParaDec(string(b))
+		return Decimal(num), nil
+	case string:
+		num, _ := compartilhado.StringParaDec(string(b))
+		return Decimal(num), nil
 	default:
 		if O, ok := b.(I__decimal__); ok {
 			return O.O__decimal__()
 		}
-	}
 
-	// FIXME: ?????
-	return nil, nil
+		// FIXME: isso está certo?
+		return nil, nil
+	}
 }
 
 func (d Decimal) Tipo() *Tipo {
@@ -87,6 +97,16 @@ func (d Decimal) O__divide__(outro Objeto) (Objeto, error) {
 	}
 
 	return outroInt.(Decimal) - d, nil
+}
+
+// FIXME: adicionar erro de divisão por zero
+func (d Decimal) O__divide_inteiro__(b Objeto) (Objeto, error) {
+	bInt, err := NewInteiro(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return Inteiro(d) / bInt.(Inteiro), nil
 }
 
 var _ conversaoEntreTipos = (*Decimal)(nil)

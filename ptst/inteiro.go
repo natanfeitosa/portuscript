@@ -16,13 +16,16 @@ Chama obj.__inteiro__() ou se esse não for encontrado, um erro pode ser lançad
 	`,
 )
 
-func NewInteiro(obj Objeto) (Objeto, error) {
+func NewInteiro(obj any) (Objeto, error) {
 	switch b := obj.(type) {
 	case nil:
 		return Inteiro(0), nil
 	case Inteiro:
 		return b, nil
 	case Texto:
+		num, _ := compartilhado.StringParaInt(string(b))
+		return Inteiro(num), nil
+	case string:
 		num, _ := compartilhado.StringParaInt(string(b))
 		return Inteiro(num), nil
 	default:
@@ -94,6 +97,16 @@ func (i Inteiro) O__divide__(b Objeto) (Objeto, error) {
 	}
 
 	return Decimal(i) / bInt.(Decimal), nil
+}
+
+// FIXME: adicionar erro de divisão por zero
+func (i Inteiro) O__divide_inteiro__(b Objeto) (Objeto, error) {
+	bInt, err := NewInteiro(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return i / bInt.(Inteiro), nil
 }
 
 func (i Inteiro) O__menor_que__(b Objeto) (Objeto, error) {

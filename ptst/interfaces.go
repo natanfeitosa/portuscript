@@ -66,11 +66,16 @@ type I__divide__ interface {
 	O__divide__(outro Objeto) (Objeto, error)
 }
 
+type I__divide_inteiro__ interface {
+	O__divide_inteiro__(outro Objeto) (Objeto, error)
+}
+
 type aritmeticaMatematica interface {
 	I__adiciona__
 	I__multiplica__
 	I__subtrai__
 	I__divide__
+	I__divide_inteiro__
 }
 
 type I__menor_que__ interface {

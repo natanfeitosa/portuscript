@@ -53,7 +53,21 @@ func Divide(a, b Objeto) (Objeto, error) {
 		return res, nil
 	}
 
-	return nil, NewErroF(TipagemErro, "A operação '-' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+	return nil, NewErroF(TipagemErro, "A operação '/' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+}
+
+func DivideInteiro(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__divide_inteiro__); ok {
+		res, err := A.O__divide_inteiro__(b)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return res, nil
+	}
+
+	return nil, NewErroF(TipagemErro, "A operação '//' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
 func MenorQue(a, b Objeto) (Objeto, error) {

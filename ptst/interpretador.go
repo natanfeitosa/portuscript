@@ -1,7 +1,6 @@
 package ptst
 
 import (
-	"github.com/natanfeitosa/portuscript/compartilhado"
 	"github.com/natanfeitosa/portuscript/parser"
 )
 
@@ -60,6 +59,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteTextoLiteral(node.(*parser.TextoLiteral))
 	case *parser.InteiroLiteral:
 		return i.visiteInteiroLiteral(node.(*parser.InteiroLiteral))
+	case *parser.DecimalLiteral:
+		return i.visiteDecimalLiteral(node.(*parser.DecimalLiteral))
 	case *parser.OpBinaria:
 		return i.visiteOpBinaria(node.(*parser.OpBinaria))
 	case *parser.Identificador:
@@ -167,13 +168,11 @@ func (i *Interpretador) visiteTextoLiteral(node *parser.TextoLiteral) (Objeto, e
 }
 
 func (i *Interpretador) visiteInteiroLiteral(node *parser.InteiroLiteral) (Objeto, error) {
-	numero, err := compartilhado.StringParaInt(node.Valor)
+	return NewInteiro(node.Valor)
+}
 
-	if err != nil {
-		return nil, err
-	}
-
-	return Inteiro(numero), nil
+func (i *Interpretador) visiteDecimalLiteral(node *parser.DecimalLiteral) (Objeto, error) {
+	return NewDecimal(node.Valor)
 }
 
 func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) {
@@ -198,6 +197,8 @@ func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) 
 		return Subtrai(esquerda, direita)
 	case "/":
 		return Divide(esquerda, direita)
+	case "//":
+		return DivideInteiro(esquerda, direita)
 	case "<":
 		return MenorQue(esquerda, direita)
 	case "<=":
