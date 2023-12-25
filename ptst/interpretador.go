@@ -1,7 +1,6 @@
 package ptst
 
 import (
-	"github.com/natanfeitosa/portuscript/compartilhado"
 	"github.com/natanfeitosa/portuscript/parser"
 )
 
@@ -167,13 +166,7 @@ func (i *Interpretador) visiteTextoLiteral(node *parser.TextoLiteral) (Objeto, e
 }
 
 func (i *Interpretador) visiteInteiroLiteral(node *parser.InteiroLiteral) (Objeto, error) {
-	numero, err := compartilhado.StringParaInt(node.Valor)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return Inteiro(numero), nil
+	return NewInteiro(node.Valor)
 }
 
 func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) {
