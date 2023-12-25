@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Open Source Helpers](https://www.codetriage.com/natanfeitosa/portuscript/badges/users.svg)](https://www.codetriage.com/natanfeitosa/portuscript)
+[![Documentation Status](https://readthedocs.org/projects/portudoc/badge/?version=latest)](https://portudoc.readthedocs.io/pt/latest/?badge=latest)
 
 ## Sobre
 
