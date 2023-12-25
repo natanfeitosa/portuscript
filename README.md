@@ -32,7 +32,7 @@ Se preferir compilar a partir do código fonte, certifique-se de ter o [Go](http
 ```bash
 git clone https://github.com/natanfeitosa/portuscript.git
 cd portuscript
-# Instruções de compilação aqui
+go build
 ```
 
 ## CLI - Utilização Básica
