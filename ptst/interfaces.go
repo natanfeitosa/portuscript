@@ -22,7 +22,7 @@ type I__booleano__ interface {
 	O__booleano__() (Objeto, error)
 }
 
-type conversaoEntreTipos interface {
+type I_conversaoEntreTipos interface {
 	I__texto__
 	I__inteiro__
 	I__decimal__
@@ -70,7 +70,7 @@ type I__divide_inteiro__ interface {
 	O__divide_inteiro__(outro Objeto) (Objeto, error)
 }
 
-type aritmeticaMatematica interface {
+type I_aritmeticaMatematica interface {
 	I__adiciona__
 	I__multiplica__
 	I__subtrai__
@@ -102,7 +102,7 @@ type I__maior_ou_igual__ interface {
 	O__maior_ou_igual__(outro Objeto) (Objeto, error)
 }
 
-type comparacaoRica interface {
+type I_comparacaoRica interface {
 	I__menor_que__
 	I__menor_ou_igual__
 	I__igual__
@@ -119,7 +119,20 @@ type I__e__ interface {
 	O__e__(outro Objeto) (Objeto, error)
 }
 
-type aritmeticaBooleana interface {
+type I_aritmeticaBooleana interface {
 	I__ou__
 	I__e__
+}
+
+type I__iter__ interface {
+	O__iter__() (Objeto, error)
+}
+
+type I__proximo__ interface {
+	O__proximo__() (Objeto, error)
+}
+
+type I_iterador interface {
+	I__iter__
+	I__proximo__
 }

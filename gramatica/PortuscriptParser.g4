@@ -12,7 +12,7 @@ declaracao: declaracao_composta | declaracao_simples;
 
 declaracao_simples: atribuicao | expressao | declaracao_retorne | declaracao_importacao | PARE | CONTINUE;
 
-declaracao_composta: declaracao_funcao | declaracao_se;
+declaracao_composta: declaracao_funcao | declaracao_se declaracao_para;
 
 atribuicao: atribuicao_constante | atribuicao_variavel;
 
@@ -39,6 +39,8 @@ declaracao_se: SE ABRE_PARENTESES expressao FECHA_PARENTESES bloco (declaracao_s
 declaracao_senao_se: SENAO SE ABRE_PARENTESES expressao FECHA_PARENTESES bloco (declaracao_senao_se | SENAO bloco)?;
 
 declaracao_senao: SENAO bloco;
+
+declaracao_para: PARA ID EM primario;
 
 bloco: ABRE_CHAVES declaracoes? FECHA_CHAVES;
 

@@ -121,7 +121,41 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 		return &ContinueNode{}, nil
 	}
 
+	if val == "para" {
+		return p.parseBlocoPara()
+	}
+
 	return p.parseExpressao()
+}
+
+func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
+	p.consume("para")
+	if err := p.consume("("); err != nil {
+		return nil, err
+	}
+
+	// FIXME: isso pode gerar erros indesejados
+	id := p.token.Valor
+	p.avancar()
+
+	if err := p.consume("em"); err != nil {
+		return nil, err
+	}
+
+	iter, err := p.parsePrimario()
+	if err != nil {
+		return nil, err
+	}
+	if err := p.consume(")"); err != nil {
+		return nil, err
+	}
+
+	corpo, err := p.parseBloco()
+	if err != nil {
+		return nil, err
+	}
+	
+	return &BlocoPara{Identificador: id, Iterador: iter, Corpo: corpo}, nil
 }
 
 func (p *Parser) parseExpressaoSe() (*ExpressaoSe, error) {

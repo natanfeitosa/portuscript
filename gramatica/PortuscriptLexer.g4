@@ -16,6 +16,8 @@ E: 'e';
 NAO: 'nao';
 PARE: 'pare';
 CONTINUE: 'continue';
+PARA: 'para';
+EM: 'em';
 
 NOVA_LINHA: '\r'? '\n';
 DIGITOS:

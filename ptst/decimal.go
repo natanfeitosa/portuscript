@@ -109,5 +109,5 @@ func (d Decimal) O__divide_inteiro__(b Objeto) (Objeto, error) {
 	return Inteiro(d) / bInt.(Inteiro), nil
 }
 
-var _ conversaoEntreTipos = (*Decimal)(nil)
-var _ aritmeticaMatematica = (*Decimal)(nil)
+var _ I_conversaoEntreTipos = (*Decimal)(nil)
+var _ I_aritmeticaMatematica = (*Decimal)(nil)

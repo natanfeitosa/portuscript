@@ -183,8 +183,8 @@ func (i Inteiro) O__e__(b Objeto) (Objeto, error) {
 	return i, nil
 }
 
-var _ conversaoEntreTipos = (*Inteiro)(nil)
-var _ aritmeticaMatematica = (*Inteiro)(nil)
-var _ comparacaoRica = (*Inteiro)(nil)
-var _ aritmeticaBooleana = (*Inteiro)(nil)
+var _ I_conversaoEntreTipos = (*Inteiro)(nil)
+var _ I_aritmeticaMatematica = (*Inteiro)(nil)
+var _ I_comparacaoRica = (*Inteiro)(nil)
+var _ I_aritmeticaBooleana = (*Inteiro)(nil)
 // var _ I_Mapa = (*Inteiro)(nil)

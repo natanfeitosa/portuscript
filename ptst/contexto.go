@@ -86,3 +86,7 @@ func (c *Contexto) ObterSimbolo(nome string) (simbolo *Simbolo, err error) {
 
 	return
 }
+
+func (c *Contexto) ExcluirSimbolo(nome string) error {
+	return c.Locais.ExcluirSimbolo(nome)
+}
