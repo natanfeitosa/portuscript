@@ -76,4 +76,6 @@ argumentos: argumento (VIRGULA argumento)*;
 
 argumento: expressao;
 
-atomo: ID | 'Verdadeiro' | 'Falso' | 'Nulo' | TEXTO+ | DIGITOS;
+atomo: ID | 'Verdadeiro' | 'Falso' | 'Nulo' | TEXTO+ | DIGITOS | tupla;
+
+tupla: ABRE_CHAVES expressao VIRGULA (expressao VIRGULA?)* FECHA_CHAVES;
