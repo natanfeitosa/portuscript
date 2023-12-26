@@ -77,6 +77,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteEnquanto(node.(*parser.Enquanto))
 	case *parser.AcessoMembro:
 		return i.visiteAcessoMembro(node.(*parser.AcessoMembro))
+	case *parser.BlocoPara:
+		return i.visiteBlocoPara(node.(*parser.BlocoPara))
 	case *parser.PareNode:
 		return i.visitePareNode(node.(*parser.PareNode))
 	case *parser.ContinueNode:
@@ -338,12 +340,61 @@ func (i *Interpretador) visiteAcessoMembro(node *parser.AcessoMembro) (Objeto, e
 	return ObtemItemS(dono, membro)
 }
 
+func (i *Interpretador) visiteBlocoPara(node *parser.BlocoPara) (Objeto, error) {
+	// FIXME: isso provavelmente não é muito eficiente e correto
+	i.Contexto.DefinirSimboloLocal(NewVarSimbolo(node.Identificador, Nulo))
+	defer func() {
+		i.Contexto.ExcluirSimbolo(node.Identificador)
+	}()
+
+	var item, iterador Objeto
+	var err error
+
+	if iterador, err = i.visite(node.Iterador); err != nil {
+		return nil, err
+	}
+
+	if iterador, err = Iter(iterador); err != nil {
+		return nil, err
+	}
+
+	for {
+		if item, err = Proximo(iterador); err != nil {
+			if objErr, ok := err.(*Erro); ok {
+				if objErr.Tipo() == FimIteracao {
+					return nil, nil
+				}
+			}
+
+			return nil, err
+		}
+
+		i.Contexto.RedefinirSimbolo(node.Identificador, item)
+
+		_, err = i.visite(node.Corpo)
+		if err != nil {
+			if objErr, ok := err.(*Erro); ok {
+				switch objErr.Tipo() {
+				case ErroContinue:
+					// Continue para a próxima iteração do loop
+					continue
+				case ErroPare:
+					// Pare o loop
+					return nil, nil
+				}
+			}
+
+			return nil, err
+		}
+	}	
+}
+
 func (i *Interpretador) visitePareNode(node *parser.PareNode) (Objeto, error) {
-	return nil, NewErro(ErroPare, nil)
+	return nil, NewErro(ErroPare, Nulo)
 }
 
 func (i *Interpretador) visiteContinueNode(node *parser.ContinueNode) (Objeto, error) {
-	return nil, NewErro(ErroContinue, nil)
+	return nil, NewErro(ErroContinue, Nulo)
 }
 
 func (i *Interpretador) criarErro(tipo *Tipo, args Objeto) error {

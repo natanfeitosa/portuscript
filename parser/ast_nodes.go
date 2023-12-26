@@ -99,9 +99,15 @@ type AcessoMembro struct {
 	Membro BaseNode
 }
 
-type PareNode struct {}
+type BlocoPara struct {
+	Identificador string
+	Iterador      BaseNode
+	Corpo         *Bloco
+}
 
-type ContinueNode struct {}
+type PareNode struct{}
+
+type ContinueNode struct{}
 
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
@@ -122,5 +128,6 @@ func (*ConstanteLiteral) isExpr()    {}
 func (*Identificador) isExpr()       {}
 func (*Anotacao) isExpr()            {}
 func (*AcessoMembro) isExpr()        {}
-func (*PareNode) isExpr()        {}
+func (*BlocoPara) isExpr()           {}
+func (*PareNode) isExpr()            {}
 func (*ContinueNode) isExpr()        {}
