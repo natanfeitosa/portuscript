@@ -61,6 +61,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteInteiroLiteral(node.(*parser.InteiroLiteral))
 	case *parser.DecimalLiteral:
 		return i.visiteDecimalLiteral(node.(*parser.DecimalLiteral))
+	case *parser.TuplaLiteral:
+		return i.visiteTuplaLiteral(node.(*parser.TuplaLiteral))
 	case *parser.OpBinaria:
 		return i.visiteOpBinaria(node.(*parser.OpBinaria))
 	case *parser.Identificador:
@@ -175,6 +177,20 @@ func (i *Interpretador) visiteInteiroLiteral(node *parser.InteiroLiteral) (Objet
 
 func (i *Interpretador) visiteDecimalLiteral(node *parser.DecimalLiteral) (Objeto, error) {
 	return NewDecimal(node.Valor)
+}
+
+func (i *Interpretador) visiteTuplaLiteral(node *parser.TuplaLiteral) (Objeto, error) {
+	var tupla Tupla
+
+	for _, elemento := range node.Elementos {
+		item, err := i.visite(elemento)
+		if err != nil {
+			return nil, err
+		}
+
+		tupla = append(tupla, item)
+	}
+	return tupla, nil
 }
 
 func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) {

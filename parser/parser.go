@@ -742,6 +742,22 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 			p.avancar()
 			return &Identificador{token.Valor}, nil
 		}
+	case lexer.TokenAbreParenteses:
+		literal := &TuplaLiteral{}
+
+		for p.token.Tipo != lexer.TokenFechaParenteses {
+			p.avancar()
+			exp, err := p.parseExpressao()
+
+			if err != nil {
+				return nil, err
+			}
+
+			literal.Elementos = append(literal.Elementos, exp)
+		}
+
+		p.avancar()
+		return literal, nil
 	}
 
 	// fmt.Printf("%t", p.token)

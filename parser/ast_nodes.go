@@ -109,6 +109,10 @@ type PareNode struct{}
 
 type ContinueNode struct{}
 
+type TuplaLiteral struct {
+	Elementos []BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -131,3 +135,4 @@ func (*AcessoMembro) isExpr()        {}
 func (*BlocoPara) isExpr()           {}
 func (*PareNode) isExpr()            {}
 func (*ContinueNode) isExpr()        {}
+func (*TuplaLiteral) isExpr()        {}
