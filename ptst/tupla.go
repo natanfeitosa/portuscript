@@ -33,5 +33,10 @@ func (t Tupla) O__texto__() (Objeto, error) {
 	return t.GRepr("(", ")")
 }
 
+func (t Tupla) O__tamanho__() (Objeto, error) {
+	return Inteiro(len(t)), nil
+}
+
 var _ I__iter__ = Tupla(nil)
 var _ I__texto__ = Tupla(nil)
+var _ I__tamanho__ = Tupla(nil)

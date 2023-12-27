@@ -105,6 +105,22 @@ func emb_texto_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 
 var emb_texto_doc = "texto(objeto) -> Recebe um objeto e retorna uma representação no tipo texto, se possível"
 
+func emb_tamanho_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
+	targs := args.(ptst.Tupla)
+
+	if len(targs) < 1 {
+		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao tamanho() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(targs))
+	}
+
+	if obj, ok := targs[0].(ptst.I__tamanho__); ok {
+		return obj.O__tamanho__()
+	}
+
+	return nil, ptst.NewErroF(ptst.TipagemErro, "Objeto do tipo '%s' não implementa a interface '__tamanho__'.", targs[0].Tipo().Nome)
+}
+
+var emb_tamanho_doc = ""
+
 func init() {
 	constantes := ptst.Mapa{
 		"Verdadeiro": ptst.Verdadeiro,
@@ -118,6 +134,7 @@ func init() {
 		ptst.NewMetodoOuPanic("doc", emb_doc_fn, emb_doc_doc),
 		ptst.NewMetodoOuPanic("int", emb_int_fn, emb_int_doc),
 		ptst.NewMetodoOuPanic("texto", emb_texto_fn, emb_texto_doc),
+		ptst.NewMetodoOuPanic("tamanho", emb_tamanho_fn, emb_tamanho_doc),
 	}
 
 	ptst.RegistraModuloImpl(
