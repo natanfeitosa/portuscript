@@ -136,3 +136,7 @@ type I_iterador interface {
 	I__iter__
 	I__proximo__
 }
+
+type I__tamanho__ interface {
+	O__tamanho__() (Objeto, error)
+}
