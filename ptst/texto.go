@@ -3,6 +3,7 @@ package ptst
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 type Texto string
@@ -88,6 +89,10 @@ func (t Texto) O__multiplica__(outro Objeto) (Objeto, error) {
 	}
 }
 
+func (t Texto) O__tamanho__() (Objeto, error) {
+	return Inteiro(utf8.RuneCountInString(string(t))), nil
+}
+
 // func (t Texto) O__subtrai__(outro Objeto) (Objeto, error) {}
 
 // func (t Texto) O__divide__(outro Objeto) (Objeto, error) {}
@@ -113,6 +118,7 @@ var _ I__multiplica__ = (*Texto)(nil)
 // var _ I__subtrai__ = (*Texto)(nil)
 // var _ I__divide__ = (*Texto)(nil)
 // var _ I_Mapa = (*Texto)(nil)
+var _ I__tamanho__ = (*Texto)(nil)
 
 func init() {
 	TipoTexto.Mapa["junta"] = NewMetodoOuPanic("junta", func(inst Objeto, iter Objeto) (Objeto, error) {
