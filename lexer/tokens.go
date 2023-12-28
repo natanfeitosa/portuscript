@@ -49,6 +49,8 @@ const (
 	TokenVirgula         // ,
 	TokenAbreChaves      // {
 	TokenFechaChaves     // }
+	TokenAbreColchetes      // {
+	TokenFechaColchetes     // }
 	TokenDoisPontos      // :
 
 	// Reatribuicao

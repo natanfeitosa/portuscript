@@ -215,6 +215,12 @@ func (l *Lexer) ProximoToken() Token {
 	case "}":
 		l.avancar()
 		return Token{TokenFechaChaves, "}"}
+	case "[":
+		l.avancar()
+		return Token{TokenAbreColchetes, "["}
+	case "]":
+		l.avancar()
+		return Token{TokenFechaColchetes, "]"}
 	case "|":
 		l.avancar()
 		return Token{TokenBitABitOu, "|"}
