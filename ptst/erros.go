@@ -21,6 +21,8 @@ var (
 	TipagemErro      = TipoErro.NewTipo("TipagemErro", "Tipo de argumento inapropriado.")
 	NomeErro         = TipoErro.NewTipo("NomeErro", "Erro de nome que não pode ser achado.")
 	ImportacaoErro   = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
+	ValorErro        = TipoErro.NewTipo("ValorErro", "O valor é inapropriádo ou sua ocorrencia não existe")
+	IndiceErro       = TipoErro.NewTipo("IndiceErro", "O indice está fora do range aceito")
 	FimIteracao      = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
 
 	// Apenas para fins de controle, não são necessariamente erros

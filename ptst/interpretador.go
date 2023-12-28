@@ -63,6 +63,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteDecimalLiteral(node.(*parser.DecimalLiteral))
 	case *parser.TuplaLiteral:
 		return i.visiteTuplaLiteral(node.(*parser.TuplaLiteral))
+	case *parser.ListaLiteral:
+		return i.visiteListaLiteral(node.(*parser.ListaLiteral))
 	case *parser.OpBinaria:
 		return i.visiteOpBinaria(node.(*parser.OpBinaria))
 	case *parser.Identificador:
@@ -191,6 +193,20 @@ func (i *Interpretador) visiteTuplaLiteral(node *parser.TuplaLiteral) (Objeto, e
 		tupla = append(tupla, item)
 	}
 	return tupla, nil
+}
+
+func (i *Interpretador) visiteListaLiteral(node *parser.ListaLiteral) (Objeto, error) {
+	lista := &Lista{}
+
+	for _, elemento := range node.Elementos {
+		item, err := i.visite(elemento)
+		if err != nil {
+			return nil, err
+		}
+
+		lista.Adiciona(item)
+	}
+	return lista, nil
 }
 
 func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) {
@@ -402,7 +418,7 @@ func (i *Interpretador) visiteBlocoPara(node *parser.BlocoPara) (Objeto, error) 
 
 			return nil, err
 		}
-	}	
+	}
 }
 
 func (i *Interpretador) visitePareNode(node *parser.PareNode) (Objeto, error) {

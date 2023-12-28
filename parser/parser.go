@@ -758,6 +758,22 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 
 		p.avancar()
 		return literal, nil
+	case lexer.TokenAbreColchetes:
+		literal := &ListaLiteral{}
+
+		for p.token.Tipo != lexer.TokenFechaColchetes {
+			p.avancar()
+			exp, err := p.parseExpressao()
+
+			if err != nil {
+				return nil, err
+			}
+
+			literal.Elementos = append(literal.Elementos, exp)
+		}
+
+		p.avancar()
+		return literal, nil
 	}
 
 	// fmt.Printf("%t", p.token)

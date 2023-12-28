@@ -113,6 +113,10 @@ type TuplaLiteral struct {
 	Elementos []BaseNode
 }
 
+type ListaLiteral struct {
+	Elementos []BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -136,3 +140,4 @@ func (*BlocoPara) isExpr()           {}
 func (*PareNode) isExpr()            {}
 func (*ContinueNode) isExpr()        {}
 func (*TuplaLiteral) isExpr()        {}
+func (*ListaLiteral) isExpr()        {}
