@@ -6,7 +6,7 @@ import (
 	"github.com/natanfeitosa/portuscript/ptst"
 )
 
-func emb_imprima_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
+func emb_imprima_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 	const (
 		final     = ptst.Texto("\n")
 		separador = ptst.Texto(" ")
@@ -21,7 +21,7 @@ func emb_imprima_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 	// resultado, err := ptst.Chamar(junta, args)
 	resultado, err := ptst.Chamar(
 		junta,
-		args.(ptst.Tupla),
+		args,
 	)
 
 	if err != nil {
@@ -35,15 +35,13 @@ func emb_imprima_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 var emb_imprima_doc = "imprima(...objetos) -> imprime a representação ou a conversão em string dos objetos separados por espaço"
 
 // FIXME: essa provavelmente não é a melhor implementação
-func emb_leia_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-	targs := args.(ptst.Tupla)
-
-	if len(targs) > 1 {
-		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao leia() esperava receber no máximo 1 argumento, mas recebeu um número de %v", len(args.(ptst.Tupla)))
+func emb_leia_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+	if err := ptst.VerificaNumeroArgumentos("leia", false, args, 0, 1); err != nil {
+		return nil, err
 	}
 
-	if len(targs) == 1 {
-		texto, err := ptst.NewTexto(targs[0])
+	if len(args) == 1 {
+		texto, err := ptst.NewTexto(args[0])
 
 		if err != nil {
 			return nil, err
@@ -60,12 +58,12 @@ func emb_leia_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 var emb_leia_doc = "leia(frase_para_imprimir) -> imprime um texto se especificado e lê uma entrada do usuário, retornando-a"
 
 // FIXME: doc(imprima) e doc(doc) não funcionam
-func emb_doc_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-	if len(args.(ptst.Tupla)) != 1 {
-		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao doc() esperava receber 1 argumento, mas recebeu um número de %v", len(args.(ptst.Tupla)))
+func emb_doc_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+	if err := ptst.VerificaNumeroArgumentos("doc", false, args, 1, 1); err != nil {
+		return nil, err
 	}
 
-	arg := args.(ptst.Tupla)[0]
+	arg := args[0]
 	imp, err := mod.(*ptst.Modulo).Contexto.ObterSimbolo("imprima")
 
 	if err != nil {
@@ -81,42 +79,36 @@ func emb_doc_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 
 var emb_doc_doc = "doc(objeto) -> Obtem a documentação do objeto"
 
-func emb_int_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-	targs := args.(ptst.Tupla)
-
-	if len(targs) < 1 {
-		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao int() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(targs))
+func emb_int_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+	if err := ptst.VerificaNumeroArgumentos("int", false, args, 0, 1); err != nil {
+		return nil, err
 	}
 
-	return ptst.NewInteiro(targs[0])
+	return ptst.NewInteiro(args[0])
 }
 
 var emb_int_doc = "int(objeto) -> Recebe um objeto e retorna uma representação numérica do tipo inteiro, se possível"
 
-func emb_texto_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-	targs := args.(ptst.Tupla)
-
-	if len(targs) < 1 {
-		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao texto() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(targs))
+func emb_texto_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+	if err := ptst.VerificaNumeroArgumentos("texto", false, args, 0, 1); err != nil {
+		return nil, err
 	}
 
-	return ptst.NewTexto(targs[0])
+	return ptst.NewTexto(args[0])
 }
 
 var emb_texto_doc = "texto(objeto) -> Recebe um objeto e retorna uma representação no tipo texto, se possível"
 
-func emb_tamanho_fn(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-	targs := args.(ptst.Tupla)
-
-	if len(targs) < 1 {
-		return nil, ptst.NewErroF(ptst.TipagemErro, "A funçao tamanho() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(targs))
+func emb_tamanho_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+	if err := ptst.VerificaNumeroArgumentos("tamanho", false, args, 1, 1); err != nil {
+		return nil, err
 	}
 
-	if obj, ok := targs[0].(ptst.I__tamanho__); ok {
+	if obj, ok := args[0].(ptst.I__tamanho__); ok {
 		return obj.O__tamanho__()
 	}
 
-	return nil, ptst.NewErroF(ptst.TipagemErro, "Objeto do tipo '%s' não implementa a interface '__tamanho__'.", targs[0].Tipo().Nome)
+	return nil, ptst.NewErroF(ptst.TipagemErro, "Objeto do tipo '%s' não implementa a interface '__tamanho__'.", args[0].Tipo().Nome)
 }
 
 var emb_tamanho_doc = ""

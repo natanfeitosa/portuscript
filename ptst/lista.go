@@ -77,8 +77,8 @@ func (l *Lista) Pop(indice Inteiro) (Objeto, error) {
 
 func init() {
 	TipoLista.Mapa["adiciona"] = NewMetodoOuPanic("adiciona", func(inst Objeto, args Tupla) (Objeto, error) {
-		if len(args) < 1 {
-			return nil, NewErroF(TipagemErro, "O método adiciona() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(args))
+		if err := VerificaNumeroArgumentos("adiciona", true, args, 1, 1); err != nil {
+			return nil, err
 		}
 
 		inst.(*Lista).Adiciona(args[0])
@@ -96,8 +96,8 @@ func init() {
 	// }, "")
 
 	TipoLista.Mapa["extende"] = NewMetodoOuPanic("extende", func(inst Objeto, args Tupla) (Objeto, error) {
-		if len(args) < 1 {
-			return nil, NewErroF(TipagemErro, "O método extende() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(args))
+		if err := VerificaNumeroArgumentos("extende", true, args, 1, 1); err != nil {
+			return nil, err
 		}
 
 		inst.(*Lista).Itens = append(inst.(*Lista).Itens, (args[0].(Tupla))...)
@@ -105,8 +105,8 @@ func init() {
 	}, "Adiciona os elementos da lista recebida ao fim da lista atual")
 
 	TipoLista.Mapa["remove"] = NewMetodoOuPanic("remove", func(inst Objeto, args Tupla) (Objeto, error) {
-		if len(args) < 1 {
-			return nil, NewErroF(TipagemErro, "O método remove() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(args))
+		if err := VerificaNumeroArgumentos("remove", true, args, 1, 1); err != nil {
+			return nil, err
 		}
 
 		instancia := inst.(*Lista)
@@ -119,6 +119,10 @@ func init() {
 	}, "Remove um elemento da lista e o retorna, se existir")
 
 	TipoLista.Mapa["pop"] = NewMetodoOuPanic("pop", func(inst Objeto, args Tupla) (Objeto, error) {
+		if err := VerificaNumeroArgumentos("pop", true, args, 0, 1); err != nil {
+			return nil, err
+		}
+
 		idx := Inteiro(0)
 
 		if len(args) == 1 {
@@ -129,8 +133,8 @@ func init() {
 	}, "Remove um item da lista com base no seu índice")
 
 	TipoLista.Mapa["indice"] = NewMetodoOuPanic("indice", func(inst Objeto, args Tupla) (Objeto, error) {
-		if len(args) < 1 {
-			return nil, NewErroF(TipagemErro, "O método indice() esperava receber no mínimo 1 argumento, mas recebeu um total de %v", len(args))
+		if err := VerificaNumeroArgumentos("indice", true, args, 1, 1); err != nil {
+			return nil, err
 		}
 
 		return inst.(*Lista).Indice(args[0])
