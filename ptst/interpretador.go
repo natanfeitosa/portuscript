@@ -265,16 +265,42 @@ func (i *Interpretador) visiteIdentificador(node *parser.Identificador) (Objeto,
 	return simbolo.Valor, nil
 }
 
-// FIXME: estamos ignorando o operador, não?
 func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, error) {
-	valor, err := i.visite(node.Expressao)
+	var direita, esquerda, valor Objeto
+	var err error
+
+	simbolo, err := i.Contexto.ObterSimbolo(node.Nome)
 	if err != nil {
 		return nil, err
 	}
 
-	err = i.Contexto.RedefinirSimbolo(node.Nome, valor)
+	esquerda = simbolo.Valor
+
+	if direita, err = i.visite(node.Expressao); err != nil {
+		return nil, err
+	}
+
+	// FIXME: provavelmente nao seria melhor criar métodos específicos para operações implace e usar estes como fallback??
+	switch node.Operador {
+	case "+=":
+		valor, err = Adiciona(esquerda, direita)
+	case "*=":
+		valor, err = Multiplica(esquerda, direita)
+	case "-=":
+		valor, err = Subtrai(esquerda, direita)
+	case "/=":
+		valor, err = Divide(esquerda, direita)
+	case "//=":
+		valor, err = DivideInteiro(esquerda, direita)
+	default:
+		valor = direita
+	}
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err = i.Contexto.RedefinirSimbolo(node.Nome, valor); err != nil {
 		return nil, err
 	}
 
