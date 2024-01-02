@@ -7,6 +7,10 @@ var TipoMapa = NewTipo(
 	"Objeto chave/valor",
 )
 
+func NewMapaVazio() Mapa {
+	return make(Mapa)
+}
+
 func (m Mapa) Tipo() *Tipo {
 	return TipoMapa
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/natanfeitosa/portuscript/parser"
 	"github.com/natanfeitosa/portuscript/playground"
 	"github.com/natanfeitosa/portuscript/ptst"
-	_ "github.com/natanfeitosa/portuscript/stdlib/embutidos"
+	_ "github.com/natanfeitosa/portuscript/stdlib"
 	"github.com/spf13/cobra"
 )
 

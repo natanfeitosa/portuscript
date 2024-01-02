@@ -87,6 +87,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visitePareNode(node.(*parser.PareNode))
 	case *parser.ContinueNode:
 		return i.visiteContinueNode(node.(*parser.ContinueNode))
+	case *parser.ImporteDe:
+		return i.visiteImporteDe(node.(*parser.ImporteDe))
 	}
 
 	return nil, nil
@@ -453,6 +455,29 @@ func (i *Interpretador) visitePareNode(node *parser.PareNode) (Objeto, error) {
 
 func (i *Interpretador) visiteContinueNode(node *parser.ContinueNode) (Objeto, error) {
 	return nil, NewErro(ErroContinue, Nulo)
+}
+
+func (i *Interpretador) visiteImporteDe(node *parser.ImporteDe) (Objeto, error) {
+	caminho, err := i.visiteTextoLiteral(node.Caminho)
+	if err != nil {
+		return nil, err
+	}
+
+	modulo, err := MaquinarioImporteModulo(i.Contexto, string(caminho.(Texto)))
+	if err != nil {
+		return nil, err
+	}
+
+	for _, nome := range node.Nomes {
+		obj, err := ObtemItemS(modulo, nome)
+		if err != nil {
+			return nil, err
+		}
+
+		i.Contexto.DefinirSimboloLocal(NewVarSimbolo(nome, obj))
+	}
+
+	return nil, nil
 }
 
 func (i *Interpretador) criarErro(tipo *Tipo, args Objeto) error {

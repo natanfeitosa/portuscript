@@ -17,13 +17,10 @@ func inicializa(parser *parser.Parser, caminho string) {
 	}
 
 	interpret := &Interpretador{Ast: ast, Caminho: Texto(caminho)}
-
-	// FIXME: isso pode ser melhorado, não?
-	interpret.Contexto = NewContexto(interpret.Caminho)
-	modulos := NewTabelaModulos()
-	modulos.NewModulo(interpret.Contexto, ObtemImplModulo("embutidos"))
-	interpret.Contexto.Modulos = modulos
-
+	contexto := NewContextoI(interpret)
+	defer contexto.Terminar()
+	MultiImporteModulo(contexto, "embutidos")
+	
 	if _, err := interpret.Inicializa(); err != nil {
 		LancarErro(err)
 	}
@@ -39,14 +36,6 @@ func InicializaDeArquivo(caminho string) {
 	}
 
 	codigo, err := os.ReadFile(caminho)
-	if err != nil {
-		LancarErro(err)
-		return
-	}
-
-	// decodificador := charmap.ISO8859_1.NewDecoder()
-	// codigo, _, err := transform.Bytes(decodificador, fonte)
-
 	if err != nil {
 		LancarErro(err)
 		return

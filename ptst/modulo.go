@@ -58,8 +58,9 @@ func ObtemImplModulo(nome string) *ModuloImpl {
 }
 
 type Modulo struct {
-	Impl     *ModuloImpl
-	Contexto *Contexto
+	Impl         *ModuloImpl
+	Contexto     *Contexto
+	acessoRapido Mapa
 }
 
 var TipoModulo = NewTipo("Modulo", "Modulo doc")
@@ -67,6 +68,23 @@ var TipoModulo = NewTipo("Modulo", "Modulo doc")
 func (m *Modulo) Tipo() *Tipo {
 	return TipoModulo
 }
+
+func (m *Modulo) O__obtem_attributo__(nome string) (Objeto, error) {
+	if objeto, ok := m.acessoRapido[nome]; ok {
+		return objeto, nil
+	}
+
+	simbolo, err := m.Contexto.ObterSimbolo(nome)
+	if err != nil {
+		return nil, err
+	}
+
+	objeto := simbolo.Valor
+	m.acessoRapido[nome] = objeto
+	return objeto, nil
+}
+
+var _ I__obtem_attributo__ = (*Modulo)(nil)
 
 type TabelaModulos struct {
 	modulos   map[string]*Modulo
@@ -79,7 +97,11 @@ func NewTabelaModulos() *TabelaModulos {
 
 func (tabela *TabelaModulos) NewModulo(ctx *Contexto, impl *ModuloImpl) (*Modulo, error) {
 	nome := impl.Info.Nome
-	modulo := &Modulo{impl, NewContexto(Texto(impl.Info.CaminhoModulo))}
+	modulo := &Modulo{
+		Impl:         impl,
+		Contexto:     NewContexto(Texto(impl.Info.CaminhoModulo)),
+		acessoRapido: NewMapaVazio(),
+	}
 
 	if nome == "" {
 		nome = "__entrada__"
@@ -115,10 +137,11 @@ func (tabela *TabelaModulos) NewModulo(ctx *Contexto, impl *ModuloImpl) (*Modulo
 	return modulo, nil
 }
 
-func (tabela *TabelaModulos) RecuperaModulo(nome string) (*Modulo, error) {
-	if modulo, ok := tabela.modulos[nome]; ok {
-		return modulo, nil
+func (tabela *TabelaModulos) ObterModulo(nome string) (*Modulo, error) {
+	m, ok := tabela.modulos[nome]
+	if !ok {
+		return nil, NewErroF(ImportacaoErro, "O módulo '%v' não pode ser achado", nome)
 	}
 
-	return nil, NewErroF(ImportacaoErro, "O módulo '%v' não pode ser achado", nome)
+	return m, nil
 }

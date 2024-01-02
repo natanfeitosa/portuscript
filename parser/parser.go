@@ -98,6 +98,9 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 	}
 
 	// FIXME: adicionar importaçao
+	if val == "de" {
+		return p.parseImporteDe()
+	}
 
 	if val == "func" {
 		return p.parseFuncao()
@@ -128,6 +131,43 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 	return p.parseExpressao()
 }
 
+func (p *Parser) parseImporteDe() (*ImporteDe, error) {
+	p.avancar()
+	if p.token.Tipo != lexer.TokenTexto {
+		return nil, fmt.Errorf("Era esperado um texto após a palavra chave 'de'")
+	}
+
+	decl := &ImporteDe{Caminho: &TextoLiteral{p.token.Valor}}
+	p.avancar()
+
+	if err := p.consume("importe"); err != nil {
+		return nil, err
+	}
+
+	for {
+		// FIXME: adicionar suporte a importação com *
+		token := p.token
+
+		if token.Tipo == lexer.TokenIdentificador && !IsKeyword(token.Valor) {
+			p.avancar()
+			decl.Nomes = append(decl.Nomes, token.Valor)
+		}
+
+		if p.token.Tipo == lexer.TokenVirgula {
+			p.avancar()
+			continue
+		}
+
+		break
+	}
+
+	if err := p.consume(";"); err != nil {
+		return nil, err
+	}
+
+	return decl, nil
+}
+
 func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
 	p.consume("para")
 	if err := p.consume("("); err != nil {
@@ -154,7 +194,7 @@ func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &BlocoPara{Identificador: id, Iterador: iter, Corpo: corpo}, nil
 }
 
@@ -200,6 +240,32 @@ func (p *Parser) parseExpressaoSe() (*ExpressaoSe, error) {
 	}
 
 	return expressaoSe, nil
+}
+
+func (p *Parser) parseEnquanto() (*Enquanto, error) {
+	if err := p.consume("enquanto"); err != nil {
+		return nil, err
+	}
+
+	if err := p.consume("("); err != nil {
+		return nil, err
+	}
+
+	condicao, err := p.parseExpressao()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := p.consume(")"); err != nil {
+		return nil, err
+	}
+
+	corpo, err := p.parseBloco()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Enquanto{Condicao: condicao, Corpo: corpo}, nil
 }
 
 func (p *Parser) parseRetorne() (*RetorneNode, error) {
@@ -778,30 +844,4 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 
 	// fmt.Printf("%t", p.token)
 	return nil, fmt.Errorf("O token '%v' não é reconhecido.", p.token.Valor)
-}
-
-func (p *Parser) parseEnquanto() (*Enquanto, error) {
-	if err := p.consume("enquanto"); err != nil {
-		return nil, err
-	}
-
-	if err := p.consume("("); err != nil {
-		return nil, err
-	}
-
-	condicao, err := p.parseExpressao()
-	if err != nil {
-		return nil, err
-	}
-
-	if err := p.consume(")"); err != nil {
-		return nil, err
-	}
-
-	corpo, err := p.parseBloco()
-	if err != nil {
-		return nil, err
-	}
-
-	return &Enquanto{Condicao: condicao, Corpo: corpo}, nil
 }

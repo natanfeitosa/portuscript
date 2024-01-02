@@ -23,6 +23,7 @@ var (
 	ImportacaoErro   = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
 	ValorErro        = TipoErro.NewTipo("ValorErro", "O valor é inapropriádo ou sua ocorrencia não existe")
 	IndiceErro       = TipoErro.NewTipo("IndiceErro", "O indice está fora do range aceito")
+	RuntimeErro       = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
 	FimIteracao      = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
 
 	// Apenas para fins de controle, não são necessariamente erros
