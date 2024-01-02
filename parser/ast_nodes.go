@@ -117,6 +117,12 @@ type ListaLiteral struct {
 	Elementos []BaseNode
 }
 
+// FIXME: adicionar suporte a importação com *
+type ImporteDe struct {
+	Caminho *TextoLiteral
+	Nomes   []string
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -141,3 +147,4 @@ func (*PareNode) isExpr()            {}
 func (*ContinueNode) isExpr()        {}
 func (*TuplaLiteral) isExpr()        {}
 func (*ListaLiteral) isExpr()        {}
+func (*ImporteDe) isExpr()           {}

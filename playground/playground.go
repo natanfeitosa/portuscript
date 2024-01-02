@@ -99,6 +99,10 @@ func Inicializa(version, datetime, commit string) {
 		}
 
 		ast, err := stringParaAst(codigo)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			continue
+		}
 		
 		interpretador := &ptst.Interpretador{
 			Ast:      ast,

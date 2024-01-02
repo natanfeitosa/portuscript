@@ -2,31 +2,39 @@ package ptst
 
 import (
 	"strings"
+	"sync"
 )
 
 type Contexto struct {
-	Pai     *Contexto       // O contexto anterior (pai), se aplicavel
-	Caminho Texto           // O caminho (path) do arquivo em execução
-	Locais  *TabelaSimbolos // Variaveis e Constantes Locais
-	Globais *TabelaSimbolos // Variaveis e Constantes Globais
-	Modulos *TabelaModulos
+	Pai       *Contexto       // O contexto anterior (pai), se aplicavel
+	Caminho   Texto           // O caminho (path) do arquivo em execução
+	Locais    *TabelaSimbolos // Variaveis e Constantes Locais
+	Globais   *TabelaSimbolos // Variaveis e Constantes Globais
+	Modulos   *TabelaModulos
+	waitgroup sync.WaitGroup
+	once      sync.Once
+	fechado   bool
 	// ErroAtual *Erro
 }
 
 func NewContexto(caminho Texto) *Contexto {
 	context := &Contexto{Caminho: caminho}
-	context.Globais = NewTabelaSimbolos()
 	context.Locais = NewTabelaSimbolos()
+	context.Globais = NewTabelaSimbolos()
+	context.Modulos = NewTabelaModulos()
+	context.fechado = false
 	return context
 }
 
+func NewContextoI(i *Interpretador) *Contexto {
+	contexto := NewContexto(i.Caminho)
+	i.Contexto = contexto
+	return contexto
+}
+
 func (c *Contexto) NewContexto() *Contexto {
-	context := &Contexto{
-		Pai:     c,
-		Caminho: c.Caminho,
-		Locais:  NewTabelaSimbolos(),
-		Globais: NewTabelaSimbolos(),
-	}
+	context := NewContexto(c.Caminho)
+	context.Pai = c
 	return context
 }
 
@@ -89,4 +97,45 @@ func (c *Contexto) ObterSimbolo(nome string) (simbolo *Simbolo, err error) {
 
 func (c *Contexto) ExcluirSimbolo(nome string) error {
 	return c.Locais.ExcluirSimbolo(nome)
+}
+
+func (c *Contexto) ObterModulo(nome string) (Objeto, error) {
+	return c.Modulos.ObterModulo(nome)
+}
+
+func (c *Contexto) InicializarModulo(implementacao *ModuloImpl) (Objeto, error) {
+	if err := c.adicionarTrabalho(); err != nil {
+		return nil, err
+	}
+	defer c.encerrarTrabalho()
+	// FIXME: adicionar a lógica para compilação e cache de módulos definidos do lado ptst da história
+
+	modulo, err := c.Modulos.NewModulo(c, implementacao)
+	if err != nil {
+		return nil, err
+	}
+
+	return modulo, nil
+}
+
+func (c *Contexto) adicionarTrabalho() error {
+	if c.fechado {
+		err := NewErro(RuntimeErro, Texto("Contexto já fechado"))
+		err.Contexto = c
+		return err
+	}
+
+	c.waitgroup.Add(1)
+	return nil
+}
+
+func (c *Contexto) encerrarTrabalho() {
+	c.waitgroup.Done()
+}
+
+func (c *Contexto) Terminar() {
+	c.once.Do(func () {
+		c.waitgroup.Wait()
+		c.fechado = true
+	})
 }
