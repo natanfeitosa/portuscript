@@ -79,7 +79,7 @@ func (l *Lexer) lerIdentificador() string {
 func (l *Lexer) lerNumero() string {
 	inicio := l.posicao - 1
 
-	for compartilhado.ContemApenasDigitos(l.caractere) || l.caractere == "." {
+	for compartilhado.ContemApenasDigitos(l.caractere) || strings.ContainsAny(".+-", l.caractere) {
 		l.avancar()
 	}
 
@@ -135,6 +135,10 @@ func (l *Lexer) ProximoToken() Token {
 		}
 		return Token{TokenIgual, "="}
 	case "+":
+		if compartilhado.ContemApenasDigitos(l.peekProximoCaractere()) {
+			goto LERNUMERO
+		}
+		
 		l.avancar()
 		if l.caractere == "=" {
 			l.avancar()
@@ -142,6 +146,10 @@ func (l *Lexer) ProximoToken() Token {
 		}
 		return Token{TokenMais, "+"}
 	case "-":
+		if compartilhado.ContemApenasDigitos(l.peekProximoCaractere()) {
+			goto LERNUMERO
+		}
+
 		l.avancar()
 		if l.caractere == "=" {
 			l.avancar()
@@ -272,24 +280,29 @@ func (l *Lexer) ProximoToken() Token {
 				return Token{TokenIdentificador, identificador}
 			}
 		} else if compartilhado.ContemApenasDigitos(l.caractere) {
-			numero := l.lerNumero()
-
-			if strings.Contains(numero, ".") {
-				return Token{TokenDecimal, numero}
-			}
-
-			return Token{TokenInteiro, numero}
+			goto LERNUMERO
 		}
 	}
 
 	return Token{TokenErro, l.caractere}
+
+LERNUMERO:
+	{
+		numero := l.lerNumero()
+
+		if strings.Contains(numero, ".") {
+			return Token{TokenDecimal, numero}
+		}
+
+		return Token{TokenInteiro, numero}
+	}
 }
 
 // peekProximoCaractere retorna o próximo caractere sem avançar o analisador.
-// func (l *Lexer) peekProximoCaractere() string {
-// 	if !l.isEof() {
-// 		return string(l.entrada[l.posicao+1])
-// 	}
+func (l *Lexer) peekProximoCaractere() string {
+	if !l.isEof() {
+		return string(l.entrada[l.posicao+1])
+	}
 
-// 	return ""
-// }
+	return ""
+}
