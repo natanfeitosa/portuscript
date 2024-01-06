@@ -1,0 +1,11 @@
+de "matematica" importe PI, raiz;
+de "colorize" importe imprimac, FUNDO, TEXTO;
+
+func darCor(arg) {
+    retorne FUNDO.branco(TEXTO.preto(arg));
+}
+
+imprima("O valor de PI é:", darCor(PI))
+imprima("A raiz quadrada de 2 é:", darCor(raiz(2, 2)))
+imprima("A raiz cúbica de 2 é:", darCor(raiz(2, 3)))
+
