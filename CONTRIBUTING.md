@@ -54,10 +54,26 @@ Os tipos de commit que você pode usar são:
 -   **merge:** (merge entre branchs)
 -   **config:** (adição/atualização de configurações)
 
-Por exemplo, ao adicionar uma nova funcionalidade, você pode fazer um commit da seguinte forma:
+O escopo deve ser um dos subdiretórios. Se for uma alteração em um módulo, use o padrão mod:<nome>. Se for um arquivo da raiz, não há escopo.
+
+Por exemplo, ao fazer um commit em um arquivo dentro do diretório compartilhado, você pode fazer assim:
 
 ```bash
-git commit -m "feat: Adiciona nova funcionalidade incrível"
+git commit -m "fix(compartilhado): Corrige bug em números.go"
+```
+
+Ou, se estiver fazendo uma alteração em um módulo específico:
+
+```bash
+git commit -m "feat(mod:nome-do-modulo): Adiciona nova funcionalidade ao módulo"
+```
+
+Se estiver alterando algo na raiz do projeto, o escopo não é necessário.
+
+Por exemplo, se estiver alterando o [`README.md`](/README.md), siga o padrão:
+
+```bash
+git commit -m "docs: Adiciona exemplos básicos"
 ```
 
 Por favor, siga este padrão ao fazer seus commits.
