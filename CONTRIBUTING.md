@@ -54,7 +54,7 @@ Os tipos de commit que você pode usar são:
 -   **merge:** (merge entre branchs)
 -   **config:** (adição/atualização de configurações)
 
-O escopo deve ser um dos subdiretórios. Se for uma alteração em um módulo, use o padrão mod:<nome>. Se for um arquivo da raiz, não há escopo.
+O escopo deve ser um dos subdiretórios. Se for uma alteração em um módulo, use o padrão mod:<nome>. Se for um arquivo da raiz, não há escopo. Ou ainda, se for uma alteração que se faça necessário mexer em mais de um escopo, use o asterisco `*`.
 
 Por exemplo, ao fazer um commit em um arquivo dentro do diretório compartilhado, você pode fazer assim:
 
