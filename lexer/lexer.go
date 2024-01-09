@@ -135,6 +135,7 @@ func (l *Lexer) ProximoToken() Token {
 		}
 		return Token{TokenIgual, "="}
 	case "+":
+		// FIXME: este case e o próximo podem conter bugs quando não tiver espaço entre o termo anterior ao simbolo e o próximo
 		if compartilhado.ContemApenasDigitos(l.peekProximoCaractere()) {
 			goto LERNUMERO
 		}
@@ -301,7 +302,7 @@ LERNUMERO:
 // peekProximoCaractere retorna o próximo caractere sem avançar o analisador.
 func (l *Lexer) peekProximoCaractere() string {
 	if !l.isEof() {
-		return string(l.entrada[l.posicao+1])
+		return compartilhado.ObtemLetraPorIndice(l.entrada, l.posicao)
 	}
 
 	return ""

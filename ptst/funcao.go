@@ -22,7 +22,7 @@ func NewFuncao(nome string, corpo *parser.Bloco, contexto *Contexto) *Funcao {
 	return &Funcao{Nome: nome, corpo: corpo, contexto: contexto}
 }
 
-func (f *Funcao) O__chame__(args Tupla) (Objeto, error) {	
+func (f *Funcao) O__chame__(args Tupla) (Objeto, error) {
 	if len(f.args) != len(args) {
 		// FIXME: este erro é adequado? A mensagem também não deveria se atentar ao plural/singular quando aplicável?
 		return nil, NewErroF(TipagemErro, "%v() esperava receber %v argumentos, mas %v foram encontrados", f.Nome, len(f.args), len(args))
@@ -36,6 +36,8 @@ func (f *Funcao) O__chame__(args Tupla) (Objeto, error) {
 			NewVarSimbolo(string(nomeStr.(Texto)), args[i]),
 		)
 	}
+
+	defer contexto.Terminar()
 
 	return (&Interpretador{Ast: f.corpo, Contexto: contexto}).Inicializa()
 }

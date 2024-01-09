@@ -81,7 +81,10 @@ func Inicializa(version, datetime, commit string) {
 	)
 
 	line := liner.NewLiner()
-	defer line.Close()
+	defer func() {
+		line.Close()
+		contextoRaiz.Terminar()
+	}()
 
 	for !finalizado {
 		codigo, err := line.Prompt(">>> ")
@@ -103,7 +106,7 @@ func Inicializa(version, datetime, commit string) {
 			fmt.Fprintln(os.Stderr, err)
 			continue
 		}
-		
+
 		interpretador := &ptst.Interpretador{
 			Ast:      ast,
 			Contexto: contextoRaiz,

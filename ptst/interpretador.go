@@ -327,6 +327,7 @@ func (i *Interpretador) visiteExpressaoSe(node *parser.ExpressaoSe) (Objeto, err
 }
 
 func (i *Interpretador) visiteBloco(node *parser.Bloco) (Objeto, error) {
+	contextoRaiz := i.Contexto
 	i.Contexto = i.Contexto.NewContexto()
 
 	for _, decl := range node.Declaracoes {
@@ -335,7 +336,8 @@ func (i *Interpretador) visiteBloco(node *parser.Bloco) (Objeto, error) {
 		}
 	}
 
-	i.Contexto = i.Contexto.Pai
+	i.Contexto.Terminar()
+	i.Contexto = contextoRaiz
 	return nil, nil
 }
 
