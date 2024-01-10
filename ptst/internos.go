@@ -108,3 +108,21 @@ func Iter(obj Objeto) (Objeto, error) {
 
 	return nil, NewErroF(TipagemErro, "O objeto do tipo '%s' não implementa a interface do iterador", obj.Tipo().Nome)
 }
+
+func InstanciaDe(obj Objeto, tipos any) (Booleano, error) {
+	switch tipo_tupla := tipos.(type) {
+	case Tupla:
+		for _, tipo := range tipo_tupla {
+			if ok, err := InstanciaDe(obj, tipo); ok {
+				return ok, nil
+			} else if err != nil {
+				return false, err
+			}
+		}
+
+		return false, nil
+	default:
+		// FIXME: verificar se realmente é um tipo usável
+		return obj.Tipo() == tipos.(*Tipo), nil
+	}
+}

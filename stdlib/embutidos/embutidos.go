@@ -18,6 +18,7 @@ func init() {
 		_emb_int,
 		_emb_texto,
 		_emb_tamanho,
+		_emb_instanciaDe,
 	}
 
 	ptst.RegistraModuloImpl(
