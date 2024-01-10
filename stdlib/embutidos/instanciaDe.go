@@ -3,7 +3,7 @@ package embutidos
 import "github.com/natanfeitosa/portuscript/ptst"
 
 func met_emb_instanciaDe(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-	if err := ptst.VerificaNumeroArgumentos("tamanho", false, args, 2, 2); err != nil {
+	if err := ptst.VerificaNumeroArgumentos("instanciaDe", false, args, 2, 2); err != nil {
 		return nil, err
 	}
 
