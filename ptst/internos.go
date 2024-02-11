@@ -70,6 +70,8 @@ func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 		if desc, ok := obj.(I__obtem__); ok {
 			return desc.O__obtem__(inst, tipo)
 		}
+
+		return obj, nil
 	}
 
 	// FIXME: adicionar a capacidade de chamar o método __obtem_item__ e __obtem__
