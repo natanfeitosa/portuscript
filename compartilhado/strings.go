@@ -23,7 +23,7 @@ func ContemApenasDigitos(str string) bool {
 	return true
 }
 
-func IndiceCaractereParaByte(str string, indice int) int {
+func IndiceCaraterParaByte(str string, indice int) int {
 	byteIndex := 0
 	for i := 0; i < indice; i++ {
 		_, tamanho := utf8.DecodeRuneInString(str[byteIndex:])
@@ -32,8 +32,8 @@ func IndiceCaractereParaByte(str string, indice int) int {
 	return byteIndex
 }
 
-func ObtemLetraPorIndice(str string, indice int) string {
-	byteIndex := IndiceCaractereParaByte(str, indice)
+func ObtemCaraterPorIndice(str string, indice int) string {
+	byteIndex := IndiceCaraterParaByte(str, indice)
 	letra, _ := utf8.DecodeRuneInString(str[byteIndex:])
 	return string(letra)
 }

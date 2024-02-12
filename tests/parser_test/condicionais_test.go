@@ -10,7 +10,7 @@ func TestExpresaoSeSemCorpo(t *testing.T) {
 	esperada := &parser.Programa{}
 	esperada.Declaracoes = []parser.BaseNode{
 		&parser.ExpressaoSe{
-			Condicao: &parser.Identificador{Nome: "Verdadeiro"},
+			Condicao: &parser.ConstanteLiteral{Valor: "Verdadeiro"},
 			Corpo: &parser.Bloco{},
 		},
 	}
@@ -30,11 +30,11 @@ func TestExpresaoSe(t *testing.T) {
 	esperada := &parser.Programa{}
 	esperada.Declaracoes = []parser.BaseNode{
 		&parser.ExpressaoSe{
-			Condicao: &parser.Identificador{Nome: "Verdadeiro"},
+			Condicao: &parser.ConstanteLiteral{Valor: "Verdadeiro"},
 			Corpo: &parser.Bloco{
 				Declaracoes: []parser.BaseNode{
 					&parser.ChamadaFuncao{
-						Identificador: &parser.Identificador{"imprima"},
+						Identificador: &parser.Identificador{Nome: "imprima"},
 						Argumentos: []parser.BaseNode{
 							&parser.TextoLiteral{
 								Valor: "\"Verdadeiro é definitivamente verdadeiro\"",

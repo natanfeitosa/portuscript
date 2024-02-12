@@ -3,19 +3,28 @@ package lexer
 // TokenType representa os tipos de tokens suportados.
 type TokenType int
 
+// Tokens simples
 const (
-	// Tokens simples
-	TokenEOF       TokenType = iota // Fim do arquivo
-	TokenErro                       // Erro léxico
-	TokenNovaLinha                  // \n
+	// Erro léxico
+	TokenErro TokenType = iota
+	// Fim do arquivo
+	TokenFimDeArquivo
+	// nova linha. Ex: \n ou \r\n
+	TokenNovaLinha
 
 	// Identificadores e literais
-	TokenIdentificador // Ex: variavel
-	TokenInteiro       // Ex: 123
-	TokenDecimal       // Ex: 123.4
-	TokenTexto         // Ex: "texto"
+
+	// Ex: variavel
+	TokenIdentificador
+	// Ex: 123
+	TokenInteiro
+	// Ex: 123.4
+	TokenDecimal
+	// Ex: "texto"
+	TokenTexto
 
 	// Palavras-chave
+
 	TokenSe
 	TokenSenao
 	TokenEnquanto
@@ -24,59 +33,119 @@ const (
 	TokenPare
 	TokenContinue
 
-	TokenVerdadeiro // Verdadeiro
-	TokenFalso      // Falso
-	TokenNulo       // Nulo
+	TokenDe
+	TokenImporte
+
+	TokenVerdadeiro
+	TokenFalso
+	TokenNulo
+
+	TokenVar
+	TokenConst
+	TokenFunc
 
 	// Operadores e pontuação
-	TokenIgual           // =
-	TokenMais            // +
-	TokenMenos           // -
-	TokenAsterisco       // *
-	TokenPotencia        // **
-	TokenDivisao         // /
-	TokenDivisaoInteira  // //
-	TokenModulo          // %
-	TokenMenorQue        // <
-	TokenMenorOuIgual    // <=
-	TokenIgualIgual      // ==
-	TokenDiferente       // !=
-	TokenMaiorQue        // >
-	TokenMaiorOuIgual    // >=
-	TokenAbreParenteses  // (
-	TokenFechaParenteses // )
-	TokenPontoEVirgula   // ;
-	TokenVirgula         // ,
-	TokenAbreChaves      // {
-	TokenFechaChaves     // }
-	TokenAbreColchetes      // {
-	TokenFechaColchetes     // }
-	TokenDoisPontos      // :
+
+	// =
+	TokenIgual
+	// +
+	TokenMais
+	// -
+	TokenMenos
+	// *
+	TokenAsterisco
+	// **
+	TokenPotencia
+	// /
+	TokenDivisao
+	// //
+	TokenDivisaoInteira
+	// %
+	TokenModulo
+	// <
+	TokenMenorQue
+	// <=
+	TokenMenorOuIgual
+	// ==
+	TokenIgualIgual
+	// !=
+	TokenDiferente
+	// >
+	TokenMaiorQue
+	// >=
+	TokenMaiorOuIgual
+	// (
+	TokenAbreParenteses
+	// )
+	TokenFechaParenteses
+	// ;
+	TokenPontoEVirgula
+	// ,
+	TokenVirgula
+	// {
+	TokenAbreChaves
+	// }
+	TokenFechaChaves
+	// [
+	TokenAbreColchetes
+	// ]
+	TokenFechaColchetes
+	// :
+	TokenDoisPontos
 
 	// Reatribuicao
-	TokenMaisIgual      // +=
-	TokenMenosIgual     // -=
-	TokenAsteriscoIgual // *=
-	TokenBarraIgual     // /=
+
+	// +=
+	TokenMaisIgual
+	// -=
+	TokenMenosIgual
+	// *=
+	TokenAsteriscoIgual
+	// /=
+	TokenBarraIgual
 
 	// Operadores booleanos
 	TokenBoolOu
 	TokenBoolE
 	TokenBoolNao
 
-	TokenBitABitOu   // |
-	TokenBitABitExOu // ^
-	TokenBitABitE    // &
-	TokenBitABitNao  // ~
+	// |
+	TokenBitABitOu
+	// ^
+	TokenBitABitExOu
+	// &
+	TokenBitABitE
+	// ~
+	TokenBitABitNao
 
-	TokenDeslocEsquerda // <<
-	TokenDeslocDireita  // >>
+	// <<
+	TokenDeslocEsquerda
+	// >>
+	TokenDeslocDireita
 
-	TokenPonto // .
+	// .
+	TokenPonto
 )
 
-// Token representa um token com seu tipo e valor.
+type PosicaoToken struct {
+	Coluna int
+	Linha  int
+	Indice int
+}
+
 type Token struct {
 	Tipo  TokenType
 	Valor string
+
+	Inicio *PosicaoToken
+	Fim    *PosicaoToken
+}
+
+func newToken(tipo TokenType, valor string, inicio, fim *PosicaoToken) *Token {
+	return &Token{
+		tipo,
+		valor,
+		inicio,
+		fim,
+	}
 }

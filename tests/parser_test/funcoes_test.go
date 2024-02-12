@@ -164,7 +164,7 @@ func TestDeclareFuncaoComRetornoVazio(t *testing.T) {
 func TestChamadaFuncaoComArgumentos(t *testing.T) {
 	esperada := &parser.Programa{}
 	chamada := &parser.ChamadaFuncao{
-		Identificador: &parser.Identificador{"nenhumaOperacao"},
+		Identificador: &parser.Identificador{Nome: "nenhumaOperacao"},
 		Argumentos: []parser.BaseNode{
 			&parser.InteiroLiteral{Valor: "2023"},
 			&parser.TextoLiteral{Valor: "\"portuscript\""},
@@ -184,7 +184,7 @@ func TestChamadaFuncaoComArgumentos(t *testing.T) {
 func TestChamadaFuncaoSemArgumentos(t *testing.T) {
 	esperada := &parser.Programa{}
 	chamada := &parser.ChamadaFuncao{
-		Identificador: &parser.Identificador{"nenhumaOperacao"},
+		Identificador: &parser.Identificador{Nome: "nenhumaOperacao"},
 	}
 	esperada.Declaracoes = append(esperada.Declaracoes, chamada)
 

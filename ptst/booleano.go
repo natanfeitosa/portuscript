@@ -68,11 +68,11 @@ func (b Booleano) O__diferente__(a Objeto) (Objeto, error) {
 }
 
 func (b Booleano) O__ou__(a Objeto) (Objeto, error) {
-	return NewBooleano(b || a.(Booleano))
+	return b || a.(Booleano), nil
 }
 
 func (b Booleano) O__e__(a Objeto) (Objeto, error) {
-	return NewBooleano(b && a.(Booleano))
+	return b && a.(Booleano), nil
 }
 
 var _ I__texto__ = (*Booleano)(nil)

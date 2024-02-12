@@ -109,5 +109,13 @@ func (d Decimal) O__divide_inteiro__(b Objeto) (Objeto, error) {
 	return Inteiro(d) / bInt.(Inteiro), nil
 }
 
+func (d Decimal) O__neg__() (Objeto, error) {
+	return -d, nil
+}
+
+func (d Decimal) O__pos__() (Objeto, error) {
+	return +d, nil
+}
+
 var _ I_conversaoEntreTipos = (*Decimal)(nil)
 var _ I_aritmeticaMatematica = (*Decimal)(nil)
