@@ -1,15 +1,43 @@
 package lexer_test
 
 import (
-	"reflect"
+	// "reflect"
+	"fmt"
 	"testing"
 
 	"github.com/natanfeitosa/portuscript/lexer"
 )
 
+func TestFuncaoSimples(t *testing.T) {
+	code := `nenhumaOperacao(2023, "portuscript")`
+
+	lex := lexer.NewLexer(code)
+	tokens := []lexer.Token{
+		{Tipo: lexer.TokenIdentificador, Valor: "nenhumaOperacao"},
+		{Tipo: lexer.TokenAbreParenteses, Valor: "("},
+		{Tipo: lexer.TokenInteiro, Valor: "2023"},
+		{Tipo: lexer.TokenVirgula, Valor: ","},
+		{Tipo: lexer.TokenTexto, Valor: "\"portuscript\""},
+		{Tipo: lexer.TokenFechaParenteses, Valor: ")"},
+	}
+
+	for _, esperado := range tokens {
+		token := lex.ProximoToken()
+		if token.Tipo != esperado.Tipo || token.Valor != esperado.Valor {
+			t.Errorf("Esperado: (%v, %s), Obtido: (%v, %s)", esperado.Tipo, esperado.Valor, token.Tipo, token.Valor)
+		}
+	}
+
+	// Verifica se o último token é EOF.
+	ultimoToken := lex.ProximoToken()
+	if ultimoToken.Tipo != lexer.TokenFimDeArquivo {
+		t.Errorf("Esperado: TokenFimDeArquivo, Obtido: %v", ultimoToken.Tipo)
+	}
+}
+
 func TestLexer(t *testing.T) {
 	input := `
-        var x = 10;
+		var x = 10;
         const PI = 3.1415;
         funcao soma(a, b) {
             retorne a + b;
@@ -32,14 +60,15 @@ func TestLexer(t *testing.T) {
 
 	lex := lexer.NewLexer(input)
 	tokens := []lexer.Token{
-		{Tipo: lexer.TokenIdentificador, Valor: "var"},
+		{Tipo: lexer.TokenNovaLinha, Valor: "\n"},
+		{Tipo: lexer.TokenVar, Valor: "var"},
 		{Tipo: lexer.TokenIdentificador, Valor: "x"},
 		{Tipo: lexer.TokenIgual, Valor: "="},
 		{Tipo: lexer.TokenInteiro, Valor: "10"},
 		{Tipo: lexer.TokenPontoEVirgula, Valor: ";"},
 		{Tipo: lexer.TokenNovaLinha, Valor: "\n"},
 
-		{Tipo: lexer.TokenIdentificador, Valor: "const"},
+		{Tipo: lexer.TokenConst, Valor: "const"},
 		{Tipo: lexer.TokenIdentificador, Valor: "PI"},
 		{Tipo: lexer.TokenIgual, Valor: "="},
 		{Tipo: lexer.TokenDecimal, Valor: "3.1415"},
@@ -138,18 +167,21 @@ func TestLexer(t *testing.T) {
 		{Tipo: lexer.TokenPontoEVirgula, Valor: ";"},
 		{Tipo: lexer.TokenNovaLinha, Valor: "\n"},
 		{Tipo: lexer.TokenFechaChaves, Valor: "}"},
+		{Tipo: lexer.TokenNovaLinha, Valor: "\n"},
 	}
 
 	for _, esperado := range tokens {
 		token := lex.ProximoToken()
-		if !reflect.DeepEqual(token, esperado) {
-			t.Errorf("Esperado: %v, Obtido: %v", esperado, token)
+		if token.Tipo != esperado.Tipo || token.Valor != esperado.Valor {
+			t.Errorf("Esperado: (%v, %s), Obtido: (%v, %s)", esperado.Tipo, esperado.Valor, token.Tipo, token.Valor)
+			fmt.Printf("\ntoken ini: %#v\n", token.Inicio)
+			fmt.Printf("\ntoken fim: %#v\n", token.Fim)
 		}
 	}
 
 	// Verifica se o último token é EOF.
 	ultimoToken := lex.ProximoToken()
-	if ultimoToken.Tipo != lexer.TokenEOF {
-		t.Errorf("Esperado: TokenEOF, Obtido: %v", ultimoToken)
+	if ultimoToken.Tipo != lexer.TokenFimDeArquivo {
+		t.Errorf("Esperado: TokenFimDeArquivo, Obtido: %v", ultimoToken.Tipo)
 	}
 }

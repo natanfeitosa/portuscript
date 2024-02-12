@@ -109,6 +109,14 @@ func (i Inteiro) O__divide_inteiro__(b Objeto) (Objeto, error) {
 	return i / bInt.(Inteiro), nil
 }
 
+func (i Inteiro) O__neg__() (Objeto, error) {
+	return -i, nil
+}
+
+func (i Inteiro) O__pos__() (Objeto, error) {
+	return +i, nil
+}
+
 func (i Inteiro) O__menor_que__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return nil, NewErroF(TipagemErro, "A operação '<' não é suportada entre os tipos '%s' e '%s'", i.Tipo().Nome, b.Tipo().Nome)

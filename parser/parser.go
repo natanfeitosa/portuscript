@@ -10,8 +10,8 @@ import (
 
 type Parser struct {
 	lex          *lexer.Lexer // O lexer original
-	token        lexer.Token
-	proximoToken lexer.Token
+	token        *lexer.Token
+	proximoToken *lexer.Token
 }
 
 func NewParser(lex *lexer.Lexer) *Parser {
@@ -24,29 +24,33 @@ func NewParserFromString(code string) *Parser {
 	return NewParser(lexer.NewLexer(code))
 }
 
+func (p *Parser) fimDeArquivo() bool {
+	return p.token != nil && p.token.Tipo == lexer.TokenFimDeArquivo
+}
+
 func (p *Parser) avancar() {
-	if p.proximoToken.Tipo == 0 && p.token.Tipo == 0 {
+	if p.token == nil {
 		p.token = p.lex.ProximoToken()
-	} else {
-		p.token = p.proximoToken
+		p.proximoToken = p.lex.ProximoToken()
+		return
+	}
+
+	p.token = p.proximoToken
+
+	if p.token.Tipo != lexer.TokenFimDeArquivo {
+		p.proximoToken = p.lex.ProximoToken()
 	}
 
 	// fmt.Printf("\ntoken: %#v\nlex: %#v\n", p.token, p.lex)
-
-	p.proximoToken = p.lex.ProximoToken()
 }
 
-func (p *Parser) consume(token string) error {
+func (p *Parser) consome(token string) error {
 	if p.token.Valor != token {
 		return fmt.Errorf("Era esperado o token '%v', mas no lugar foi encontrado '%v'.", token, p.token.Valor)
 	}
 
 	p.avancar()
 	return nil
-}
-
-func (p *Parser) isEof() bool {
-	return p.token.Tipo == lexer.TokenEOF
 }
 
 func (p *Parser) Parse() (*Programa, error) {
@@ -62,7 +66,7 @@ func (p *Parser) Parse() (*Programa, error) {
 func (p *Parser) parseDeclaracoes() ([]BaseNode, error) {
 	var declaracoes []BaseNode
 
-	for !p.isEof() && p.token.Tipo != lexer.TokenFechaChaves {
+	for !p.fimDeArquivo() && p.token.Tipo != lexer.TokenFechaChaves {
 		if p.token.Tipo != lexer.TokenNovaLinha {
 			declaracao, err := p.parseDeclaracao()
 
@@ -80,55 +84,35 @@ func (p *Parser) parseDeclaracoes() ([]BaseNode, error) {
 }
 
 func (p *Parser) parseDeclaracao() (BaseNode, error) {
-	val := p.token.Valor
-
-	if val == "const" || val == "var" {
+	switch p.token.Tipo {
+	case lexer.TokenVar, lexer.TokenConst:
 		return p.parseVariavel()
-	}
-
-	if !IsKeyword(val) {
+	case lexer.TokenRetorne:
+		return p.parseRetorne()
+	case lexer.TokenDe:
+		return p.parseImporteDe()
+	case lexer.TokenFunc:
+		return p.parseFuncao()
+	case lexer.TokenSe:
+		return p.parseExpressaoSe()
+	case lexer.TokenEnquanto:
+		return p.parseEnquanto()
+	case lexer.TokenPare:
+		p.avancar()
+		return &PareNode{}, nil
+	case lexer.TokenContinue:
+		p.avancar()
+		return &ContinueNode{}, nil
+	case lexer.TokenPara:
+		return p.parseBlocoPara()
+	default:
 		proximo := p.proximoToken.Tipo
 		if proximo >= lexer.TokenMaisIgual && proximo <= lexer.TokenBarraIgual || proximo == lexer.TokenIgual {
 			return p.parseReatribuicao()
 		}
-	}
 
-	if val == "retorne" {
-		return p.parseRetorne()
+		return p.parseExpressao()
 	}
-
-	// FIXME: adicionar importaçao
-	if val == "de" {
-		return p.parseImporteDe()
-	}
-
-	if val == "func" {
-		return p.parseFuncao()
-	}
-
-	if val == "se" {
-		return p.parseExpressaoSe()
-	}
-
-	if val == "enquanto" {
-		return p.parseEnquanto()
-	}
-
-	if val == "pare" {
-		p.avancar()
-		return &PareNode{}, nil
-	}
-
-	if val == "continue" {
-		p.avancar()
-		return &ContinueNode{}, nil
-	}
-
-	if val == "para" {
-		return p.parseBlocoPara()
-	}
-
-	return p.parseExpressao()
 }
 
 func (p *Parser) parseImporteDe() (*ImporteDe, error) {
@@ -140,7 +124,7 @@ func (p *Parser) parseImporteDe() (*ImporteDe, error) {
 	decl := &ImporteDe{Caminho: &TextoLiteral{p.token.Valor}}
 	p.avancar()
 
-	if err := p.consume("importe"); err != nil {
+	if err := p.consome("importe"); err != nil {
 		return nil, err
 	}
 
@@ -161,7 +145,7 @@ func (p *Parser) parseImporteDe() (*ImporteDe, error) {
 		break
 	}
 
-	if err := p.consume(";"); err != nil {
+	if err := p.consome(";"); err != nil {
 		return nil, err
 	}
 
@@ -169,8 +153,8 @@ func (p *Parser) parseImporteDe() (*ImporteDe, error) {
 }
 
 func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
-	p.consume("para")
-	if err := p.consume("("); err != nil {
+	p.consome("para")
+	if err := p.consome("("); err != nil {
 		return nil, err
 	}
 
@@ -178,7 +162,7 @@ func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
 	id := p.token.Valor
 	p.avancar()
 
-	if err := p.consume("em"); err != nil {
+	if err := p.consome("em"); err != nil {
 		return nil, err
 	}
 
@@ -186,7 +170,7 @@ func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := p.consume(")"); err != nil {
+	if err := p.consome(")"); err != nil {
 		return nil, err
 	}
 
@@ -199,8 +183,8 @@ func (p *Parser) parseBlocoPara() (*BlocoPara, error) {
 }
 
 func (p *Parser) parseExpressaoSe() (*ExpressaoSe, error) {
-	p.consume("se")
-	if err := p.consume("("); err != nil {
+	p.consome("se")
+	if err := p.consome("("); err != nil {
 		return nil, err
 	}
 
@@ -210,7 +194,7 @@ func (p *Parser) parseExpressaoSe() (*ExpressaoSe, error) {
 	}
 
 	expressaoSe := &ExpressaoSe{Condicao: condicao}
-	if err := p.consume(")"); err != nil {
+	if err := p.consome(")"); err != nil {
 		return nil, err
 	}
 
@@ -243,11 +227,11 @@ func (p *Parser) parseExpressaoSe() (*ExpressaoSe, error) {
 }
 
 func (p *Parser) parseEnquanto() (*Enquanto, error) {
-	if err := p.consume("enquanto"); err != nil {
+	if err := p.consome("enquanto"); err != nil {
 		return nil, err
 	}
 
-	if err := p.consume("("); err != nil {
+	if err := p.consome("("); err != nil {
 		return nil, err
 	}
 
@@ -256,7 +240,7 @@ func (p *Parser) parseEnquanto() (*Enquanto, error) {
 		return nil, err
 	}
 
-	if err := p.consume(")"); err != nil {
+	if err := p.consome(")"); err != nil {
 		return nil, err
 	}
 
@@ -269,7 +253,7 @@ func (p *Parser) parseEnquanto() (*Enquanto, error) {
 }
 
 func (p *Parser) parseRetorne() (*RetorneNode, error) {
-	if err := p.consume("retorne"); err != nil {
+	if err := p.consome("retorne"); err != nil {
 		return nil, err
 	}
 
@@ -283,7 +267,7 @@ func (p *Parser) parseRetorne() (*RetorneNode, error) {
 		}
 
 		retorne.Expressao = expressao
-		if err := p.consume(";"); err != nil {
+		if err := p.consome(";"); err != nil {
 			return nil, err
 		}
 	}
@@ -310,7 +294,7 @@ func (p *Parser) parseReatribuicao() (*Reatribuicao, error) {
 
 	reatribuicao.Expressao = expressao
 
-	if err := p.consume(";"); err != nil {
+	if err := p.consome(";"); err != nil {
 		return nil, err
 	}
 
@@ -318,7 +302,7 @@ func (p *Parser) parseReatribuicao() (*Reatribuicao, error) {
 }
 
 func (p *Parser) parseFuncao() (*DeclFuncao, error) {
-	if err := p.consume("func"); err != nil {
+	if err := p.consome("func"); err != nil {
 		return nil, err
 	}
 
@@ -328,7 +312,7 @@ func (p *Parser) parseFuncao() (*DeclFuncao, error) {
 	funcao.Nome = p.token.Valor
 	p.avancar()
 
-	if err := p.consume("("); err != nil {
+	if err := p.consome("("); err != nil {
 		return nil, err
 	}
 
@@ -350,7 +334,7 @@ func (p *Parser) parseFuncao() (*DeclFuncao, error) {
 		}
 	}
 
-	if err := p.consume(")"); err != nil {
+	if err := p.consome(")"); err != nil {
 		return nil, err
 	}
 
@@ -369,7 +353,7 @@ func (p *Parser) parseFuncao() (*DeclFuncao, error) {
 func (p *Parser) parseBloco() (*Bloco, error) {
 	bloco := &Bloco{}
 
-	if err := p.consume("{"); err != nil {
+	if err := p.consome("{"); err != nil {
 		return nil, err
 	}
 
@@ -381,7 +365,7 @@ func (p *Parser) parseBloco() (*Bloco, error) {
 
 	bloco.Declaracoes = decl
 
-	if err := p.consume("}"); err != nil {
+	if err := p.consome("}"); err != nil {
 		return nil, err
 	}
 
@@ -397,7 +381,7 @@ func (p *Parser) parseDeclFuncaoParametro() (*DeclFuncaoParametro, error) {
 	p.avancar()
 
 	if p.token.Tipo == lexer.TokenDoisPontos {
-		if err := p.consume(":"); err != nil {
+		if err := p.consome(":"); err != nil {
 			return nil, err
 		}
 
@@ -406,7 +390,7 @@ func (p *Parser) parseDeclFuncaoParametro() (*DeclFuncaoParametro, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenIgual {
-		if err := p.consume("="); err != nil {
+		if err := p.consome("="); err != nil {
 			return nil, err
 		}
 
@@ -442,7 +426,7 @@ func (p *Parser) parseVariavel() (*DeclVar, error) {
 	p.avancar()
 
 	if p.token.Tipo == lexer.TokenDoisPontos {
-		if err := p.consume(":"); err != nil {
+		if err := p.consome(":"); err != nil {
 			return nil, err
 		}
 
@@ -453,7 +437,7 @@ func (p *Parser) parseVariavel() (*DeclVar, error) {
 	// FIXME: lança um erro se não tiver tipo definido e/ou for uma constante
 
 	if p.token.Tipo == lexer.TokenIgual {
-		if err := p.consume("="); err != nil {
+		if err := p.consome("="); err != nil {
 			return nil, err
 		}
 
@@ -466,7 +450,7 @@ func (p *Parser) parseVariavel() (*DeclVar, error) {
 		decl.Inicializador = expressao
 	}
 
-	if err := p.consume(";"); err != nil {
+	if err := p.consome(";"); err != nil {
 		return nil, err
 	}
 
@@ -485,7 +469,7 @@ func (p *Parser) parseDisjuncao() (BaseNode, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenBoolOu {
-		p.consume("ou")
+		p.consome("ou")
 		direita, err := p.parseConjuncao()
 
 		if err != nil {
@@ -506,7 +490,7 @@ func (p *Parser) parseConjuncao() (BaseNode, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenBoolE {
-		p.consume("e")
+		p.consome("e")
 		direita, err := p.parseInversao()
 
 		if err != nil {
@@ -520,15 +504,15 @@ func (p *Parser) parseConjuncao() (BaseNode, error) {
 }
 
 func (p *Parser) parseInversao() (BaseNode, error) {
-	if p.token.Tipo == lexer.TokenBoolOu {
-		p.consume("ou")
+	if p.token.Tipo == lexer.TokenBoolNao {
+		p.consome("nao")
 		operacao, err := p.parseInversao()
 
 		if err != nil {
 			return nil, err
 		}
 
-		return &OpUnaria{"ou", operacao}, nil
+		return &OpUnaria{"nao", operacao}, nil
 	}
 
 	return p.parseComparacao()
@@ -568,7 +552,7 @@ func (p *Parser) parseBitABitOu() (BaseNode, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenBitABitOu {
-		p.consume("|")
+		p.consome("|")
 		direita, err := p.parseBitABitExOu()
 
 		if err != nil {
@@ -589,7 +573,7 @@ func (p *Parser) parseBitABitExOu() (BaseNode, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenBitABitExOu {
-		p.consume("^")
+		p.consome("^")
 		direita, err := p.parseBitABitE()
 
 		if err != nil {
@@ -610,7 +594,7 @@ func (p *Parser) parseBitABitE() (BaseNode, error) {
 	}
 
 	if p.token.Tipo == lexer.TokenBitABitE {
-		p.consume("&")
+		p.consome("&")
 		direita, err := p.parseDeslocamento()
 
 		if err != nil {
@@ -702,6 +686,7 @@ func (p *Parser) parseFator() (BaseNode, error) {
 
 	switch token.Tipo {
 	case lexer.TokenMais, lexer.TokenMenos, lexer.TokenBitABitNao:
+		p.avancar()
 		expressao, err := p.parseFator()
 
 		if err != nil {
@@ -755,7 +740,7 @@ func (p *Parser) parsePrimario() (BaseNode, error) {
 	if p.token.Tipo == lexer.TokenAbreParenteses {
 		chamada := &ChamadaFuncao{Identificador: atom}
 
-		if err := p.consume("("); err != nil {
+		if err := p.consome("("); err != nil {
 			return nil, err
 		}
 
@@ -778,7 +763,7 @@ func (p *Parser) parsePrimario() (BaseNode, error) {
 			}
 		}
 
-		if err := p.consume(")"); err != nil {
+		if err := p.consome(")"); err != nil {
 			return nil, err
 		}
 
@@ -791,9 +776,10 @@ func (p *Parser) parsePrimario() (BaseNode, error) {
 func (p *Parser) parseAtomo() (BaseNode, error) {
 	token := p.token
 	switch token.Tipo {
-	// case lexer.TokenVerdadeiro, lexer.TokenFalso, lexer.TokenNulo:
-	// 	p.avancar()
-	// 	return &ConstanteLiteral{token.Valor}, nil
+	case lexer.TokenVerdadeiro, lexer.TokenFalso, lexer.TokenNulo:
+		p.avancar()
+		// return &ConstanteLiteral{token.Valor}, nil
+		return &Identificador{token.Valor}, nil
 	case lexer.TokenTexto:
 		p.avancar()
 		return &TextoLiteral{token.Valor}, nil

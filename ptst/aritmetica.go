@@ -191,3 +191,29 @@ func E(a, b Objeto) (Objeto, error) {
 
 	return nil, NewErroF(TipagemErro, "A operação 'e' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
+
+func Neg(a Objeto) (Objeto, error) {
+	if A, ok := a.(I__neg__); ok {
+		res, err := A.O__neg__()
+		if err != nil {
+			return nil, err
+		}
+		
+		return res, nil
+	}
+
+	return nil, NewErroF(TipagemErro, "A operação '-' não é suportada para o tipo '%s'", a.Tipo().Nome)
+}
+
+func Pos(a Objeto) (Objeto, error) {
+	if A, ok := a.(I__pos__); ok {
+		res, err := A.O__pos__()
+		if err != nil {
+			return nil, err
+		}
+		
+		return res, nil
+	}
+
+	return nil, NewErroF(TipagemErro, "A operação '+' não é suportada para o tipo '%s'", a.Tipo().Nome)
+}

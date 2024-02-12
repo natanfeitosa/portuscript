@@ -67,6 +67,8 @@ func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
 		return i.visiteListaLiteral(node.(*parser.ListaLiteral))
 	case *parser.OpBinaria:
 		return i.visiteOpBinaria(node.(*parser.OpBinaria))
+	case *parser.OpUnaria:
+		return i.visiteOpUnaria(node.(*parser.OpUnaria))
 	case *parser.Identificador:
 		return i.visiteIdentificador(node.(*parser.Identificador))
 	case *parser.Reatribuicao:
@@ -209,6 +211,23 @@ func (i *Interpretador) visiteListaLiteral(node *parser.ListaLiteral) (Objeto, e
 		lista.Adiciona(item)
 	}
 	return lista, nil
+}
+
+func (i *Interpretador) visiteOpUnaria(node *parser.OpUnaria) (Objeto, error) {
+	operando, err := i.visite(node.Expressao)
+
+	if err != nil {
+		return nil, err
+	}
+
+	switch node.Operador {
+	case "-":
+		return Neg(operando)
+	case "+":
+		return Pos(operando)
+	}
+
+	return nil, NewErroF(TipagemErro, "A operação '%s' não é suportada para o tipo '%s'", node.Operador, operando.Tipo().Nome)
 }
 
 func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) {
