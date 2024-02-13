@@ -29,3 +29,5 @@ portuscript.exe
 # Dinamicamente gerados para benchmark
 benchmark
 main_test.go
+
+bin
