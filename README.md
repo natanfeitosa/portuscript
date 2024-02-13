@@ -14,26 +14,20 @@
 - **Simples e Poderosa**: Projetada para facilitar o aprendizado de programação, mantendo a capacidade de lidar com tarefas complexas.
 - **Comunidade Ativa**: Contribua e faça parte de uma comunidade que apoia o crescimento e desenvolvimento do PortuScript.
 
-## Como Começar
+## Instalação
 
-### Baixar Binários (Recomendado)
+### Instalar versão mais recente
 
-Os binários pré-compilados estão disponíveis para os seguintes sistemas operacionais e arquiteturas:
-
-- Darwin (macOS)
-- Linux
-- Windows
-
-Navege até a [página de lançamentos](https://github.com/natanfeitosa/portuscript/releases) e escolha o binário correspondente ao seu sistema operacional e arquitetura, faça o download e comece a usar o PortuScript imediatamente.
-
-### Compilar a partir do Código Fonte
-
-Se preferir compilar a partir do código fonte, certifique-se de ter o [Go](https://golang.org/doc/install) instalado. Em seguida, execute os seguintes comandos:
-
+### Com Bash
 ```bash
-git clone https://github.com/natanfeitosa/portuscript.git
-cd portuscript
-go build
+curl -fsSL https://raw.githubusercontent.com/natanfeitosa/portuscript/main/instalar.sh | bash
+```
+
+### Instalar versão específica
+
+### Com Bash
+```bash
+curl -fsSL https://raw.githubusercontent.com/natanfeitosa/portuscript/main/instalar.sh | bash -s v0.1.0
 ```
 
 ## CLI - Utilização Básica
