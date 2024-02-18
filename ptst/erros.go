@@ -14,7 +14,8 @@ var BaseErro = TipoObjeto.NewTipo(
 )
 
 var (
-	TipoErro         = BaseErro.NewTipo("Erro", "Base comum para todos os erros que não são de saída.")
+	TipoErro = BaseErro.NewTipo("Erro", "Base comum para todos os erros que não são de saída.")
+
 	SintaxeErro      = TipoErro.NewTipo("SintaxeErro", "Sintaxe Invalida.")
 	ReatribuicaoErro = TipoErro.NewTipo("ReatribuicaoErro", "Proibido redeclarar.")
 	AtributoErro     = TipoErro.NewTipo("AtributoErro", "Atributo não encontrado.")
@@ -23,8 +24,11 @@ var (
 	ImportacaoErro   = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
 	ValorErro        = TipoErro.NewTipo("ValorErro", "O valor é inapropriádo ou sua ocorrencia não existe")
 	IndiceErro       = TipoErro.NewTipo("IndiceErro", "O indice está fora do range aceito")
-	RuntimeErro       = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
+	RuntimeErro      = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
 	FimIteracao      = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
+
+	SistemaErro              = TipoErro.NewTipo("SistemaErro", "Erro relacionado ao sistema operacional")
+	ArquivoNaoEncontradoErro = SistemaErro.NewTipo("ArquivoNaoEncontradoErro", "O arquivo não pôde ser encontrado")
 
 	// Apenas para fins de controle, não são necessariamente erros
 	ErroContinue = TipoErro.NewTipo("ErroContinue", "Erro utilizado para representar a instrução 'continue' em loops")
@@ -54,5 +58,6 @@ func (e *Erro) AdicionarContexto(contexto *Contexto) {
 func (e *Erro) Error() string {
 	format := "Arquivo %v:\n  %v: %v"
 
-	return fmt.Sprintf(format, e.Contexto.Caminho, e.Base.Nome, e.Mensagem.(Texto))
+	// FIXME: corrigir o caminho
+	return fmt.Sprintf(format, "e.Contexto.Caminho", e.Base.Nome, e.Mensagem.(Texto))
 }

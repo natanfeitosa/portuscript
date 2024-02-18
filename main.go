@@ -61,18 +61,25 @@ func main() {
 		Long:    strings.ReplaceAll(strings.Trim(LongDescription, "\n "), "\t", "    "),
 		Version: Version,
 		Run: func(cmd *cobra.Command, args []string) {
+			ctx := ptst.NewContexto(ptst.OpcsContexto{CaminhosPadrao: []string{"."}})
+			defer ctx.Terminar()
+
 			if len(args) > 0 {
-				ptst.InicializaDeArquivo(args[0])
+				_, err := ptst.ExecutarArquivo(ctx, "", args[0], ".", false)
+
+				if err != nil {
+					ptst.LancarErro(err)
+				}
 				return
 			}
 
-			if codigo != "" {
-				// fmt.Printf("codigo: %v\n", codigo)
-				ptst.InicializaDeString(codigo)
-				return
-			}
+			// if codigo != "" {
+			// 	// fmt.Printf("codigo: %v\n", codigo)
+			// 	ptst.InicializaDeString(codigo)
+			// 	return
+			// }
 
-			playground.Inicializa(Version, Datetime, Commit)
+			playground.Inicializa(ctx, Version, Datetime, Commit)
 		},
 	}
 

@@ -24,7 +24,7 @@ func init() {
 		&ptst.ModuloImpl{
 			Info: ptst.ModuloInfo{
 				Nome: "matematica",
-				CaminhoModulo: "stdlib/matematica",
+				Arquivo: "stdlib/matematica",
 			},
 			Constantes: constantes,
 			Metodos:    metodos,
