@@ -2,20 +2,14 @@ package ptst
 
 import (
 	"sync"
-)
 
-type ModuloFlags int32
-
-const (
-	ModuloCompartilhavel ModuloFlags = iota
-	ModuloEntrada                    // O módulo/arquivo de entrada usado na linha de comando
+	"github.com/natanfeitosa/portuscript/parser"
 )
 
 type ModuloInfo struct {
 	Nome          string // Disponível em __nome__
 	Doc           string // Disponível em __doc__
-	CaminhoModulo string // Caminho relativo (talvez?) referente ao módulo. Disponível em __caminho__
-	Flags         ModuloFlags
+	Arquivo string // Caminho relativo (talvez?) referente ao módulo. Disponível em __caminho__
 }
 
 type ModuloImpl struct {
@@ -25,6 +19,8 @@ type ModuloImpl struct {
 	// Talvez os dois próximos sejam um pouco redundante
 	Constantes Mapa
 	Variaveis  Mapa
+
+	Ast parser.BaseNode
 }
 
 type GerenciadorModulos struct {
@@ -60,6 +56,7 @@ func ObtemImplModulo(nome string) *ModuloImpl {
 type Modulo struct {
 	Impl         *ModuloImpl
 	Contexto     *Contexto
+	Escopo       *Escopo
 	acessoRapido Mapa
 }
 
@@ -69,19 +66,19 @@ func (m *Modulo) Tipo() *Tipo {
 	return TipoModulo
 }
 
-func (m *Modulo) O__obtem_attributo__(nome string) (Objeto, error) {
-	if objeto, ok := m.acessoRapido[nome]; ok {
-		return objeto, nil
+func (m *Modulo) O__obtem_attributo__(nome string) (objeto Objeto, err error) {
+	ok := false
+	if objeto, ok = m.acessoRapido[nome]; ok {
+		return
 	}
 
-	simbolo, err := m.Contexto.ObterSimbolo(nome)
+	objeto, err = m.Escopo.ObterValor(nome)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	objeto := simbolo.Valor
 	m.acessoRapido[nome] = objeto
-	return objeto, nil
+	return
 }
 
 var _ I__obtem_attributo__ = (*Modulo)(nil)
@@ -99,34 +96,33 @@ func (tabela *TabelaModulos) NewModulo(ctx *Contexto, impl *ModuloImpl) (*Modulo
 	nome := impl.Info.Nome
 	modulo := &Modulo{
 		Impl:         impl,
-		Contexto:     NewContexto(Texto(impl.Info.CaminhoModulo)),
+		Contexto:     ctx,
+		Escopo:       NewEscopo(),
 		acessoRapido: NewMapaVazio(),
 	}
 
 	if nome == "" {
 		nome = "__entrada__"
-		modulo.Impl.Info.Flags = ModuloEntrada
 	}
 
-	// modulo.Contexto.Caminho = Texto(impl.Info.CaminhoModulo)
-	modulo.Contexto.Globais.DefinirSimbolo(NewConstSimbolo("__nome__", Texto(nome)))
-	modulo.Contexto.Globais.DefinirSimbolo(NewConstSimbolo("__caminho__", Texto(impl.Info.CaminhoModulo)))
-	modulo.Contexto.Globais.DefinirSimbolo(NewConstSimbolo("__doc__", Texto(impl.Info.Doc)))
+	modulo.Escopo.DefinirSimbolo(NewConstSimbolo("__nome__", Texto(nome)))
+	modulo.Escopo.DefinirSimbolo(NewConstSimbolo("__arquivo__", Texto(impl.Info.Arquivo)))
+	modulo.Escopo.DefinirSimbolo(NewConstSimbolo("__doc__", Texto(impl.Info.Doc)))
 
 	for _, metodo := range impl.Metodos {
 		// metodo.Modulo = modulo
 		instMetodo := new(Metodo)
 		*instMetodo = *metodo
 		instMetodo.Modulo = modulo
-		modulo.Contexto.Globais.DefinirSimbolo(NewVarSimbolo(metodo.Nome, instMetodo))
+		modulo.Escopo.DefinirSimbolo(NewVarSimbolo(metodo.Nome, instMetodo))
 	}
 
 	for nome, valor := range impl.Constantes {
-		modulo.Contexto.Globais.DefinirSimbolo(NewConstSimbolo(string(nome), valor))
+		modulo.Escopo.DefinirSimbolo(NewConstSimbolo(string(nome), valor))
 	}
 
 	for nome, valor := range impl.Variaveis {
-		modulo.Contexto.Globais.DefinirSimbolo(NewVarSimbolo(string(nome), valor))
+		modulo.Escopo.DefinirSimbolo(NewVarSimbolo(string(nome), valor))
 	}
 
 	tabela.modulos[nome] = modulo

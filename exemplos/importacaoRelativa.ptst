@@ -1,0 +1,8 @@
+de "./importacao" importe darCor;
+
+imprima()
+imprima("Algum teste:", darCor("OLA"))
+imprima()
+
+imprima(__arquivo__)
+imprima(__nome__)

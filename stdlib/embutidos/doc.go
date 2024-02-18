@@ -8,17 +8,16 @@ func met_emb_doc(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 	}
 
 	arg := args[0]
-	imp, err := mod.(*ptst.Modulo).Contexto.ObterSimbolo("imprima")
-
+	imp, err := mod.(*ptst.Modulo).Escopo.ObterValor("imprima")
 	if err != nil {
 		return nil, err
 	}
 
 	if obj, ok := arg.(ptst.I_ObtemDoc); ok {
-		return ptst.Chamar(imp.Valor, ptst.Tupla{ptst.Texto(obj.ObtemDoc())})
+		return ptst.Chamar(imp, ptst.Tupla{ptst.Texto(obj.ObtemDoc())})
 	}
 
-	return ptst.Chamar(imp.Valor, ptst.Tupla{ptst.Texto(arg.Tipo().ObtemDoc())})
+	return ptst.Chamar(imp, ptst.Tupla{ptst.Texto(arg.Tipo().ObtemDoc())})
 }
 
 var _emb_doc = ptst.NewMetodoOuPanic(

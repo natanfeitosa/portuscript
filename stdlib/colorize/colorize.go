@@ -32,7 +32,7 @@ func init() {
 		&ptst.ModuloImpl{
 			Info: ptst.ModuloInfo{
 				Nome:          "colorize",
-				CaminhoModulo: "stdlib/colorize",
+				Arquivo: "stdlib/colorize",
 			},
 			Constantes: constantes,
 			Metodos:    metodos,

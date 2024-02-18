@@ -18,7 +18,7 @@ func init() {
 		&ptst.ModuloImpl{
 			Info: ptst.ModuloInfo{
 				Nome:          "sistema",
-				CaminhoModulo: "stdlib/sistema",
+				Arquivo: "stdlib/sistema",
 			},
 			Constantes: constantes,
 			Metodos:    metodos,

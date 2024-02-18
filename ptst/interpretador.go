@@ -7,8 +7,24 @@ import (
 type Interpretador struct {
 	Ast          parser.BaseNode
 	Contexto     *Contexto
-	Caminho      Texto
+	Escopo       *Escopo
 	ValorRetorno Objeto
+}
+
+func (i *Interpretador) entrarNoEscopo(escopo *Escopo) {
+	if escopo == nil {
+		escopo = i.Escopo.NewEscopo()
+	}
+
+	if escopo.Pai == nil && i.Escopo != nil {
+		escopo.Pai = i.Escopo
+	}
+
+	i.Escopo = escopo
+}
+
+func (i *Interpretador) sairDoEscopo() {
+	i.Escopo = i.Escopo.Pai
 }
 
 func (i *Interpretador) Inicializa() (Objeto, error) {
@@ -47,50 +63,50 @@ func (i *Interpretador) Visite(nodes []parser.BaseNode) (Objeto, error) {
 	return resultado, nil
 }
 
-func (i *Interpretador) visite(node parser.BaseNode) (Objeto, error) {
-	switch node.(type) {
+func (i *Interpretador) visite(astNode parser.BaseNode) (Objeto, error) {
+	switch node := astNode.(type) {
 	case *parser.DeclVar:
-		return i.visiteDeclVar(node.(*parser.DeclVar))
+		return i.visiteDeclVar(node)
 	case *parser.DeclFuncao:
-		return i.visiteDeclFuncao(node.(*parser.DeclFuncao))
+		return i.visiteDeclFuncao(node)
 	case *parser.ChamadaFuncao:
-		return i.visiteChamadaFuncao(node.(*parser.ChamadaFuncao))
+		return i.visiteChamadaFuncao(node)
 	case *parser.TextoLiteral:
-		return i.visiteTextoLiteral(node.(*parser.TextoLiteral))
+		return i.visiteTextoLiteral(node)
 	case *parser.InteiroLiteral:
-		return i.visiteInteiroLiteral(node.(*parser.InteiroLiteral))
+		return i.visiteInteiroLiteral(node)
 	case *parser.DecimalLiteral:
-		return i.visiteDecimalLiteral(node.(*parser.DecimalLiteral))
+		return i.visiteDecimalLiteral(node)
 	case *parser.TuplaLiteral:
-		return i.visiteTuplaLiteral(node.(*parser.TuplaLiteral))
+		return i.visiteTuplaLiteral(node)
 	case *parser.ListaLiteral:
-		return i.visiteListaLiteral(node.(*parser.ListaLiteral))
+		return i.visiteListaLiteral(node)
 	case *parser.OpBinaria:
-		return i.visiteOpBinaria(node.(*parser.OpBinaria))
+		return i.visiteOpBinaria(node)
 	case *parser.OpUnaria:
-		return i.visiteOpUnaria(node.(*parser.OpUnaria))
+		return i.visiteOpUnaria(node)
 	case *parser.Identificador:
-		return i.visiteIdentificador(node.(*parser.Identificador))
+		return i.visiteIdentificador(node)
 	case *parser.Reatribuicao:
-		return i.visiteReatribuicao(node.(*parser.Reatribuicao))
+		return i.visiteReatribuicao(node)
 	case *parser.ExpressaoSe:
-		return i.visiteExpressaoSe(node.(*parser.ExpressaoSe))
+		return i.visiteExpressaoSe(node)
 	case *parser.Bloco:
-		return i.visiteBloco(node.(*parser.Bloco))
+		return i.visiteBloco(node)
 	case *parser.RetorneNode:
-		return i.visiteRetorneNode(node.(*parser.RetorneNode))
+		return i.visiteRetorneNode(node)
 	case *parser.Enquanto:
-		return i.visiteEnquanto(node.(*parser.Enquanto))
+		return i.visiteEnquanto(node)
 	case *parser.AcessoMembro:
-		return i.visiteAcessoMembro(node.(*parser.AcessoMembro))
+		return i.visiteAcessoMembro(node)
 	case *parser.BlocoPara:
-		return i.visiteBlocoPara(node.(*parser.BlocoPara))
+		return i.visiteBlocoPara(node)
 	case *parser.PareNode:
-		return i.visitePareNode(node.(*parser.PareNode))
+		return i.visitePareNode(node)
 	case *parser.ContinueNode:
-		return i.visiteContinueNode(node.(*parser.ContinueNode))
+		return i.visiteContinueNode(node)
 	case *parser.ImporteDe:
-		return i.visiteImporteDe(node.(*parser.ImporteDe))
+		return i.visiteImporteDe(node)
 	}
 
 	return nil, nil
@@ -115,13 +131,10 @@ func (i *Interpretador) visiteDeclVar(node *parser.DeclVar) (Objeto, error) {
 	simbolo := NewVarSimbolo(node.Nome, valor)
 
 	if node.Constante {
-		simbolo.Flag = SimboloConstanteFlag
+		simbolo.Constante = true
 	}
 
-	err := i.Contexto.DefinirSimboloLocal(simbolo)
-
-	if err != nil {
-		err.(*Erro).AdicionarContexto(i.Contexto)
+	if err := i.Escopo.DefinirSimbolo(simbolo); err != nil {
 		return nil, err
 	}
 
@@ -130,17 +143,13 @@ func (i *Interpretador) visiteDeclVar(node *parser.DeclVar) (Objeto, error) {
 
 // FIXME: Isso vai funcionar?
 func (i *Interpretador) visiteDeclFuncao(node *parser.DeclFuncao) (Objeto, error) {
-	funcao := NewFuncao(node.Nome, node.Corpo, i.Contexto)
+	funcao := NewFuncao(node.Nome, node.Corpo, i.Contexto, i.Escopo)
 
 	for _, param := range node.Parametros {
 		funcao.args = append(funcao.args, Texto(param.Nome))
 	}
 
-	simbolo := NewVarSimbolo(node.Nome, funcao)
-	simbolo.Flag = SimboloFuncaoFlag
-
-	err := i.Contexto.DefinirSimboloLocal(simbolo)
-
+	err := i.Escopo.DefinirSimbolo(NewVarSimbolo(node.Nome, funcao))
 	if err != nil {
 		return nil, err
 	}
@@ -276,26 +285,27 @@ func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) 
 }
 
 func (i *Interpretador) visiteIdentificador(node *parser.Identificador) (Objeto, error) {
-	simbolo, err := i.Contexto.ObterSimbolo(node.Nome)
+	objeto, err := i.Escopo.ObterValor(node.Nome)
 
 	if err != nil {
-		err.(*Erro).AdicionarContexto(i.Contexto)
+		if objeto, err = i.Contexto.Modulos.Embutidos.O__obtem_attributo__(node.Nome); err == nil {
+			return objeto, nil
+		}
+
 		return nil, err
 	}
 
-	return simbolo.Valor, nil
+	return objeto, nil
 }
 
 func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, error) {
 	var direita, esquerda, valor Objeto
 	var err error
 
-	simbolo, err := i.Contexto.ObterSimbolo(node.Nome)
+	esquerda, err = i.Escopo.ObterValor(node.Nome)
 	if err != nil {
 		return nil, err
 	}
-
-	esquerda = simbolo.Valor
 
 	if direita, err = i.visite(node.Expressao); err != nil {
 		return nil, err
@@ -321,7 +331,7 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 		return nil, err
 	}
 
-	if err = i.Contexto.RedefinirSimbolo(node.Nome, valor); err != nil {
+	if err = i.Escopo.RedefinirValor(node.Nome, valor); err != nil {
 		return nil, err
 	}
 
@@ -346,17 +356,14 @@ func (i *Interpretador) visiteExpressaoSe(node *parser.ExpressaoSe) (Objeto, err
 }
 
 func (i *Interpretador) visiteBloco(node *parser.Bloco) (Objeto, error) {
-	contextoRaiz := i.Contexto
-	i.Contexto = i.Contexto.NewContexto()
+	i.entrarNoEscopo(nil)
+	defer i.sairDoEscopo()
 
 	for _, decl := range node.Declaracoes {
 		if _, err := i.visite(decl); err != nil {
 			return nil, err
 		}
 	}
-
-	i.Contexto.Terminar()
-	i.Contexto = contextoRaiz
 	return nil, nil
 }
 
@@ -423,9 +430,9 @@ func (i *Interpretador) visiteAcessoMembro(node *parser.AcessoMembro) (Objeto, e
 
 func (i *Interpretador) visiteBlocoPara(node *parser.BlocoPara) (Objeto, error) {
 	// FIXME: isso provavelmente não é muito eficiente e correto
-	i.Contexto.DefinirSimboloLocal(NewVarSimbolo(node.Identificador, Nulo))
+	i.Escopo.DefinirSimbolo(NewVarSimbolo(node.Identificador, Nulo))
 	defer func() {
-		i.Contexto.ExcluirSimbolo(node.Identificador)
+		i.Escopo.ExcluirSimbolo(node.Identificador)
 	}()
 
 	var item, iterador Objeto
@@ -450,7 +457,7 @@ func (i *Interpretador) visiteBlocoPara(node *parser.BlocoPara) (Objeto, error) 
 			return nil, err
 		}
 
-		i.Contexto.RedefinirSimbolo(node.Identificador, item)
+		i.Escopo.RedefinirValor(node.Identificador, item)
 
 		_, err = i.visite(node.Corpo)
 		if err != nil {
@@ -484,7 +491,7 @@ func (i *Interpretador) visiteImporteDe(node *parser.ImporteDe) (Objeto, error) 
 		return nil, err
 	}
 
-	modulo, err := MaquinarioImporteModulo(i.Contexto, string(caminho.(Texto)))
+	modulo, err := MaquinarioImporteModulo(i.Contexto, string(caminho.(Texto)), i.Escopo)
 	if err != nil {
 		return nil, err
 	}
@@ -495,16 +502,10 @@ func (i *Interpretador) visiteImporteDe(node *parser.ImporteDe) (Objeto, error) 
 			return nil, err
 		}
 
-		i.Contexto.DefinirSimboloLocal(NewVarSimbolo(nome, obj))
+		i.Escopo.DefinirSimbolo(NewVarSimbolo(nome, obj))
 	}
 
 	return nil, nil
-}
-
-func (i *Interpretador) criarErro(tipo *Tipo, args Objeto) error {
-	erro := NewErro(tipo, args)
-	erro.Contexto = i.Contexto
-	return erro
 }
 
 func (i *Interpretador) criarErroF(tipo *Tipo, format string, args ...any) error {
