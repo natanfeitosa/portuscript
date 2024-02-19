@@ -7,7 +7,7 @@ type MetodoProxy struct {
 
 var TipoMetodoProxy = NewTipo("MetodoProxy", "Um método que não exatamente reflete o método real")
 
-func newMetodoProxy(inst, metodo Objeto) *MetodoProxy {
+func NewMetodoProxy(inst, metodo Objeto) *MetodoProxy {
 	return &MetodoProxy{inst, metodo}
 }
 

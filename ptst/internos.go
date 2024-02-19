@@ -3,6 +3,8 @@ package ptst
 import (
 	"fmt"
 	"os"
+	"reflect"
+	"strings"
 )
 
 func LancarErro(err error) {
@@ -55,7 +57,14 @@ func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 	}
 
 	// FIXME: e se o método for definido do "outro lado" do código?
-	// FIXME: adicionar um proxy para métodos nativos
+
+	if len(nome) > 4 && (strings.HasPrefix(nome, "__") && strings.HasSuffix(nome, "__")) {
+		ref := reflect.ValueOf(inst)
+		m := ref.MethodByName("M" + nome)
+		if m.IsValid() {
+			return NewMetodoProxyDeNativo(nome, m.Interface())
+		}
+	}
 
 	if I, ok := inst.(I_Mapa); ok {
 		mapa := I.ObtemMapa()

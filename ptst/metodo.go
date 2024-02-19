@@ -48,7 +48,7 @@ func (m *Metodo) M__chame__(args Tupla) (Objeto, error) {
 // FIXME: isso deve retornar um proxy
 func (m *Metodo) M__obtem__(inst Objeto, dono *Tipo) (Objeto, error) {
 	if inst != Nulo {
-		return newMetodoProxy(inst, m), nil
+		return NewMetodoProxy(inst, m), nil
 	}
 
 	return m, nil
@@ -61,22 +61,14 @@ var _ I__obtem__ = (*Metodo)(nil)
 
 // Copiado de https://github.com/go-python/gpython/blob/main/py/method.go#L97C1-L115C2
 func NewMetodo(nome string, chamavel interface{}, doc string) (*Metodo, error) {
-	// switch chamavel.(type) {
-	// case func(inst Objeto, args Tupla) (Objeto, error):
-	// case func(Objeto) (Objeto, error):
-	// case func(Objeto, Objeto) (Objeto, error):
-	// case InternalMetodo:
-	// default:
-	// 	return nil, ExceptionNewf(SystemError, "Unknown function type for NewMetodo %q, %T", nome, chamavel)
-	// }
 	return &Metodo{
-		Nome:   nome,
-		Doc:    doc,
+		Nome:     nome,
+		Doc:      doc,
 		chamavel: chamavel,
 	}, nil
 }
 
-func NewMetodoOuPanic(nome string, chamavel interface{}, doc string) (*Metodo) {
+func NewMetodoOuPanic(nome string, chamavel interface{}, doc string) *Metodo {
 	m, err := NewMetodo(nome, chamavel, doc)
 
 	if err != nil {
@@ -84,4 +76,27 @@ func NewMetodoOuPanic(nome string, chamavel interface{}, doc string) (*Metodo) {
 	}
 
 	return m
+}
+
+func NewMetodoProxyDeNativo(nome string, chamavel interface{}) (*Metodo, error) {
+	metodo := &Metodo{
+		Nome: nome,
+	}
+
+	switch fn := chamavel.(type) {
+	// Métodos como `__iter__`, `__tamanho__` e `__text__`
+	case func() (Objeto, error):
+		metodo.chamavel = func(_ Objeto) (Objeto, error) {
+			return fn()
+		}
+	case func(Objeto) (Objeto, error):
+		metodo.chamavel = func(_ Objeto, arg Objeto) (Objeto, error) {
+			return fn(arg)
+		}
+	default:
+		// FIXME: adicionar um tipo de erro adequado
+		return nil, fmt.Errorf("não foi possível criar um proxy para o método %T", fn)
+	}
+
+	return metodo, nil
 }
