@@ -73,11 +73,14 @@ func main() {
 				return
 			}
 
-			// if codigo != "" {
-			// 	// fmt.Printf("codigo: %v\n", codigo)
-			// 	ptst.InicializaDeString(codigo)
-			// 	return
-			// }
+			if codigo != "" {
+				_, err := ptst.ExecutarString(ctx, codigo)
+
+				if err != nil {
+					ptst.LancarErro(err)
+				}
+				return
+			}
 
 			playground.Inicializa(ctx, Version, Datetime, Commit)
 		},
