@@ -70,6 +70,20 @@ func DivideInteiro(a, b Objeto) (Objeto, error) {
 	return nil, NewErroF(TipagemErro, "A operação '//' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
+func Mod(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__mod__); ok {
+		res, err := A.M__mod__(b)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return res, nil
+	}
+
+	return nil, NewErroF(TipagemErro, "A operação '%%' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+}
+
 func MenorQue(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__menor_que__); ok {
 		res, err := A.M__menor_que__(b)

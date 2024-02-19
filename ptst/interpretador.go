@@ -263,6 +263,8 @@ func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) 
 		return Divide(esquerda, direita)
 	case "//":
 		return DivideInteiro(esquerda, direita)
+	case "%":
+		return Mod(esquerda, direita)
 	case "<":
 		return MenorQue(esquerda, direita)
 	case "<=":
