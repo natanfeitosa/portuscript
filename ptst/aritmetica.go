@@ -2,7 +2,7 @@ package ptst
 
 func Adiciona(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__adiciona__); ok {
-		res, err := A.O__adiciona__(b)
+		res, err := A.M__adiciona__(b)
 
 		if err != nil {
 			return nil, err
@@ -16,7 +16,7 @@ func Adiciona(a, b Objeto) (Objeto, error) {
 
 func Multiplica(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__multiplica__); ok {
-		res, err := A.O__multiplica__(b)
+		res, err := A.M__multiplica__(b)
 
 		if err != nil {
 			return nil, err
@@ -30,7 +30,7 @@ func Multiplica(a, b Objeto) (Objeto, error) {
 
 func Subtrai(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__subtrai__); ok {
-		res, err := A.O__subtrai__(b)
+		res, err := A.M__subtrai__(b)
 
 		if err != nil {
 			return nil, err
@@ -44,7 +44,7 @@ func Subtrai(a, b Objeto) (Objeto, error) {
 
 func Divide(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__divide__); ok {
-		res, err := A.O__divide__(b)
+		res, err := A.M__divide__(b)
 
 		if err != nil {
 			return nil, err
@@ -58,7 +58,7 @@ func Divide(a, b Objeto) (Objeto, error) {
 
 func DivideInteiro(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__divide_inteiro__); ok {
-		res, err := A.O__divide_inteiro__(b)
+		res, err := A.M__divide_inteiro__(b)
 
 		if err != nil {
 			return nil, err
@@ -72,7 +72,7 @@ func DivideInteiro(a, b Objeto) (Objeto, error) {
 
 func MenorQue(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__menor_que__); ok {
-		res, err := A.O__menor_que__(b)
+		res, err := A.M__menor_que__(b)
 
 		if err != nil {
 			return nil, err
@@ -86,7 +86,7 @@ func MenorQue(a, b Objeto) (Objeto, error) {
 
 func MenorOuIgual(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__menor_ou_igual__); ok {
-		res, err := A.O__menor_ou_igual__(b)
+		res, err := A.M__menor_ou_igual__(b)
 
 		if err != nil {
 			return nil, err
@@ -100,7 +100,7 @@ func MenorOuIgual(a, b Objeto) (Objeto, error) {
 
 func Igual(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__igual__); ok {
-		res, err := A.O__igual__(b)
+		res, err := A.M__igual__(b)
 
 		if err != nil {
 			return nil, err
@@ -124,7 +124,7 @@ func Igual(a, b Objeto) (Objeto, error) {
 
 func Diferente(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__diferente__); ok {
-		res, err := A.O__diferente__(b)
+		res, err := A.M__diferente__(b)
 
 		if err != nil {
 			return nil, err
@@ -138,7 +138,7 @@ func Diferente(a, b Objeto) (Objeto, error) {
 
 func MaiorQue(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__maior_que__); ok {
-		res, err := A.O__maior_que__(b)
+		res, err := A.M__maior_que__(b)
 
 		if err != nil {
 			return nil, err
@@ -152,7 +152,7 @@ func MaiorQue(a, b Objeto) (Objeto, error) {
 
 func MaiorOuIgual(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__maior_ou_igual__); ok {
-		res, err := A.O__maior_ou_igual__(b)
+		res, err := A.M__maior_ou_igual__(b)
 
 		if err != nil {
 			return nil, err
@@ -166,7 +166,7 @@ func MaiorOuIgual(a, b Objeto) (Objeto, error) {
 
 func Ou(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__ou__); ok {
-		res, err := A.O__ou__(b)
+		res, err := A.M__ou__(b)
 
 		if err != nil {
 			return nil, err
@@ -180,7 +180,7 @@ func Ou(a, b Objeto) (Objeto, error) {
 
 func E(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__e__); ok {
-		res, err := A.O__e__(b)
+		res, err := A.M__e__(b)
 
 		if err != nil {
 			return nil, err
@@ -194,7 +194,7 @@ func E(a, b Objeto) (Objeto, error) {
 
 func Neg(a Objeto) (Objeto, error) {
 	if A, ok := a.(I__neg__); ok {
-		res, err := A.O__neg__()
+		res, err := A.M__neg__()
 		if err != nil {
 			return nil, err
 		}
@@ -207,7 +207,7 @@ func Neg(a Objeto) (Objeto, error) {
 
 func Pos(a Objeto) (Objeto, error) {
 	if A, ok := a.(I__pos__); ok {
-		res, err := A.O__pos__()
+		res, err := A.M__pos__()
 		if err != nil {
 			return nil, err
 		}

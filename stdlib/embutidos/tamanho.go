@@ -8,7 +8,7 @@ func emb_tamanho_fn(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 	}
 
 	if obj, ok := args[0].(ptst.I__tamanho__); ok {
-		return obj.O__tamanho__()
+		return obj.M__tamanho__()
 	}
 
 	return nil, ptst.NewErroF(ptst.TipagemErro, "Objeto do tipo '%s' não implementa a interface '__tamanho__'.", args[0].Tipo().Nome)

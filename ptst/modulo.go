@@ -66,7 +66,7 @@ func (m *Modulo) Tipo() *Tipo {
 	return TipoModulo
 }
 
-func (m *Modulo) O__obtem_attributo__(nome string) (objeto Objeto, err error) {
+func (m *Modulo) M__obtem_attributo__(nome string) (objeto Objeto, err error) {
 	ok := false
 	if objeto, ok = m.acessoRapido[nome]; ok {
 		return

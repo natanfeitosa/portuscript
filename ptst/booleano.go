@@ -22,7 +22,7 @@ func boolParaBooleano(obj bool) Booleano {
 func NewBooleano(obj any) (Objeto, error) {
 	switch b := obj.(type) {
 	case I__booleano__:
-		return b.O__booleano__()
+		return b.M__booleano__()
 	case bool:
 		return boolParaBooleano(b), nil
 	}
@@ -34,7 +34,7 @@ func (b Booleano) Tipo() *Tipo {
 	return TipoBooleano
 }
 
-func (b Booleano) O__texto__() (Objeto, error) {
+func (b Booleano) M__texto__() (Objeto, error) {
 	if b {
 		return Texto("Verdadeiro"), nil
 	}
@@ -42,11 +42,11 @@ func (b Booleano) O__texto__() (Objeto, error) {
 	return Texto("Falso"), nil
 }
 
-func (b Booleano) O__booleano__() (Objeto, error) {
+func (b Booleano) M__booleano__() (Objeto, error) {
 	return b, nil
 }
 
-func (b Booleano) O__igual__(a Objeto) (Objeto, error) {
+func (b Booleano) M__igual__(a Objeto) (Objeto, error) {
 	if !MesmoTipo(b, a) {
 		return Falso, nil
 	}
@@ -54,12 +54,12 @@ func (b Booleano) O__igual__(a Objeto) (Objeto, error) {
 	return NewBooleano(b == a.(Booleano))
 }
 
-func (b Booleano) O__diferente__(a Objeto) (Objeto, error) {
+func (b Booleano) M__diferente__(a Objeto) (Objeto, error) {
 	if !MesmoTipo(b, a) {
 		return Falso, nil
 	}
 
-	igual, err := b.O__igual__(a)
+	igual, err := b.M__igual__(a)
 	if err != nil {
 		return nil, err
 	}
@@ -67,11 +67,11 @@ func (b Booleano) O__diferente__(a Objeto) (Objeto, error) {
 	return Nao(igual)
 }
 
-func (b Booleano) O__ou__(a Objeto) (Objeto, error) {
+func (b Booleano) M__ou__(a Objeto) (Objeto, error) {
 	return b || a.(Booleano), nil
 }
 
-func (b Booleano) O__e__(a Objeto) (Objeto, error) {
+func (b Booleano) M__e__(a Objeto) (Objeto, error) {
 	return b && a.(Booleano), nil
 }
 

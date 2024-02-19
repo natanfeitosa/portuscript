@@ -41,12 +41,12 @@ func (m *Metodo) ObtemDoc() string {
 	return m.Doc
 }
 
-func (m *Metodo) O__chame__(args Tupla) (Objeto, error) {
+func (m *Metodo) M__chame__(args Tupla) (Objeto, error) {
 	return m.Chamar(Objeto(m.Modulo), args)
 }
 
 // FIXME: isso deve retornar um proxy
-func (m *Metodo) O__obtem__(inst Objeto, dono *Tipo) (Objeto, error) {
+func (m *Metodo) M__obtem__(inst Objeto, dono *Tipo) (Objeto, error) {
 	if inst != Nulo {
 		return newMetodoProxy(inst, m), nil
 	}

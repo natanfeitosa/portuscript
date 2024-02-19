@@ -15,7 +15,7 @@ func (mp *MetodoProxy) Tipo() *Tipo {
 	return TipoMetodoProxy
 }
 
-func (mp *MetodoProxy) O__chame__(args Tupla) (Objeto, error) {
+func (mp *MetodoProxy) M__chame__(args Tupla) (Objeto, error) {
 	if m, ok := mp.Metodo.(*Metodo); ok {
 		return m.Chamar(mp.Inst, args)
 	}

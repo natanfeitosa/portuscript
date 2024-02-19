@@ -35,7 +35,7 @@ func Chamar(obj Objeto, args Objeto) (Objeto, error) {
 	}
 
 	if I, ok := obj.(I__chame__); ok {
-		return I.O__chame__(argsTupla)
+		return I.M__chame__(argsTupla)
 	}
 
 	return nil, NewErroF(TipagemErro, "O objeto '%s' não é do tipo chamável.", obj.Tipo().Nome)
@@ -51,7 +51,7 @@ func NomeAtributo(obj Objeto) (string, error) {
 
 func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 	if I, ok := inst.(I__obtem_attributo__); ok {
-		return I.O__obtem_attributo__(nome)
+		return I.M__obtem_attributo__(nome)
 	}
 
 	// FIXME: e se o método for definido do "outro lado" do código?
@@ -68,7 +68,7 @@ func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 	tipo := inst.Tipo()
 	if obj := tipo.G_ObtemAtributoOuNil(nome); obj != nil {
 		if desc, ok := obj.(I__obtem__); ok {
-			return desc.O__obtem__(inst, tipo)
+			return desc.M__obtem__(inst, tipo)
 		}
 
 		return obj, nil
@@ -97,7 +97,7 @@ func Nao(obj Objeto) (Objeto, error) {
 
 func Proximo(obj Objeto) (Objeto, error) {
 	if iter, ok := obj.(I__proximo__); ok {
-		return iter.O__proximo__()
+		return iter.M__proximo__()
 	}
 
 	return nil, NewErroF(TipagemErro, "O objeto do tipo '%s' não implementa a interface do iterador", obj.Tipo().Nome)
@@ -105,7 +105,7 @@ func Proximo(obj Objeto) (Objeto, error) {
 
 func Iter(obj Objeto) (Objeto, error) {
 	if iter, ok := obj.(I__iter__); ok {
-		return iter.O__iter__()
+		return iter.M__iter__()
 	}
 
 	return nil, NewErroF(TipagemErro, "O objeto do tipo '%s' não implementa a interface do iterador", obj.Tipo().Nome)

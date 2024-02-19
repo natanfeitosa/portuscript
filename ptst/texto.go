@@ -30,7 +30,7 @@ func NewTexto(arg any) (Objeto, error) {
 		return obj, nil
 	default:
 		if O, ok := obj.(I__texto__); ok {
-			return O.O__texto__()
+			return O.M__texto__()
 		}
 	}
 
@@ -42,15 +42,15 @@ func (t Texto) Tipo() *Tipo {
 	return TipoTexto
 }
 
-func (t Texto) O__texto__() (Objeto, error) {
+func (t Texto) M__texto__() (Objeto, error) {
 	return t, nil
 }
 
-func (t Texto) O__booleano__() (Objeto, error) {
+func (t Texto) M__booleano__() (Objeto, error) {
 	return NewBooleano(len(t) != 0)
 }
 
-func (t Texto) O__igual__(outro Objeto) (Objeto, error) {
+func (t Texto) M__igual__(outro Objeto) (Objeto, error) {
 	if !MesmoTipo(t, outro) {
 		return Falso, nil
 	}
@@ -58,9 +58,9 @@ func (t Texto) O__igual__(outro Objeto) (Objeto, error) {
 	return NewBooleano(t == outro.(Texto))
 }
 
-// func (t Texto) O__ou__(outro Objeto) (Objeto, error) {}
+// func (t Texto) M__ou__(outro Objeto) (Objeto, error) {}
 
-func (t Texto) O__adiciona__(outro Objeto) (Objeto, error) {
+func (t Texto) M__adiciona__(outro Objeto) (Objeto, error) {
 	if !MesmoTipo(t, outro) {
 		return nil, NewErroF(TipagemErro, "Não é possível concatenar o tipo '%s' com '%s'", t.Tipo().Nome, outro.Tipo().Nome)
 	}
@@ -74,7 +74,7 @@ func (t Texto) O__adiciona__(outro Objeto) (Objeto, error) {
 	return Texto(fmt.Sprintf("%s%s", t, outroTexto.(Texto))), nil
 }
 
-func (t Texto) O__multiplica__(outro Objeto) (Objeto, error) {
+func (t Texto) M__multiplica__(outro Objeto) (Objeto, error) {
 	switch obj := outro.(type) {
 	case Inteiro:
 		resultado := Texto(t)
@@ -89,13 +89,13 @@ func (t Texto) O__multiplica__(outro Objeto) (Objeto, error) {
 	}
 }
 
-func (t Texto) O__tamanho__() (Objeto, error) {
+func (t Texto) M__tamanho__() (Objeto, error) {
 	return Inteiro(utf8.RuneCountInString(string(t))), nil
 }
 
-// func (t Texto) O__subtrai__(outro Objeto) (Objeto, error) {}
+// func (t Texto) M__subtrai__(outro Objeto) (Objeto, error) {}
 
-// func (t Texto) O__divide__(outro Objeto) (Objeto, error) {}
+// func (t Texto) M__divide__(outro Objeto) (Objeto, error) {}
 
 func (t Texto) String() string {
 	return string(t)
