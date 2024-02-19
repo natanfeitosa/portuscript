@@ -25,15 +25,15 @@ func (t Tupla) GRepr(inicio, fim string) (Objeto, error) {
 	return (Texto(inicio) + res.(Texto) + Texto(fim)), nil
 }
 
-func (t Tupla) O__iter__() (Objeto, error) {
+func (t Tupla) M__iter__() (Objeto, error) {
 	return NewIterador(t)
 }
 
-func (t Tupla) O__texto__() (Objeto, error) {
+func (t Tupla) M__texto__() (Objeto, error) {
 	return t.GRepr("(", ")")
 }
 
-func (t Tupla) O__tamanho__() (Objeto, error) {
+func (t Tupla) M__tamanho__() (Objeto, error) {
 	return Inteiro(len(t)), nil
 }
 

@@ -13,16 +13,16 @@ func (l *Lista) Tipo() *Tipo {
 	return TipoLista
 }
 
-func (l *Lista) O__iter__() (Objeto, error) {
+func (l *Lista) M__iter__() (Objeto, error) {
 	return NewIterador(l.Itens)
 }
 
-func (l *Lista) O__texto__() (Objeto, error) {
+func (l *Lista) M__texto__() (Objeto, error) {
 	return l.Itens.GRepr("[", "]")
 }
 
-func (l *Lista) O__tamanho__() (Objeto, error) {
-	return l.Itens.O__tamanho__()
+func (l *Lista) M__tamanho__() (Objeto, error) {
+	return l.Itens.M__tamanho__()
 }
 
 var _ I__iter__ = (*Lista)(nil)
@@ -50,7 +50,7 @@ func (l *Lista) Indice(obj Objeto) (Objeto, error) {
 }
 
 func (l *Lista) Pop(indice Inteiro) (Objeto, error) {
-	tamanho, err := l.O__tamanho__()
+	tamanho, err := l.M__tamanho__()
 	if err != nil {
 		return nil, err
 	}

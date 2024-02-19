@@ -1,25 +1,25 @@
 package ptst
 
-// Interfaces para fins de tipagem como a seguinte devem, começar com "I" e seus métodos internos com "O" de "Objeto"
+// Interfaces para fins de tipagem como a seguinte devem, começar com "I" e seus métodos internos com "M" de "Método"
 
 type I__chame__ interface {
-	O__chame__(args Tupla) (Objeto, error)
+	M__chame__(args Tupla) (Objeto, error)
 }
 
 type I__texto__ interface {
-	O__texto__() (Objeto, error)
+	M__texto__() (Objeto, error)
 }
 
 type I__inteiro__ interface {
-	O__inteiro__() (Objeto, error)
+	M__inteiro__() (Objeto, error)
 }
 
 type I__decimal__ interface {
-	O__decimal__() (Objeto, error)
+	M__decimal__() (Objeto, error)
 }
 
 type I__booleano__ interface {
-	O__booleano__() (Objeto, error)
+	M__booleano__() (Objeto, error)
 }
 
 type I_conversaoEntreTipos interface {
@@ -30,12 +30,12 @@ type I_conversaoEntreTipos interface {
 }
 
 type I__obtem_attributo__ interface {
-	O__obtem_attributo__(nome string) (Objeto, error)
+	M__obtem_attributo__(nome string) (Objeto, error)
 }
 
 // FIXME: inst é a instacia; e dono, o objeto vindo do método `Tipo()`
 type I__obtem__ interface {
-	O__obtem__(inst Objeto, dono *Tipo) (Objeto, error)
+	M__obtem__(inst Objeto, dono *Tipo) (Objeto, error)
 }
 
 type I_Mapa interface {
@@ -51,31 +51,31 @@ type I_Chamar interface {
 }
 
 type I__adiciona__ interface {
-	O__adiciona__(outro Objeto) (Objeto, error)
+	M__adiciona__(outro Objeto) (Objeto, error)
 }
 
 type I__multiplica__ interface {
-	O__multiplica__(outro Objeto) (Objeto, error)
+	M__multiplica__(outro Objeto) (Objeto, error)
 }
 
 type I__subtrai__ interface {
-	O__subtrai__(outro Objeto) (Objeto, error)
+	M__subtrai__(outro Objeto) (Objeto, error)
 }
 
 type I__divide__ interface {
-	O__divide__(outro Objeto) (Objeto, error)
+	M__divide__(outro Objeto) (Objeto, error)
 }
 
 type I__divide_inteiro__ interface {
-	O__divide_inteiro__(outro Objeto) (Objeto, error)
+	M__divide_inteiro__(outro Objeto) (Objeto, error)
 }
 
 type I__neg__ interface {
-	O__neg__() (Objeto, error)
+	M__neg__() (Objeto, error)
 }
 
 type I__pos__ interface {
-	O__pos__() (Objeto, error)
+	M__pos__() (Objeto, error)
 }
 
 type I_aritmeticaMatematica interface {
@@ -89,27 +89,27 @@ type I_aritmeticaMatematica interface {
 }
 
 type I__menor_que__ interface {
-	O__menor_que__(outro Objeto) (Objeto, error)
+	M__menor_que__(outro Objeto) (Objeto, error)
 }
 
 type I__menor_ou_igual__ interface {
-	O__menor_ou_igual__(outro Objeto) (Objeto, error)
+	M__menor_ou_igual__(outro Objeto) (Objeto, error)
 }
 
 type I__igual__ interface {
-	O__igual__(outro Objeto) (Objeto, error)
+	M__igual__(outro Objeto) (Objeto, error)
 }
 
 type I__diferente__ interface {
-	O__diferente__(outro Objeto) (Objeto, error)
+	M__diferente__(outro Objeto) (Objeto, error)
 }
 
 type I__maior_que__ interface {
-	O__maior_que__(outro Objeto) (Objeto, error)
+	M__maior_que__(outro Objeto) (Objeto, error)
 }
 
 type I__maior_ou_igual__ interface {
-	O__maior_ou_igual__(outro Objeto) (Objeto, error)
+	M__maior_ou_igual__(outro Objeto) (Objeto, error)
 }
 
 type I_comparacaoRica interface {
@@ -122,11 +122,11 @@ type I_comparacaoRica interface {
 }
 
 type I__ou__ interface {
-	O__ou__(outro Objeto) (Objeto, error)
+	M__ou__(outro Objeto) (Objeto, error)
 }
 
 type I__e__ interface {
-	O__e__(outro Objeto) (Objeto, error)
+	M__e__(outro Objeto) (Objeto, error)
 }
 
 type I_aritmeticaBooleana interface {
@@ -135,11 +135,11 @@ type I_aritmeticaBooleana interface {
 }
 
 type I__iter__ interface {
-	O__iter__() (Objeto, error)
+	M__iter__() (Objeto, error)
 }
 
 type I__proximo__ interface {
-	O__proximo__() (Objeto, error)
+	M__proximo__() (Objeto, error)
 }
 
 type I_iterador interface {
@@ -148,5 +148,5 @@ type I_iterador interface {
 }
 
 type I__tamanho__ interface {
-	O__tamanho__() (Objeto, error)
+	M__tamanho__() (Objeto, error)
 }

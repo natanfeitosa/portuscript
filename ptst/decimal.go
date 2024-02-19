@@ -30,7 +30,7 @@ func NewDecimal(obj any) (Objeto, error) {
 		return Decimal(num), nil
 	default:
 		if O, ok := b.(I__decimal__); ok {
-			return O.O__decimal__()
+			return O.M__decimal__()
 		}
 
 		// FIXME: isso está certo?
@@ -42,7 +42,7 @@ func (d Decimal) Tipo() *Tipo {
 	return TipoDecimal
 }
 
-func (d Decimal) O__texto__() (Objeto, error) {
+func (d Decimal) M__texto__() (Objeto, error) {
 	if i := int64(d); Decimal(i) == d {
 		return Texto(fmt.Sprintf("%d.0", i)), nil
 	}
@@ -50,19 +50,19 @@ func (d Decimal) O__texto__() (Objeto, error) {
 	return Texto(fmt.Sprintf("%g", d)), nil
 }
 
-func (d Decimal) O__booleano__() (Objeto, error) {
+func (d Decimal) M__booleano__() (Objeto, error) {
 	return NewBooleano(d != 0)
 }
 
-func (d Decimal) O__inteiro__() (Objeto, error) {
+func (d Decimal) M__inteiro__() (Objeto, error) {
 	return Inteiro(d), nil
 }
 
-func (d Decimal) O__decimal__() (Objeto, error) {
+func (d Decimal) M__decimal__() (Objeto, error) {
 	return d, nil
 }
 
-func (d Decimal) O__adiciona__(outro Objeto) (Objeto, error) {
+func (d Decimal) M__adiciona__(outro Objeto) (Objeto, error) {
 	outroInt, err := NewDecimal(outro)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (d Decimal) O__adiciona__(outro Objeto) (Objeto, error) {
 	return d + outroInt.(Decimal), nil
 }
 
-func (d Decimal) O__multiplica__(outro Objeto) (Objeto, error) {
+func (d Decimal) M__multiplica__(outro Objeto) (Objeto, error) {
 	outroInt, err := NewDecimal(outro)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (d Decimal) O__multiplica__(outro Objeto) (Objeto, error) {
 	return d * outroInt.(Decimal), nil
 }
 
-func (d Decimal) O__subtrai__(outro Objeto) (Objeto, error) {
+func (d Decimal) M__subtrai__(outro Objeto) (Objeto, error) {
 	outroInt, err := NewDecimal(outro)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (d Decimal) O__subtrai__(outro Objeto) (Objeto, error) {
 }
 
 // FIXME: adicionar erro de divisão por zero
-func (d Decimal) O__divide__(outro Objeto) (Objeto, error) {
+func (d Decimal) M__divide__(outro Objeto) (Objeto, error) {
 	outroInt, err := NewDecimal(outro)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (d Decimal) O__divide__(outro Objeto) (Objeto, error) {
 }
 
 // FIXME: adicionar erro de divisão por zero
-func (d Decimal) O__divide_inteiro__(b Objeto) (Objeto, error) {
+func (d Decimal) M__divide_inteiro__(b Objeto) (Objeto, error) {
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err
@@ -109,11 +109,11 @@ func (d Decimal) O__divide_inteiro__(b Objeto) (Objeto, error) {
 	return Inteiro(d) / bInt.(Inteiro), nil
 }
 
-func (d Decimal) O__neg__() (Objeto, error) {
+func (d Decimal) M__neg__() (Objeto, error) {
 	return -d, nil
 }
 
-func (d Decimal) O__pos__() (Objeto, error) {
+func (d Decimal) M__pos__() (Objeto, error) {
 	return +d, nil
 }
 

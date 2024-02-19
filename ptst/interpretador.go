@@ -288,7 +288,7 @@ func (i *Interpretador) visiteIdentificador(node *parser.Identificador) (Objeto,
 	objeto, err := i.Escopo.ObterValor(node.Nome)
 
 	if err != nil {
-		if objeto, err = i.Contexto.Modulos.Embutidos.O__obtem_attributo__(node.Nome); err == nil {
+		if objeto, err = i.Contexto.Modulos.Embutidos.M__obtem_attributo__(node.Nome); err == nil {
 			return objeto, nil
 		}
 

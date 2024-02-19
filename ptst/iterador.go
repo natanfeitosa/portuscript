@@ -15,11 +15,11 @@ func (it *Iterador) Tipo() *Tipo {
 	return TipoIterador
 }
 
-func (it *Iterador) O__iter__() (Objeto, error) {
+func (it *Iterador) M__iter__() (Objeto, error) {
 	return it, nil
 }
 
-func (it *Iterador) O__proximo__() (Objeto, error) {
+func (it *Iterador) M__proximo__() (Objeto, error) {
 	if tupla, ok := it.Conteiner.(Tupla); ok {
 		if it.Posicao >= len(tupla) {
 			return nil, NewErro(FimIteracao, Nulo)

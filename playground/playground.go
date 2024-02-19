@@ -27,7 +27,7 @@ func Inicializa(ctx *ptst.Contexto, version, datetime, commit string) {
 		},
 	})
 
-	imprima, err := mod.Contexto.Modulos.Embutidos.O__obtem_attributo__("imprima")
+	imprima, err := mod.Contexto.Modulos.Embutidos.M__obtem_attributo__("imprima")
 
 	if err != nil {
 		finalizar()

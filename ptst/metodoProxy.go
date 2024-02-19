@@ -7,7 +7,7 @@ type MetodoProxy struct {
 
 var TipoMetodoProxy = NewTipo("MetodoProxy", "Um método que não exatamente reflete o método real")
 
-func newMetodoProxy(inst, metodo Objeto) *MetodoProxy {
+func NewMetodoProxy(inst, metodo Objeto) *MetodoProxy {
 	return &MetodoProxy{inst, metodo}
 }
 
@@ -15,7 +15,7 @@ func (mp *MetodoProxy) Tipo() *Tipo {
 	return TipoMetodoProxy
 }
 
-func (mp *MetodoProxy) O__chame__(args Tupla) (Objeto, error) {
+func (mp *MetodoProxy) M__chame__(args Tupla) (Objeto, error) {
 	if m, ok := mp.Metodo.(*Metodo); ok {
 		return m.Chamar(mp.Inst, args)
 	}

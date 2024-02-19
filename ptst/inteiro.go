@@ -30,7 +30,7 @@ func NewInteiro(obj any) (Objeto, error) {
 		return Inteiro(num), nil
 	default:
 		if O, ok := b.(I__inteiro__); ok {
-			return O.O__inteiro__()
+			return O.M__inteiro__()
 		}
 
 		// FIXME: isso está certo?
@@ -46,23 +46,23 @@ func (i Inteiro) Tipo() *Tipo {
 // 	return t.Tipo().Mapa
 // }
 
-func (i Inteiro) O__texto__() (Objeto, error) {
+func (i Inteiro) M__texto__() (Objeto, error) {
 	return Texto(fmt.Sprintf("%d", i)), nil
 }
 
-func (i Inteiro) O__booleano__() (Objeto, error) {
+func (i Inteiro) M__booleano__() (Objeto, error) {
 	return NewBooleano(i != 0)
 }
 
-func (i Inteiro) O__inteiro__() (Objeto, error) {
+func (i Inteiro) M__inteiro__() (Objeto, error) {
 	return i, nil
 }
 
-func (i Inteiro) O__decimal__() (Objeto, error) {
+func (i Inteiro) M__decimal__() (Objeto, error) {
 	return Decimal(i), nil
 }
 
-func (i Inteiro) O__adiciona__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__adiciona__(b Objeto) (Objeto, error) {
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (i Inteiro) O__adiciona__(b Objeto) (Objeto, error) {
 	return i + bInt.(Inteiro), nil
 }
 
-func (i Inteiro) O__multiplica__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__multiplica__(b Objeto) (Objeto, error) {
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (i Inteiro) O__multiplica__(b Objeto) (Objeto, error) {
 	return i * bInt.(Inteiro), nil
 }
 
-func (i Inteiro) O__subtrai__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__subtrai__(b Objeto) (Objeto, error) {
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (i Inteiro) O__subtrai__(b Objeto) (Objeto, error) {
 }
 
 // FIXME: adicionar erro de divisão por zero
-func (i Inteiro) O__divide__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__divide__(b Objeto) (Objeto, error) {
 	bInt, err := NewDecimal(b)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (i Inteiro) O__divide__(b Objeto) (Objeto, error) {
 }
 
 // FIXME: adicionar erro de divisão por zero
-func (i Inteiro) O__divide_inteiro__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__divide_inteiro__(b Objeto) (Objeto, error) {
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err
@@ -109,15 +109,15 @@ func (i Inteiro) O__divide_inteiro__(b Objeto) (Objeto, error) {
 	return i / bInt.(Inteiro), nil
 }
 
-func (i Inteiro) O__neg__() (Objeto, error) {
+func (i Inteiro) M__neg__() (Objeto, error) {
 	return -i, nil
 }
 
-func (i Inteiro) O__pos__() (Objeto, error) {
+func (i Inteiro) M__pos__() (Objeto, error) {
 	return +i, nil
 }
 
-func (i Inteiro) O__menor_que__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__menor_que__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return nil, NewErroF(TipagemErro, "A operação '<' não é suportada entre os tipos '%s' e '%s'", i.Tipo().Nome, b.Tipo().Nome)
 	}
@@ -125,7 +125,7 @@ func (i Inteiro) O__menor_que__(b Objeto) (Objeto, error) {
 	return NewBooleano(i < b.(Inteiro))
 }
 
-func (i Inteiro) O__menor_ou_igual__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__menor_ou_igual__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return nil, NewErroF(TipagemErro, "A operação '<=' não é suportada entre os tipos '%s' e '%s'", i.Tipo().Nome, b.Tipo().Nome)
 	}
@@ -133,7 +133,7 @@ func (i Inteiro) O__menor_ou_igual__(b Objeto) (Objeto, error) {
 	return NewBooleano(i <= b.(Inteiro))
 }
 
-func (i Inteiro) O__igual__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__igual__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return Falso, nil
 	}
@@ -141,7 +141,7 @@ func (i Inteiro) O__igual__(b Objeto) (Objeto, error) {
 	return NewBooleano(i == b.(Inteiro))
 }
 
-func (i Inteiro) O__diferente__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__diferente__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return Verdadeiro, nil
 	}
@@ -149,7 +149,7 @@ func (i Inteiro) O__diferente__(b Objeto) (Objeto, error) {
 	return NewBooleano(i != b.(Inteiro))
 }
 
-func (i Inteiro) O__maior_que__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__maior_que__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return nil, NewErroF(TipagemErro, "A operação '>' não é suportada entre os tipos '%s' e '%s'", i.Tipo().Nome, b.Tipo().Nome)
 	}
@@ -157,7 +157,7 @@ func (i Inteiro) O__maior_que__(b Objeto) (Objeto, error) {
 	return NewBooleano(i > b.(Inteiro))
 }
 
-func (i Inteiro) O__maior_ou_igual__(b Objeto) (Objeto, error) {
+func (i Inteiro) M__maior_ou_igual__(b Objeto) (Objeto, error) {
 	if !MesmoTipo(i, b) {
 		return nil, NewErroF(TipagemErro, "A operação '>=' não é suportada entre os tipos '%s' e '%s'", i.Tipo().Nome, b.Tipo().Nome)
 	}
@@ -165,8 +165,8 @@ func (i Inteiro) O__maior_ou_igual__(b Objeto) (Objeto, error) {
 	return NewBooleano(i >= b.(Inteiro))
 }
 
-func (i Inteiro) O__ou__(b Objeto) (Objeto, error) {
-	booleano, err := i.O__booleano__()
+func (i Inteiro) M__ou__(b Objeto) (Objeto, error) {
+	booleano, err := i.M__booleano__()
 	if err != nil {
 		return nil, err
 	}
@@ -178,8 +178,8 @@ func (i Inteiro) O__ou__(b Objeto) (Objeto, error) {
 	return b, nil
 }
 
-func (i Inteiro) O__e__(b Objeto) (Objeto, error) {
-	booleano, err := i.O__booleano__()
+func (i Inteiro) M__e__(b Objeto) (Objeto, error) {
+	booleano, err := i.M__booleano__()
 	if err != nil {
 		return nil, err
 	}
