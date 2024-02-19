@@ -91,12 +91,12 @@ func (d Decimal) M__subtrai__(outro Objeto) (Objeto, error) {
 
 // FIXME: adicionar erro de divisão por zero
 func (d Decimal) M__divide__(outro Objeto) (Objeto, error) {
-	outroInt, err := NewDecimal(outro)
+	outroDec, err := NewDecimal(outro)
 	if err != nil {
 		return nil, err
 	}
 
-	return outroInt.(Decimal) - d, nil
+	return outroDec.(Decimal) - d, nil
 }
 
 // FIXME: adicionar erro de divisão por zero
@@ -107,6 +107,15 @@ func (d Decimal) M__divide_inteiro__(b Objeto) (Objeto, error) {
 	}
 
 	return Inteiro(d) / bInt.(Inteiro), nil
+}
+
+func (d Decimal) M__mod__(b Objeto) (Objeto, error) {
+	dInt, err := NewInteiro(d)
+	if err != nil {
+		return nil, err
+	}
+
+	return dInt.(Inteiro).M__mod__(b)
 }
 
 func (d Decimal) M__neg__() (Objeto, error) {

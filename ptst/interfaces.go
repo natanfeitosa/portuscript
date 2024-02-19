@@ -70,6 +70,10 @@ type I__divide_inteiro__ interface {
 	M__divide_inteiro__(outro Objeto) (Objeto, error)
 }
 
+type I__mod__ interface {
+	M__mod__(outro Objeto) (Objeto, error)
+}
+
 type I__neg__ interface {
 	M__neg__() (Objeto, error)
 }
@@ -84,6 +88,7 @@ type I_aritmeticaMatematica interface {
 	I__subtrai__
 	I__divide__
 	I__divide_inteiro__
+	I__mod__
 	I__neg__
 	I__pos__
 }

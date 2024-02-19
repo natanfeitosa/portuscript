@@ -109,6 +109,15 @@ func (i Inteiro) M__divide_inteiro__(b Objeto) (Objeto, error) {
 	return i / bInt.(Inteiro), nil
 }
 
+func (i Inteiro) M__mod__(b Objeto) (Objeto, error) {
+	bInt, err := NewInteiro(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return i % bInt.(Inteiro), nil
+}
+
 func (i Inteiro) M__neg__() (Objeto, error) {
 	return -i, nil
 }
