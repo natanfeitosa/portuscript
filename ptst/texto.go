@@ -2,6 +2,7 @@ package ptst
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -22,9 +23,11 @@ func NewTexto(arg any) (Objeto, error) {
 	case nil:
 		return Texto(""), nil
 	case string:
-		obj = strings.ReplaceAll(obj, "\\n", "\n")
-		obj = strings.ReplaceAll(obj, "\\r", "\r")
-		obj = strings.ReplaceAll(obj, "\\t", "\t")
+		obj, err := strconv.Unquote(`"` + obj + `"`)
+		if err != nil {
+			return nil, err
+		}
+
 		return Texto(obj), nil
 	case Texto:
 		return obj, nil
