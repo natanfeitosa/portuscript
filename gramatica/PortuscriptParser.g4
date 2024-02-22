@@ -126,7 +126,8 @@ atomo:
 	| TEXTO+
 	| DIGITOS
 	| tupla
-	| grupo;
+	| grupo
+	| lista;
 
 tupla:
 	ABRE_CHAVES expressao VIRGULA (expressao VIRGULA?)* FECHA_CHAVES;
