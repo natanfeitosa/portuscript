@@ -795,7 +795,7 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 			return &Identificador{token.Valor}, nil
 		}
 	case lexer.TokenAbreParenteses:
-		literal := &TuplaLiteral{}
+		tupla := &TuplaLiteral{}
 
 		for p.token.Tipo != lexer.TokenFechaParenteses {
 			p.avancar()
@@ -805,11 +805,21 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 				return nil, err
 			}
 
-			literal.Elementos = append(literal.Elementos, exp)
+			if p.token.Tipo != lexer.TokenVirgula {
+				if len(tupla.Elementos) == 0 {
+					if err := p.consome(")"); err != nil {
+						return nil, err
+					}
+
+					return exp, nil
+				}
+			}
+
+			tupla.Elementos = append(tupla.Elementos, exp)
 		}
 
 		p.avancar()
-		return literal, nil
+		return tupla, nil
 	case lexer.TokenAbreColchetes:
 		literal := &ListaLiteral{}
 
@@ -829,5 +839,5 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 	}
 
 	// fmt.Printf("%t", p.token)
-	return nil, fmt.Errorf("O token '%v' não é reconhecido.", p.token.Valor)
+	return nil, fmt.Errorf("o token '%v' não é reconhecido", p.token.Valor)
 }

@@ -125,10 +125,13 @@ atomo:
 	| 'Nulo'
 	| TEXTO+
 	| DIGITOS
-	| tupla;
+	| tupla
+	| grupo;
 
 tupla:
 	ABRE_CHAVES expressao VIRGULA (expressao VIRGULA?)* FECHA_CHAVES;
+
+grupo: ABRE_CHAVES expressao FECHA_CHAVES;
 
 lista:
 	ABRE_COLCHETES expressao (VIRGULA expressao)* FECHA_COLCHETES;
