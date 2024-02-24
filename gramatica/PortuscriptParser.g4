@@ -130,9 +130,9 @@ atomo:
 	| lista;
 
 tupla:
-	ABRE_CHAVES expressao VIRGULA (expressao VIRGULA?)* FECHA_CHAVES;
+	ABRE_PARENTESES expressao VIRGULA (expressao VIRGULA?)* FECHA_PARENTESES;
 
-grupo: ABRE_CHAVES expressao FECHA_CHAVES;
+grupo: ABRE_PARENTESES expressao FECHA_PARENTESES;
 
 lista:
 	ABRE_COLCHETES expressao (VIRGULA expressao)* FECHA_COLCHETES;
