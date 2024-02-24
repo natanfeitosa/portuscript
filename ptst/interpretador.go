@@ -107,6 +107,8 @@ func (i *Interpretador) visite(astNode parser.BaseNode) (Objeto, error) {
 		return i.visiteContinueNode(node)
 	case *parser.ImporteDe:
 		return i.visiteImporteDe(node)
+	case *parser.Indexacao:
+		return i.visiteIndexacao(node)
 	}
 
 	return nil, nil
@@ -304,8 +306,7 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 	var direita, esquerda, valor Objeto
 	var err error
 
-	esquerda, err = i.Escopo.ObterValor(node.Nome)
-	if err != nil {
+	if esquerda, err = i.visite(node.Objeto); err != nil {
 		return nil, err
 	}
 
@@ -333,8 +334,20 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 		return nil, err
 	}
 
-	if err = i.Escopo.RedefinirValor(node.Nome, valor); err != nil {
-		return nil, err
+	switch obj := node.Objeto.(type) {
+	case *parser.Indexacao:
+		if esquerda, err = i.visite(obj.Objeto); err != nil {
+			return nil, err
+		}
+
+		chave, err := i.visite(obj.Argumento)
+		if err != nil {
+			return nil, err
+		}
+
+		return DefineItem(esquerda, chave, valor)
+	case *parser.Identificador:
+		return nil, i.Escopo.RedefinirValor(obj.Nome, valor)
 	}
 
 	return nil, nil
@@ -427,7 +440,7 @@ func (i *Interpretador) visiteAcessoMembro(node *parser.AcessoMembro) (Objeto, e
 	// }
 
 	membro := node.Membro.(*parser.Identificador).Nome
-	return ObtemItemS(dono, membro)
+	return ObtemAtributoS(dono, membro)
 }
 
 func (i *Interpretador) visiteBlocoPara(node *parser.BlocoPara) (Objeto, error) {
@@ -499,7 +512,7 @@ func (i *Interpretador) visiteImporteDe(node *parser.ImporteDe) (Objeto, error) 
 	}
 
 	for _, nome := range node.Nomes {
-		obj, err := ObtemItemS(modulo, nome)
+		obj, err := ObtemAtributoS(modulo, nome)
 		if err != nil {
 			return nil, err
 		}
@@ -508,6 +521,21 @@ func (i *Interpretador) visiteImporteDe(node *parser.ImporteDe) (Objeto, error) 
 	}
 
 	return nil, nil
+}
+
+func (i *Interpretador) visiteIndexacao(node *parser.Indexacao) (Objeto, error) {
+	var obj, arg Objeto
+	var err error
+
+	if obj, err = i.visite(node.Objeto); err != nil {
+		return nil, err
+	}
+
+	if arg, err = i.visite(node.Argumento); err != nil {
+		return nil, err
+	}
+
+	return ObtemItem(obj, arg)
 }
 
 func (i *Interpretador) criarErroF(tipo *Tipo, format string, args ...any) error {

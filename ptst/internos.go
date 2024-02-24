@@ -51,7 +51,7 @@ func NomeAtributo(obj Objeto) (string, error) {
 	return "", NewErroF(AtributoErro, "O nome do atributo deve ser do tipo texto, não '%s'", obj.Tipo().Nome)
 }
 
-func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
+func ObtemAtributoS(inst Objeto, nome string) (Objeto, error) {
 	if I, ok := inst.(I__obtem_attributo__); ok {
 		return I.M__obtem_attributo__(nome)
 	}
@@ -83,7 +83,6 @@ func ObtemItemS(inst Objeto, nome string) (Objeto, error) {
 		return obj, nil
 	}
 
-	// FIXME: adicionar a capacidade de chamar o método __obtem_item__ e __obtem__
 	return nil, NewErroF(AtributoErro, "O atributo '%s' não existe no tipo '%s'", nome, inst.Tipo().Nome)
 }
 
@@ -120,6 +119,7 @@ func Iter(obj Objeto) (Objeto, error) {
 	return nil, NewErroF(TipagemErro, "O objeto do tipo '%s' não implementa a interface do iterador", obj.Tipo().Nome)
 }
 
+// FIXME: esta não é a melhor assinatura possível
 func InstanciaDe(obj Objeto, tipos any) (Booleano, error) {
 	switch tipo_tupla := tipos.(type) {
 	case Tupla:
@@ -136,4 +136,20 @@ func InstanciaDe(obj Objeto, tipos any) (Booleano, error) {
 		// FIXME: verificar se realmente é um tipo usável
 		return obj.Tipo() == tipos.(*Tipo), nil
 	}
+}
+
+func ObtemItem(inst, arg Objeto) (Objeto, error) {
+	if I, ok := inst.(I__obtem_item__); ok {
+		return I.M__obtem_item__(arg)
+	}
+	
+	return nil, NewErroF(TipagemErro, "O tipo '%s' não suporta o uso de indices", inst.Tipo().Nome)
+}
+
+func DefineItem(inst, chave, valor Objeto) (Objeto, error) {
+	if I, ok := inst.(I__define_item__); ok {
+		return I.M__define_item__(chave, valor)
+	}
+	
+	return nil, NewErroF(TipagemErro, "O tipo '%s' não suporta a atribuição por indice", inst.Tipo().Nome)
 }

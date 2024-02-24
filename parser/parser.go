@@ -46,7 +46,7 @@ func (p *Parser) avancar() {
 
 func (p *Parser) consome(token string) error {
 	if p.token.Valor != token {
-		return fmt.Errorf("Era esperado o token '%v', mas no lugar foi encontrado '%v'.", token, p.token.Valor)
+		return fmt.Errorf("era esperado o token '%v', mas no lugar foi encontrado '%v'", token, p.token.Valor)
 	}
 
 	p.avancar()
@@ -106,12 +106,30 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 	case lexer.TokenPara:
 		return p.parseBlocoPara()
 	default:
-		proximo := p.proximoToken.Tipo
-		if proximo >= lexer.TokenMaisIgual && proximo <= lexer.TokenBarraIgual || proximo == lexer.TokenIgual {
-			return p.parseReatribuicao()
+		expressao, err := p.parseExpressao()
+		if err != nil {
+			return nil, err
 		}
 
-		return p.parseExpressao()
+		token := p.token.Tipo
+		if token >= lexer.TokenMaisIgual && token <= lexer.TokenBarraIgual || token == lexer.TokenIgual {
+			reatribuicao := &Reatribuicao{Objeto: expressao, Operador: p.token.Valor}
+			p.avancar()
+
+			expressao, err = p.parseExpressao()
+			if err != nil {
+				return nil, err
+			}
+
+			reatribuicao.Expressao = expressao
+			if err := p.consome(";"); err != nil {
+				return nil, err
+			}
+
+			return reatribuicao, nil
+		}
+
+		return expressao, nil
 	}
 }
 
@@ -272,33 +290,6 @@ func (p *Parser) parseRetorne() (*RetorneNode, error) {
 		}
 	}
 	return retorne, nil
-}
-
-func (p *Parser) parseReatribuicao() (*Reatribuicao, error) {
-	reatribuicao := &Reatribuicao{}
-	reatribuicao.Nome = p.token.Valor
-
-	p.avancar()
-	// FIXME: isso devia gerar um erro
-	// if !(p.token.Tipo >= lexer.TokenMaisIgual && p.token.Tipo <= lexer.TokenBarraIgual) {
-	// }
-
-	reatribuicao.Operador = p.token.Valor
-	p.avancar()
-
-	expressao, err := p.parseExpressao()
-
-	if err != nil {
-		return nil, err
-	}
-
-	reatribuicao.Expressao = expressao
-
-	if err := p.consome(";"); err != nil {
-		return nil, err
-	}
-
-	return reatribuicao, nil
 }
 
 func (p *Parser) parseFuncao() (*DeclFuncao, error) {
@@ -768,6 +759,21 @@ func (p *Parser) parsePrimario() (BaseNode, error) {
 		}
 
 		return chamada, nil
+	}
+
+	for p.token.Tipo == lexer.TokenAbreColchetes {
+		p.avancar()
+
+		arg, err := p.parseExpressao()
+		if err != nil {
+			return nil, err
+		}
+
+		if err := p.consome("]"); err != nil {
+			return nil, err
+		}
+
+		atom = &Indexacao{atom, arg}
 	}
 
 	return atom, nil

@@ -18,7 +18,7 @@ func met_color_imprimac(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) 
 	var junta, textoObj ptst.Objeto
 	var err error
 
-	if junta, err = ptst.ObtemItemS(ptst.Texto(""), "junta"); err != nil {
+	if junta, err = ptst.ObtemAtributoS(ptst.Texto(""), "junta"); err != nil {
 		return nil, err
 	}
 	
