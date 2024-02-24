@@ -48,14 +48,14 @@ func TestSimplesAtribuicaoConstante(t *testing.T) {
 
 func TestSimplesReatribuicao(t *testing.T) {
 	esperada := &parser.Programa{}
-	
+
 	inteiro := &parser.InteiroLiteral{Valor: "1"}
 
 	esperada.Declaracoes = []parser.BaseNode{
-		&parser.Reatribuicao{Nome: "variavel", Operador: "+=", Expressao: inteiro},
-		&parser.Reatribuicao{Nome: "variavel", Operador: "-=", Expressao: inteiro},
-		&parser.Reatribuicao{Nome: "variavel", Operador: "/=", Expressao: inteiro},
-		&parser.Reatribuicao{Nome: "variavel", Operador: "*=", Expressao: inteiro},
+		&parser.Reatribuicao{Objeto: &parser.Identificador{Nome: "variavel"}, Operador: "+=", Expressao: inteiro},
+		&parser.Reatribuicao{Objeto: &parser.Identificador{Nome: "variavel"}, Operador: "-=", Expressao: inteiro},
+		&parser.Reatribuicao{Objeto: &parser.Identificador{Nome: "variavel"}, Operador: "/=", Expressao: inteiro},
+		&parser.Reatribuicao{Objeto: &parser.Identificador{Nome: "variavel"}, Operador: "*=", Expressao: inteiro},
 	}
 
 	code := `

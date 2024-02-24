@@ -12,7 +12,7 @@ func met_emb_imprima(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 		separador = ptst.Texto(" ")
 	)
 
-	junta, err := ptst.ObtemItemS(separador, "junta")
+	junta, err := ptst.ObtemAtributoS(separador, "junta")
 
 	if err != nil {
 		return nil, err

@@ -1,6 +1,7 @@
 package parser_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/natanfeitosa/portuscript/parser"
@@ -10,7 +11,7 @@ func TestExpresaoSeSemCorpo(t *testing.T) {
 	esperada := &parser.Programa{}
 	esperada.Declaracoes = []parser.BaseNode{
 		&parser.ExpressaoSe{
-			Condicao: &parser.ConstanteLiteral{Valor: "Verdadeiro"},
+			Condicao: &parser.Identificador{Nome: "Verdadeiro"},
 			Corpo: &parser.Bloco{},
 		},
 	}
@@ -20,6 +21,8 @@ func TestExpresaoSeSemCorpo(t *testing.T) {
 	`
 
 	err, ok := createParserAndCompare(code, esperada)
+	
+	fmt.Println(err, ok)
 
 	if !ok {
 		t.Error(err)
@@ -30,7 +33,7 @@ func TestExpresaoSe(t *testing.T) {
 	esperada := &parser.Programa{}
 	esperada.Declaracoes = []parser.BaseNode{
 		&parser.ExpressaoSe{
-			Condicao: &parser.ConstanteLiteral{Valor: "Verdadeiro"},
+			Condicao: &parser.Identificador{Nome: "Verdadeiro"},
 			Corpo: &parser.Bloco{
 				Declaracoes: []parser.BaseNode{
 					&parser.ChamadaFuncao{

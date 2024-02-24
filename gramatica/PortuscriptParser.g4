@@ -12,6 +12,7 @@ declaracao: declaracao_composta | declaracao_simples;
 
 declaracao_simples:
 	atribuicao
+	| expressao OPERADOR_REATRIBUICAO expressao
 	| expressao
 	| declaracao_retorne
 	| declaracao_importacao
@@ -108,10 +109,9 @@ fator: (MAIS | MENOS | NAO_BIT_A_BIT)* potencia;
 potencia: primario (POTENCIA fator)?;
 
 primario:
-	atomo (
-		PONTO primario
-		| ABRE_PARENTESES argumentos? FECHA_PARENTESES
-	)
+	primario PONTO primario
+	| primario ABRE_PARENTESES argumentos FECHA_PARENTESES
+	| primario ABRE_COLCHETES expressao FECHA_COLCHETES
 	| atomo;
 
 argumentos: argumento (VIRGULA argumento)*;

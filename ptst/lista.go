@@ -25,9 +25,23 @@ func (l *Lista) M__tamanho__() (Objeto, error) {
 	return l.Itens.M__tamanho__()
 }
 
+func (l *Lista) M__obtem_item__(obj Objeto) (Objeto, error) {
+	return l.Itens.ObtemItem(obj, "Lista")
+}
+
+func (l *Lista) M__define_item__(chave, valor Objeto) (Objeto, error) {
+	if _, err := l.Itens.DefineItem(chave, valor, l.Tipo().Nome); err != nil {
+		return nil, err
+	}
+
+	return l, nil
+}
+
 var _ I__iter__ = (*Lista)(nil)
 var _ I__texto__ = (*Lista)(nil)
 var _ I__tamanho__ = (*Lista)(nil)
+var _ I__obtem_item__ = (*Lista)(nil)
+var _ I__define_item__ = (*Lista)(nil)
 
 func (l *Lista) Adiciona(item Objeto) (Objeto, error) {
 	l.Itens = append(l.Itens, item)

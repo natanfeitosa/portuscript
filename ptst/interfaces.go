@@ -155,3 +155,11 @@ type I_iterador interface {
 type I__tamanho__ interface {
 	M__tamanho__() (Objeto, error)
 }
+
+type I__obtem_item__ interface {
+	M__obtem_item__(obj Objeto) (Objeto, error)
+}
+
+type I__define_item__ interface {
+	M__define_item__(chave, valor Objeto) (Objeto, error)
+}

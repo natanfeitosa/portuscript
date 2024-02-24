@@ -18,7 +18,7 @@ type DeclVar struct {
 
 // Casos como `variavel += 1`, `variavel -= 1` e outros
 type Reatribuicao struct {
-	Nome      string
+	Objeto    BaseNode
 	Operador  string   // =, -=, +=, /=, //=, *= ou outros
 	Expressao BaseNode // A expressao após o sinal de igualdade
 }
@@ -123,6 +123,11 @@ type ImporteDe struct {
 	Nomes   []string
 }
 
+type Indexacao struct {
+	Objeto    BaseNode
+	Argumento BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -148,3 +153,4 @@ func (*ContinueNode) isExpr()        {}
 func (*TuplaLiteral) isExpr()        {}
 func (*ListaLiteral) isExpr()        {}
 func (*ImporteDe) isExpr()           {}
+func (*Indexacao) isExpr()           {}
