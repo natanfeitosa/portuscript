@@ -27,6 +27,9 @@ var (
 	RuntimeErro      = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
 	FimIteracao      = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
 
+	ConsultaErro = TipoErro.NewTipo("ConsultaErro", "Classe base para erros que envolem chave ou indice em elementos")
+	ChaveErro = ConsultaErro.NewTipo("ChaveErro", "Lançado quando a chave de um mapa não existe ou é inválida")
+
 	SistemaErro              = TipoErro.NewTipo("SistemaErro", "Erro relacionado ao sistema operacional")
 	ArquivoNaoEncontradoErro = SistemaErro.NewTipo("ArquivoNaoEncontradoErro", "O arquivo não pôde ser encontrado")
 

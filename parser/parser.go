@@ -136,7 +136,7 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 func (p *Parser) parseImporteDe() (*ImporteDe, error) {
 	p.avancar()
 	if p.token.Tipo != lexer.TokenTexto {
-		return nil, fmt.Errorf("Era esperado um texto após a palavra chave 'de'")
+		return nil, fmt.Errorf("era esperado um texto após a palavra chave 'de'")
 	}
 
 	decl := &ImporteDe{Caminho: &TextoLiteral{p.token.Valor}}
@@ -842,8 +842,69 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 
 		p.avancar()
 		return literal, nil
+	case lexer.TokenAbreChaves:
+		return p.parseMapa()
 	}
 
-	// fmt.Printf("%t", p.token)
 	return nil, fmt.Errorf("o token '%v' não é reconhecido", p.token.Valor)
+}
+
+func (p *Parser) parseMapa() (*MapaLiteral, error) {
+	mapa := &MapaLiteral{}
+	if err := p.consome("{"); err != nil {
+		return nil, err
+	}
+
+	for p.token.Tipo != lexer.TokenFechaChaves {
+		var chave, valor BaseNode
+		var err error
+
+		valorImplicito := false
+
+		if p.token.Tipo == lexer.TokenAbreColchetes {
+			p.avancar()
+
+			if chave, err = p.parseExpressao(); err != nil {
+				return nil, err
+			}
+
+			if err = p.consome("]"); err != nil {
+				return nil, err
+			}
+		} else {
+			if chave, err = p.parseAtomo(); err != nil {
+				return nil, err
+			}
+		}
+
+		if c, ok := chave.(*Identificador); ok {
+			if p.token.Tipo != lexer.TokenDoisPontos {
+				valor = chave
+				valorImplicito = true
+			}
+
+			chave = &TextoLiteral{"\"" + c.Nome + "\""}
+		}
+
+		if !valorImplicito {
+			if err = p.consome(":"); err != nil {
+				return nil, err
+			}
+
+			if valor, err = p.parseExpressao(); err != nil {
+				return nil, err
+			}
+		}
+
+		mapa.Entradas = append(mapa.Entradas, []BaseNode{chave, valor})
+
+		if p.token.Tipo == lexer.TokenVirgula {
+			p.avancar()
+		}
+	}
+
+	if err := p.consome("}"); err != nil {
+		return nil, err
+	}
+	return mapa, nil
 }
