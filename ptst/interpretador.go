@@ -109,6 +109,8 @@ func (i *Interpretador) visite(astNode parser.BaseNode) (Objeto, error) {
 		return i.visiteImporteDe(node)
 	case *parser.Indexacao:
 		return i.visiteIndexacao(node)
+	case *parser.MapaLiteral:
+		return i.visiteMapaLiteral(node)
 	}
 
 	return nil, nil
@@ -536,6 +538,29 @@ func (i *Interpretador) visiteIndexacao(node *parser.Indexacao) (Objeto, error) 
 	}
 
 	return ObtemItem(obj, arg)
+}
+
+func (i *Interpretador) visiteMapaLiteral(node *parser.MapaLiteral) (Objeto, error) {
+	mapa := NewMapaVazio()
+
+	for _, entrada := range node.Entradas {
+		var chave, valor Objeto
+		var err error
+
+		if chave, err = i.visite(entrada[0]); err != nil {
+			return nil, err
+		}
+
+		if valor, err = i.visite(entrada[1]); err != nil {
+			return nil, err
+		}
+
+		if _, err := mapa.M__define_item__(chave, valor); err != nil {
+			return nil, err
+		}
+	}
+
+	return mapa, nil
 }
 
 func (i *Interpretador) criarErroF(tipo *Tipo, format string, args ...any) error {

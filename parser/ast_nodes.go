@@ -128,6 +128,10 @@ type Indexacao struct {
 	Argumento BaseNode
 }
 
+type MapaLiteral struct {
+	Entradas [][]BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -154,3 +158,4 @@ func (*TuplaLiteral) isExpr()        {}
 func (*ListaLiteral) isExpr()        {}
 func (*ImporteDe) isExpr()           {}
 func (*Indexacao) isExpr()           {}
+func (*MapaLiteral) isExpr()           {}

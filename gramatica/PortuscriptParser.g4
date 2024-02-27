@@ -127,7 +127,8 @@ atomo:
 	| DIGITOS
 	| tupla
 	| grupo
-	| lista;
+	| lista
+	| mapa;
 
 tupla:
 	ABRE_PARENTESES expressao VIRGULA (expressao VIRGULA?)* FECHA_PARENTESES;
@@ -136,3 +137,11 @@ grupo: ABRE_PARENTESES expressao FECHA_PARENTESES;
 
 lista:
 	ABRE_COLCHETES expressao (VIRGULA expressao)* FECHA_COLCHETES;
+
+// Exemplos: { } { a } { a: 1, 'b': 2 } { [a]: b+2 }
+mapa:
+	ABRE_CHAVES (mapa_item (VIRGULA mapa_item)*)? FECHA_CHAVES;
+
+mapa_item:
+	ID
+	| (ID | TEXTO | (ABRE_COLCHETES expressao FECHA_COLCHETES)) DOIS_PONTOS expressao;
