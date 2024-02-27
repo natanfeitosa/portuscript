@@ -136,7 +136,7 @@ tupla:
 grupo: ABRE_PARENTESES expressao FECHA_PARENTESES;
 
 lista:
-	ABRE_COLCHETES expressao (VIRGULA expressao)* FECHA_COLCHETES;
+	ABRE_COLCHETES (expressao (VIRGULA expressao)*)? FECHA_COLCHETES;
 
 // Exemplos: { } { a } { a: 1, 'b': 2 } { [a]: b+2 }
 mapa:
