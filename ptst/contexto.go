@@ -2,6 +2,7 @@ package ptst
 
 import (
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/natanfeitosa/portuscript/parser"
@@ -34,9 +35,9 @@ func NewContexto(opcs OpcsContexto) *Contexto {
 	return context
 }
 
-func (c *Contexto) TransformarEmAst(caminho string, useSysPaths bool, curDir string) (string, parser.BaseNode, error) {
-	if err := c.adicionarTrabalho(); err != nil {
-		return "", nil, err
+func (c *Contexto) TransformarEmAst(caminhoInicial string, useSysPaths bool, curDir string) (caminho string, ast parser.BaseNode, err error) {
+	if err = c.adicionarTrabalho(); err != nil {
+		return
 	}
 	defer c.encerrarTrabalho()
 
@@ -45,18 +46,20 @@ func (c *Contexto) TransformarEmAst(caminho string, useSysPaths bool, curDir str
 		caminhos = c.Opcs.CaminhosPadrao
 	}
 
-	caminho, err := ResolveArquivoPtst(caminho, caminhos, curDir)
-	if err != nil {
-		return "", nil, err
+	caminho, err = ResolveArquivoPtst(caminhoInicial, caminhos, curDir)
+	if err != nil || strings.HasSuffix(caminho, "so") {
+		return
 	}
 
-	codigo, err := os.ReadFile(caminho)
+	var codigo []byte
+	codigo, err = os.ReadFile(caminho)
 	if err != nil {
-		return "", nil, NewErroF(SistemaErro, "Erro ao acessar '%s': %s", caminho, err)
+		err = NewErroF(SistemaErro, "Erro ao acessar '%s': %s", caminho, err)
+		return
 	}
 
-	ast, err := c.StringParaAst(string(codigo))
-	return caminho, ast, err
+	ast, err = c.StringParaAst(string(codigo))
+	return
 }
 
 func (c *Contexto) StringParaAst(codigo string) (parser.BaseNode, error) {

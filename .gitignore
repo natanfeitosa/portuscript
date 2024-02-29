@@ -31,3 +31,5 @@ benchmark
 main_test.go
 
 bin
+
+*.so

@@ -1,0 +1,4 @@
+# Aqui, o nome "externos" é o nome que demos para o nosso arquivo de saída .so
+de "externos" importe exiba;
+
+exiba("Olá, tudo bem?")

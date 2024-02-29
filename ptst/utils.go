@@ -51,8 +51,13 @@ func ResolveArquivoPtst(caminhoArqOuMod string, bases []string, curDir string) (
 		}
 
 		if filepath.Ext(caminho) == "" && os.IsNotExist(err) {
-			caminho += ".ptst"
+			caminho += ".so"
 			_, err = os.Stat(caminho)
+
+			if err != nil {
+				caminho = strings.Replace(caminho, filepath.Ext(caminho), ".ptst", 1)
+				_, err = os.Stat(caminho)
+			}
 		}
 
 		if err != nil {
