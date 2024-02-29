@@ -55,25 +55,25 @@ changelog:
   #     - "^exemplo"
   groups:
     - title: Adições de Recursos (Features)
-      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?feat(\([[:word:]*:]+\))??!?:.+$'
       order: 0
     - title: Correções de Bugs
-      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?fix(\([[:word:]*:]+\))??!?:.+$'
       order: 1
     - title: Alterações na Documentação
-      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?docs(\([[:word:]*:]+\))??!?:.+$'
       order: 2
     - title: Refatorações de Código
-      regexp: '^.*?refactor(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?refactor(\([[:word:]*:]+\))??!?:.+$'
       order: 3
     - title: Adição/Atualização de Testes
-      regexp: '^.*?test(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?test(\([[:word:]*:]+\))??!?:.+$'
       order: 4
     - title: Melhorias de Desempenho
-      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?perf(\([[:word:]*:]+\))??!?:.+$'
       order: 5
     - title: Adições de exemplos
-      regexp: '^.*?exemplo(\([[:word:]]+\))??!?:.+$'
+      regexp: '^.*?exemplo(\([[:word:]*:]+\))??!?:.+$'
       order: 6
     - title: Outros
       order: 999
