@@ -839,9 +839,9 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 		return tupla, nil
 	case lexer.TokenAbreColchetes:
 		literal := &ListaLiteral{}
+		p.avancar()
 
 		for p.token.Tipo != lexer.TokenFechaColchetes {
-			p.avancar()
 			exp, err := p.parseExpressao()
 
 			if err != nil {
@@ -849,6 +849,10 @@ func (p *Parser) parseAtomo() (BaseNode, error) {
 			}
 
 			literal.Elementos = append(literal.Elementos, exp)
+
+			if p.token.Tipo == lexer.TokenVirgula {
+				p.avancar()
+			}
 		}
 
 		p.avancar()
