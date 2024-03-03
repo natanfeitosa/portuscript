@@ -27,6 +27,17 @@ func init() {
 		_emb_tamanho,
 		_emb_instanciaDe,
 		_emb_mesmoTipo,
+		ptst.NewMetodoOuPanic(
+			"tipo",
+			func(_ ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+				if err := ptst.VerificaNumeroArgumentos("tipo", false, args, 1, 1); err != nil {
+					return nil, err
+				}
+
+				return args[0].Tipo(), nil
+			},
+			"Obtem o tipo de um objeto",
+		),
 	}
 
 	ptst.RegistraModuloImpl(
