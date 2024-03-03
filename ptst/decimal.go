@@ -38,6 +38,12 @@ func NewDecimal(obj any) (Objeto, error) {
 	}
 }
 
+func init() {
+	TipoDecimal.Nova = func(args Tupla) (Objeto, error) {
+		return NewDecimal(args[0])
+	}
+}
+
 func (d Decimal) Tipo() *Tipo {
 	return TipoDecimal
 }

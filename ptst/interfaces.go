@@ -38,7 +38,7 @@ type I__obtem__ interface {
 	M__obtem__(inst Objeto, dono *Tipo) (Objeto, error)
 }
 
-type I_Mapa interface {
+type I_ObtemMapa interface {
 	ObtemMapa() Mapa
 }
 
@@ -162,4 +162,13 @@ type I__obtem_item__ interface {
 
 type I__define_item__ interface {
 	M__define_item__(chave, valor Objeto) (Objeto, error)
+}
+
+// Semelhante ao __new__ do python
+type I__nova_instancia__ interface {
+	M__nova_instancia__(meta *Tipo, args Tupla) (Objeto, error)
+}
+
+type I__inicializa__ interface {
+	M__inicializa__(args Tupla) (error)
 }

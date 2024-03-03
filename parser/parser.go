@@ -449,6 +449,17 @@ func (p *Parser) parseVariavel() (*DeclVar, error) {
 }
 
 func (p *Parser) parseExpressao() (BaseNode, error) {
+	if p.token.Tipo == lexer.TokenNova {
+		p.avancar()
+
+		obj, err := p.parsePrimario()
+		if err != nil {
+			return nil, err
+		}
+
+		return &NovaNode{obj}, nil
+	}
+
 	return p.parseDisjuncao()
 }
 

@@ -66,7 +66,7 @@ func ObtemAtributoS(inst Objeto, nome string) (Objeto, error) {
 		}
 	}
 
-	if I, ok := inst.(I_Mapa); ok {
+	if I, ok := inst.(I_ObtemMapa); ok {
 		mapa := I.ObtemMapa()
 		
 		if res, ok := mapa[nome]; ok {
@@ -152,4 +152,17 @@ func DefineItem(inst, chave, valor Objeto) (Objeto, error) {
 	}
 	
 	return nil, NewErroF(TipagemErro, "O tipo '%s' não suporta a atribuição por indice", inst.Tipo().Nome)
+}
+
+func NovaInstancia(obj Objeto, args Tupla) (Objeto, error) {
+	if I, ok := obj.(I__nova_instancia__); ok {
+		return I.M__nova_instancia__(obj.(*Tipo), args)
+	}
+
+	// t := obj.(*Tipo)
+	// if t.Base != nil {
+	// 	return t.M__nova_instancia__(t, args)
+	// }
+
+	return nil, NewErroF(TipagemErro, "O objeto '%s' não é instanciável", obj.Tipo().Nome)
 }

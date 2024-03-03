@@ -38,6 +38,12 @@ func NewInteiro(obj any) (Objeto, error) {
 	}
 }
 
+func init() {
+	TipoInteiro.Nova = func(args Tupla) (Objeto, error) {
+		return NewInteiro(args[0])
+	}
+}
+
 func (i Inteiro) Tipo() *Tipo {
 	return TipoInteiro
 }

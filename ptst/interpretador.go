@@ -111,6 +111,8 @@ func (i *Interpretador) visite(astNode parser.BaseNode) (Objeto, error) {
 		return i.visiteIndexacao(node)
 	case *parser.MapaLiteral:
 		return i.visiteMapaLiteral(node)
+	case *parser.NovaNode:
+		return i.visiteNovaNode(node)
 	}
 
 	return nil, nil
@@ -494,11 +496,11 @@ func (i *Interpretador) visiteBlocoPara(node *parser.BlocoPara) (Objeto, error) 
 	}
 }
 
-func (i *Interpretador) visitePareNode(node *parser.PareNode) (Objeto, error) {
+func (i *Interpretador) visitePareNode(_ *parser.PareNode) (Objeto, error) {
 	return nil, NewErro(ErroPare, Nulo)
 }
 
-func (i *Interpretador) visiteContinueNode(node *parser.ContinueNode) (Objeto, error) {
+func (i *Interpretador) visiteContinueNode(_ *parser.ContinueNode) (Objeto, error) {
 	return nil, NewErro(ErroContinue, Nulo)
 }
 
@@ -561,6 +563,26 @@ func (i *Interpretador) visiteMapaLiteral(node *parser.MapaLiteral) (Objeto, err
 	}
 
 	return mapa, nil
+}
+
+func (i *Interpretador) visiteNovaNode(node *parser.NovaNode) (Objeto, error) {
+	chamada, ok := node.Objeto.(*parser.ChamadaFuncao)
+	if !ok {
+		return nil, NewErroF(SintaxeErro, "era esperada uma sintaxe similar a chamada de função após o token 'nova'")
+	}
+
+	var obj, args Objeto
+	var err error
+
+	if obj, err = i.visite(chamada.Identificador); err != nil {
+		return nil, err
+	}
+
+	if args, err = i.visiteTuplaLiteral(&parser.TuplaLiteral{Elementos: chamada.Argumentos}); err != nil {
+		return nil, err
+	}
+
+	return NovaInstancia(obj, args.(Tupla))
 }
 
 func (i *Interpretador) criarErroF(tipo *Tipo, format string, args ...any) error {

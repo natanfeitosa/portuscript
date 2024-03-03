@@ -18,6 +18,7 @@ PARE: 'pare';
 CONTINUE: 'continue';
 PARA: 'para';
 EM: 'em';
+NOVA: 'nova';
 
 NOVA_LINHA: '\r'? '\n';
 DIGITOS:

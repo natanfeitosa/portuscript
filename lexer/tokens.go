@@ -125,6 +125,10 @@ const (
 
 	// .
 	TokenPonto
+
+	// const instancia = nova MinhaClasse()
+	TokenNova
+	TokenClasse
 )
 
 type PosicaoToken struct {
