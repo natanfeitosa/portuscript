@@ -9,11 +9,18 @@ func init() {
 		"Verdadeiro": ptst.Verdadeiro,
 		"Falso":      ptst.Falso,
 		"Nulo":       ptst.Nulo,
+		"Inteiro":    ptst.TipoInteiro,
+		"Decimal":    ptst.TipoDecimal,
+		"Texto":      ptst.TipoTexto,
+		// "Lista":      ptst.TipoLista,
+		// "Tupla":      ptst.TipoTupla,
+		// "Mapa":       ptst.TipoMapa,
+		"Booleano": ptst.TipoBooleano,
 	}
 
 	metodos := []*ptst.Metodo{
 		_emb_imprima,
-		_emb_leia_,
+		_emb_leia,
 		_emb_doc,
 		_emb_int,
 		_emb_texto,

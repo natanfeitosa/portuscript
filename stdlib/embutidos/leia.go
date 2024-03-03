@@ -27,7 +27,7 @@ func met_emb_leia(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 	return ptst.Texto(leitura), nil
 }
 
-var _emb_leia_ = ptst.NewMetodoOuPanic(
+var _emb_leia = ptst.NewMetodoOuPanic(
 	"leia",
 	met_emb_leia,
 	"leia(frase_para_imprimir) -> imprime um texto se especificado e lê uma entrada do usuário, retornando-a",
