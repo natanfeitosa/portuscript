@@ -5,15 +5,15 @@ import (
 	"strings"
 )
 
-type CriaFunc func(meta *Tipo, args Tupla) (Objeto, error)
+type NovaFunc func(args Tupla) (Objeto, error)
 
 // func __inicializa__(instancia, argumentos) {}
-type InicializaFunc func(inst Objeto, args Tupla) error
+type InicializaFunc func(args Tupla) error
 
 // Talvez um MRO seria útil?
 type Tipo struct {
 	Nome       string         // Nome para o tipo
-	Cria       CriaFunc       // Semelhante ao __new__ do python
+	Nova       NovaFunc       // Abstração para a interface `__nova_instancia__`
 	Inicializa InicializaFunc // Funcao/Metodo chamado quando instanciar uma classe
 	Doc        string         // A documentaçao para ajudar (ou não) a entender a classe
 	Base       *Tipo          // A classe da qual a atual herda
@@ -27,6 +27,11 @@ func NewTipo(nome string, doc string) *Tipo {
 	return t
 }
 
+// FIXME: isso pode não estar certo
+func (b *Tipo) Tipo() *Tipo {
+	return b
+}
+
 func (b *Tipo) ObtemDoc() string {
 	return b.Doc
 }
@@ -37,8 +42,8 @@ func (b *Tipo) NewTipo(nome string, doc string) *Tipo {
 	return t
 }
 
-func (b *Tipo) NewTipoX(nome string, doc string, cria CriaFunc, inicializa InicializaFunc) *Tipo {
-	t := &Tipo{Nome: nome, Doc: doc, Base: b, Cria: cria, Inicializa: inicializa, Mapa: Mapa{}}
+func (b *Tipo) NewTipoX(nome string, doc string, nova NovaFunc, inicializa InicializaFunc) *Tipo {
+	t := &Tipo{Nome: nome, Doc: doc, Base: b, Nova: nova, Inicializa: inicializa, Mapa: Mapa{}}
 	EnfileiraMontagemDoTipo(t)
 	return t
 }
@@ -61,7 +66,7 @@ func (b *Tipo) Monta() error {
 			b.Mapa["__doc__"] = Nulo
 		}
 	}
-	
+
 	return nil
 }
 
@@ -73,6 +78,18 @@ func (b *Tipo) G_ObtemAtributoOuNil(nome string) Objeto {
 
 	// FIXME: não deviamos olhar nas bases?
 	return nil
+}
+
+func (b *Tipo) M__nova_instancia__(meta *Tipo, args Tupla) (Objeto, error) {
+	if b.Nova != nil {
+		return b.Nova(args)
+	}
+
+	return nil, NewErroF(TipagemErro, "O objeto '%s' não é instanciável", b.Nome)
+}
+
+func (b *Tipo) M__texto__() (Objeto, error) {
+	return Texto(b.Nome), nil
 }
 
 var TipoTipo *Tipo = NewTipo(
@@ -119,3 +136,9 @@ func init() {
 		panic(err)
 	}
 }
+
+var _ Objeto = (*Tipo)(nil)
+var _ I_ObtemMapa = (*Tipo)(nil)
+var _ I__nova_instancia__ = (*Tipo)(nil)
+// var _ I__repr__ = (*Tipo)(nil)
+var _ I__texto__ = (*Tipo)(nil)

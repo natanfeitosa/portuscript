@@ -30,6 +30,12 @@ func NewBooleano(obj any) (Objeto, error) {
 	return Falso, nil
 }
 
+func init() {
+	TipoBooleano.Nova = func(args Tupla) (Objeto, error) {
+		return NewBooleano(args[0])
+	}
+}
+
 func (b Booleano) Tipo() *Tipo {
 	return TipoBooleano
 }
@@ -56,6 +62,7 @@ func (b Booleano) M__igual__(a Objeto) (Objeto, error) {
 
 func (b Booleano) M__diferente__(a Objeto) (Objeto, error) {
 	if !MesmoTipo(b, a) {
+		// FIXME: não deveria retornar Verdadeiro?
 		return Falso, nil
 	}
 

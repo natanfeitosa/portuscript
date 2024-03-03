@@ -132,6 +132,10 @@ type MapaLiteral struct {
 	Entradas [][]BaseNode
 }
 
+type NovaNode struct {
+	Objeto BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -158,4 +162,5 @@ func (*TuplaLiteral) isExpr()        {}
 func (*ListaLiteral) isExpr()        {}
 func (*ImporteDe) isExpr()           {}
 func (*Indexacao) isExpr()           {}
-func (*MapaLiteral) isExpr()           {}
+func (*MapaLiteral) isExpr()         {}
+func (*NovaNode) isExpr()            {}

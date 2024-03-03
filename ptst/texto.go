@@ -41,6 +41,12 @@ func NewTexto(arg any) (Objeto, error) {
 	return nil, nil
 }
 
+func init() {
+	TipoTexto.Nova = func(args Tupla) (Objeto, error) {
+		return NewTexto(args[0])
+	}
+}
+
 func (t Texto) Tipo() *Tipo {
 	return TipoTexto
 }

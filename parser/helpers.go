@@ -12,6 +12,7 @@ var palavrasChave = map[string]bool{
 	"pare":     true,
 	"continue": true,
 	"para":     true,
+	"nova":     true,
 	// "Verdadeiro": true,
 	// "Falso":      true,
 	// "Nulo":       true,

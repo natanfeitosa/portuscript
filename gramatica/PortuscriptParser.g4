@@ -68,7 +68,9 @@ declaracao_para: PARA ID EM primario;
 
 bloco: ABRE_CHAVES declaracoes? FECHA_CHAVES;
 
-expressao: disjuncao;
+expressao:
+	NOVA primario ABRE_PARENTESES argumentos? FECHA_PARENTESES
+	| disjuncao;
 
 disjuncao: conjuncao (OU conjuncao)*;
 
@@ -110,7 +112,7 @@ potencia: primario (POTENCIA fator)?;
 
 primario:
 	primario PONTO primario
-	| primario ABRE_PARENTESES argumentos FECHA_PARENTESES
+	| primario ABRE_PARENTESES argumentos? FECHA_PARENTESES
 	| primario ABRE_COLCHETES expressao FECHA_COLCHETES
 	| atomo;
 
