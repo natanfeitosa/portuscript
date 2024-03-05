@@ -61,11 +61,17 @@ func main() {
 		Long:    strings.ReplaceAll(strings.Trim(LongDescription, "\n "), "\t", "    "),
 		Version: Version,
 		Run: func(cmd *cobra.Command, args []string) {
-			ctx := ptst.NewContexto(ptst.OpcsContexto{CaminhosPadrao: []string{"."}})
+			cur, err := os.Getwd()
+			if err != nil {
+				panic(err)
+			}
+
+			ctx := ptst.NewContexto(ptst.OpcsContexto{CaminhosPadrao: []string{cur}})
 			defer ctx.Terminar()
 
 			if len(args) > 0 {
-				_, err := ptst.ExecutarArquivo(ctx, "", args[0], ".", false)
+
+				_, err = ptst.ExecutarArquivo(ctx, "", args[0], cur, false)
 
 				if err != nil {
 					ptst.LancarErro(err)
