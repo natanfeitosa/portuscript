@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/natanfeitosa/portuscript/parser"
 	"github.com/natanfeitosa/portuscript/playground"
 	"github.com/natanfeitosa/portuscript/ptst"
 	_ "github.com/natanfeitosa/portuscript/stdlib"
@@ -13,9 +12,9 @@ import (
 )
 
 var (
-    Commit   string = "-"
-    Datetime string = "0000-00-00T00:00:00"
-    Version  string = "dev"
+	Commit   string = "-"
+	Datetime string = "0000-00-00T00:00:00"
+	Version  string = "dev"
 )
 
 const LongDescription = `
@@ -27,32 +26,6 @@ mas sem ficar apenas criando códigos sem uso prático ou que não refletem o mu
 `
 
 var codigo string
-
-var verast = &cobra.Command{
-	Use:   "ast [arquivo.ptst]",
-	Short: "Imprime a ast de um código",
-	Run: func(cmd *cobra.Command, args []string) {
-		if cmd.Flags().Lookup("codigo").Value.String() != "" {
-			ast, err := parser.NewParserFromString(codigo).Parse()
-
-			if err != nil {
-				fmt.Fprint(os.Stderr, err)
-				return
-			}
-
-			astbytes, err := parser.Ast2string(ast)
-
-			if err != nil {
-				fmt.Fprint(os.Stderr, err)
-				return
-			}
-
-			fmt.Println(string(astbytes))
-			return
-		}
-		fmt.Println(args)
-	},
-}
 
 func main() {
 	rootCmd := &cobra.Command{
@@ -69,33 +42,27 @@ func main() {
 			ctx := ptst.NewContexto(ptst.OpcsContexto{CaminhosPadrao: []string{cur}})
 			defer ctx.Terminar()
 
+			// Se não passar um caminho de arquivo nem usar código inline com `-c`
+			if codigo == "" && len(args) == 0 {
+				playground.Inicializa(ctx, Version, Datetime, Commit)
+				return
+			}
+
+			// Passou o caminho de um arquio
 			if len(args) > 0 {
-
 				_, err = ptst.ExecutarArquivo(ctx, "", args[0], cur, false)
-
-				if err != nil {
-					ptst.LancarErro(err)
-				}
-				return
 			}
 
+			// Usou código inline
 			if codigo != "" {
-				_, err := ptst.ExecutarString(ctx, codigo)
-
-				if err != nil {
-					ptst.LancarErro(err)
-				}
-				return
+				_, err = ptst.ExecutarString(ctx, codigo)
 			}
 
-			playground.Inicializa(ctx, Version, Datetime, Commit)
+			ptst.LancarErro(err)
 		},
 	}
-
-	// rootCmd.AddCommand(verast)
+	
 	rootCmd.PersistentFlags().StringVarP(&codigo, "codigo", "c", "", "Use para rodar um código inline.")
-
-	// rootCmd.SetVersionTemplate("portuscipt versão " + Version)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
