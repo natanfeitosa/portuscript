@@ -3,6 +3,7 @@ module github.com/natanfeitosa/portuscript
 go 1.21.1
 
 require (
+	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/peterh/liner v1.2.2
 	github.com/rivo/uniseg v0.4.4
 	github.com/spf13/cobra v1.7.0
