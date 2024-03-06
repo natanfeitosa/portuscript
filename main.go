@@ -5,9 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/natanfeitosa/portuscript/playground"
-	"github.com/natanfeitosa/portuscript/ptst"
-	_ "github.com/natanfeitosa/portuscript/stdlib"
+	"github.com/natanfeitosa/portuscript/cmd"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +23,11 @@ mas sem ficar apenas criando códigos sem uso prático ou que não refletem o mu
 	A documentação completa pode ser encontrada em https://github.com/natanfeitosa/portuscript
 `
 
-var codigo string
+func init() {
+	cmd.Commit = Commit
+	cmd.Datetime = Datetime
+	cmd.Version = Version
+}
 
 func main() {
 	rootCmd := &cobra.Command{
@@ -33,36 +35,8 @@ func main() {
 		Short:   "Portuscript é uma linguagem programação completamente em Português",
 		Long:    strings.ReplaceAll(strings.Trim(LongDescription, "\n "), "\t", "    "),
 		Version: Version,
-		Run: func(cmd *cobra.Command, args []string) {
-			cur, err := os.Getwd()
-			if err != nil {
-				panic(err)
-			}
-
-			ctx := ptst.NewContexto(ptst.OpcsContexto{CaminhosPadrao: []string{cur}})
-			defer ctx.Terminar()
-
-			// Se não passar um caminho de arquivo nem usar código inline com `-c`
-			if codigo == "" && len(args) == 0 {
-				playground.Inicializa(ctx, Version, Datetime, Commit)
-				return
-			}
-
-			// Passou o caminho de um arquio
-			if len(args) > 0 {
-				_, err = ptst.ExecutarArquivo(ctx, "", args[0], cur, false)
-			}
-
-			// Usou código inline
-			if codigo != "" {
-				_, err = ptst.ExecutarString(ctx, codigo)
-			}
-
-			ptst.LancarErro(err)
-		},
 	}
-	
-	rootCmd.PersistentFlags().StringVarP(&codigo, "codigo", "c", "", "Use para rodar um código inline.")
+	cmd.InstalarComandos(rootCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
