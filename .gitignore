@@ -32,4 +32,5 @@ main_test.go
 
 bin
 
-*.so
+.vscode/*
+!.vscode/settings.json
