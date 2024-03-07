@@ -103,6 +103,23 @@ func (p *Parser) parseDeclaracao() (BaseNode, error) {
 	case lexer.TokenContinue:
 		p.avancar()
 		return &ContinueNode{}, nil
+	case lexer.TokenAssegura:
+		p.avancar()
+
+		var condicao, mensagem BaseNode
+		var err error
+
+		if condicao, err = p.parseExpressao(); err != nil {
+			return nil, err
+		}
+
+		if p.token.Tipo == lexer.TokenVirgula {
+			p.avancar()
+			if mensagem, err = p.parseExpressao(); err != nil {
+				return nil, err
+			}
+		}
+		return &AsseguraNode{condicao, mensagem}, nil
 	case lexer.TokenPara:
 		return p.parseBlocoPara()
 	default:

@@ -71,4 +71,6 @@ var tokensIdentificadores = map[string]TokenType{
 
 	"nova": TokenNova,
 	"classe": TokenClasse,
+
+	"assegura": TokenAssegura,
 }

@@ -113,6 +113,8 @@ func (i *Interpretador) visite(astNode parser.BaseNode) (Objeto, error) {
 		return i.visiteMapaLiteral(node)
 	case *parser.NovaNode:
 		return i.visiteNovaNode(node)
+	case *parser.AsseguraNode:
+		return i.visiteAsseguraNode(node)
 	}
 
 	return nil, nil
@@ -583,6 +585,31 @@ func (i *Interpretador) visiteNovaNode(node *parser.NovaNode) (Objeto, error) {
 	}
 
 	return NovaInstancia(obj, args.(Tupla))
+}
+
+func (i *Interpretador) visiteAsseguraNode(node *parser.AsseguraNode) (Objeto, error) {
+	var condicao, mensagem Objeto = Verdadeiro, Texto("")
+	var err error
+
+	if condicao, err = i.visite(node.Condicao); err != nil {
+		return nil, err
+	}
+
+	if node.Mensagem != nil {
+		if mensagem, err = i.visite(node.Mensagem); err != nil {
+			return nil, err
+		}
+	}
+
+	// FIXME: adicione algo na verificação
+	// if _, ok := mensagem.(Texto); !ok {}
+
+	// FIXME: deveria ser mais rigoroso com o tipo aqui
+	if !condicao.(Booleano) {
+		return nil, NewErro(ErroDeAsseguracao, mensagem)
+	}
+
+	return nil, nil
 }
 
 func (i *Interpretador) criarErroF(tipo *Tipo, format string, args ...any) error {
