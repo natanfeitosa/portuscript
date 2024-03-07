@@ -16,6 +16,7 @@ var palavrasChave = map[string]bool{
 	// "Verdadeiro": true,
 	// "Falso":      true,
 	// "Nulo":       true,
+	"assegura": true,
 }
 
 func IsKeyword(s string) bool {

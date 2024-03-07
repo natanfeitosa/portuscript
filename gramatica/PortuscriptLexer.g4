@@ -19,6 +19,7 @@ CONTINUE: 'continue';
 PARA: 'para';
 EM: 'em';
 NOVA: 'nova';
+ASSEGURA: 'assegura';
 
 NOVA_LINHA: '\r'? '\n';
 DIGITOS:

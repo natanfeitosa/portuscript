@@ -136,6 +136,11 @@ type NovaNode struct {
 	Objeto BaseNode
 }
 
+type AsseguraNode struct {
+	Condicao BaseNode
+	Mensagem BaseNode
+}
+
 func (*Programa) isExpr()            {}
 func (*DeclVar) isExpr()             {}
 func (*Reatribuicao) isExpr()        {}
@@ -164,3 +169,4 @@ func (*ImporteDe) isExpr()           {}
 func (*Indexacao) isExpr()           {}
 func (*MapaLiteral) isExpr()         {}
 func (*NovaNode) isExpr()            {}
+func (*AsseguraNode) isExpr()        {}

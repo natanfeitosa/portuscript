@@ -16,6 +16,7 @@ declaracao_simples:
 	| expressao
 	| declaracao_retorne
 	| declaracao_importacao
+	| ASSEGURA expressao (VIRGULA expressao)?
 	| PARE
 	| CONTINUE;
 

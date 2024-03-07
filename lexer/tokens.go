@@ -129,6 +129,8 @@ const (
 	// const instancia = nova MinhaClasse()
 	TokenNova
 	TokenClasse
+
+	TokenAssegura
 )
 
 type PosicaoToken struct {
