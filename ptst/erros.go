@@ -13,6 +13,22 @@ var BaseErro = TipoObjeto.NewTipo(
 	"A classe de erro base para todas as outras.",
 )
 
+func init() {
+	BaseErro.Mapa["__nova_instancia__"] = NewMetodoOuPanic(
+		"__nova_instancia__",
+		func(inst Objeto, args Tupla) (Objeto, error) {
+			tipo := inst.(*Tipo)
+			message, ok := args[0].(Texto)
+			if !ok {
+				return nil, NewErroF(TipagemErro, "O primeiro argumento de '%s' deve ser do tipo '%s', e não '%s'", tipo.Nome, TipoTexto.Nome, args[0].Tipo().Nome)
+			}
+
+			return NewErro(tipo, message), nil
+		},
+		"",
+	)
+}
+
 var (
 	TipoErro = BaseErro.NewTipo("Erro", "Base comum para todos os erros que não são de saída.")
 
