@@ -70,16 +70,6 @@ func (b *Tipo) Monta() error {
 	return nil
 }
 
-// G vem de `Genérico`
-func (b *Tipo) G_ObtemAtributoOuNil(nome string) Objeto {
-	if obj, ok := b.Mapa[nome]; ok {
-		return obj
-	}
-
-	// FIXME: não deviamos olhar nas bases?
-	return nil
-}
-
 func (b *Tipo) M__nova_instancia__(meta *Tipo, args Tupla) (Objeto, error) {
 	if b.Nova != nil {
 		return b.Nova(args)
@@ -88,16 +78,12 @@ func (b *Tipo) M__nova_instancia__(meta *Tipo, args Tupla) (Objeto, error) {
 	return nil, NewErroF(TipagemErro, "O objeto '%s' não é instanciável", b.Nome)
 }
 
-func (b *Tipo) M__texto__() (Objeto, error) {
-	return Texto(b.Nome), nil
-}
-
 var TipoTipo *Tipo = NewTipo(
 	"Tipo",
 	"Tipo raiz para todos os objetos (interno).",
 )
 
-var TipoObjeto *Tipo = NewTipo(
+var TipoObjeto *Tipo = TipoTipo.NewTipo(
 	"Objeto",
 	"A classe base para todas as outras classes.",
 )
@@ -135,10 +121,20 @@ func init() {
 		// FIXME: talvez não seja a melhor abordagem
 		panic(err)
 	}
+
+	TipoTipo.Mapa["__texto__"] = NewMetodoOuPanic(
+		"__texto__",
+		func(inst Objeto) (Objeto, error) {
+			if T, ok := inst.(*Tipo); ok {
+				return NewTexto(T.Nome)
+			}
+
+			return NewTexto(inst.Tipo().Nome)
+		},
+		"Retorna o nome da classe",
+	)
 }
 
 var _ Objeto = (*Tipo)(nil)
 var _ I_ObtemMapa = (*Tipo)(nil)
 var _ I__nova_instancia__ = (*Tipo)(nil)
-// var _ I__repr__ = (*Tipo)(nil)
-var _ I__texto__ = (*Tipo)(nil)

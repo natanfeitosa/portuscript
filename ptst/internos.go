@@ -51,33 +51,72 @@ func NomeAtributo(obj Objeto) (string, error) {
 	return "", NewErroF(AtributoErro, "O nome do atributo deve ser do tipo texto, não '%s'", obj.Tipo().Nome)
 }
 
+// FIXME: talve ficasse mais performático usando goroutines (ou pode não ser uma boa ideia)
+func ObtemAtributoRecursivamente(classe Objeto, nome string) Objeto {
+	// if I, ok := classe.(*Tipo); ok {
+	// 	if res, ok := I.Mapa[nome]; ok {
+	// 		return res
+	// 	}
+	// }
+	if classe == nil {
+		return nil
+	}
+
+	if I, ok := classe.(I_ObtemMapa); ok {
+		mapa := I.ObtemMapa()
+		if res, ok := mapa[nome]; ok {
+			return res
+		}
+	}
+
+	// if tipo := classe.Tipo(); tipo != nil {
+	// 	if obj, ok := tipo.Mapa[nome]; ok {
+	// 		return obj
+	// 	}
+	// }
+
+	// if classe.Tipo() != nil {
+	// 	if o := ObtemAtributoRecursivamente(classe.Tipo(), nome); o != nil {
+	// 		return o
+	// 	}
+	// }
+
+	if tipo, ok := classe.(*Tipo); ok {
+		if tipo.Base != nil {
+			obj := ObtemAtributoRecursivamente(tipo.Base, nome)
+			if obj != nil {
+				return obj
+			}
+		}
+	}
+
+	if len(nome) > 4 && (strings.HasPrefix(nome, "__") && strings.HasSuffix(nome, "__")) {
+		ref := reflect.ValueOf(classe)
+		m := ref.MethodByName("M" + nome)
+		if m.IsValid() {
+			metodo, err := NewMetodoProxyDeNativo(nome, m.Interface())
+			if err != nil {
+				panic(err)
+			}
+			return metodo
+		}
+	}
+
+	if tipo := classe.Tipo(); tipo != classe {
+		return ObtemAtributoRecursivamente(tipo, nome)
+	}
+
+	return nil
+}
+
 func ObtemAtributoS(inst Objeto, nome string) (Objeto, error) {
 	if I, ok := inst.(I__obtem_attributo__); ok {
 		return I.M__obtem_attributo__(nome)
 	}
 
-	// FIXME: e se o método for definido do "outro lado" do código?
-
-	if len(nome) > 4 && (strings.HasPrefix(nome, "__") && strings.HasSuffix(nome, "__")) {
-		ref := reflect.ValueOf(inst)
-		m := ref.MethodByName("M" + nome)
-		if m.IsValid() {
-			return NewMetodoProxyDeNativo(nome, m.Interface())
-		}
-	}
-
-	if I, ok := inst.(I_ObtemMapa); ok {
-		mapa := I.ObtemMapa()
-		
-		if res, ok := mapa[nome]; ok {
-			return res, nil
-		}
-	}
-
-	tipo := inst.Tipo()
-	if obj := tipo.G_ObtemAtributoOuNil(nome); obj != nil {
+	if obj := ObtemAtributoRecursivamente(inst, nome); obj != nil {
 		if desc, ok := obj.(I__obtem__); ok {
-			return desc.M__obtem__(inst, tipo)
+			return desc.M__obtem__(inst, inst.Tipo())
 		}
 
 		return obj, nil
@@ -142,7 +181,7 @@ func ObtemItem(inst, arg Objeto) (Objeto, error) {
 	if I, ok := inst.(I__obtem_item__); ok {
 		return I.M__obtem_item__(arg)
 	}
-	
+
 	return nil, NewErroF(TipagemErro, "O tipo '%s' não suporta o uso de indices", inst.Tipo().Nome)
 }
 
@@ -150,19 +189,19 @@ func DefineItem(inst, chave, valor Objeto) (Objeto, error) {
 	if I, ok := inst.(I__define_item__); ok {
 		return I.M__define_item__(chave, valor)
 	}
-	
+
 	return nil, NewErroF(TipagemErro, "O tipo '%s' não suporta a atribuição por indice", inst.Tipo().Nome)
 }
 
 func NovaInstancia(obj Objeto, args Tupla) (Objeto, error) {
+	nova, err := ObtemAtributoS(obj, "__nova_instancia__")
+	if err == nil {
+		return Chamar(nova, args)
+	}
+
 	if I, ok := obj.(I__nova_instancia__); ok {
 		return I.M__nova_instancia__(obj.(*Tipo), args)
 	}
-
-	// t := obj.(*Tipo)
-	// if t.Base != nil {
-	// 	return t.M__nova_instancia__(t, args)
-	// }
 
 	return nil, NewErroF(TipagemErro, "O objeto '%s' não é instanciável", obj.Tipo().Nome)
 }
