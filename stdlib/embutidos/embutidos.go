@@ -4,19 +4,48 @@ import (
 	"github.com/natanfeitosa/portuscript/ptst"
 )
 
+func registrarTipos(tipos []*ptst.Tipo, mapa ptst.Mapa) {
+	for _, tipo := range tipos {
+		mapa[tipo.Nome] = tipo
+	}
+}
+
 func init() {
 	constantes := ptst.Mapa{
 		"Verdadeiro": ptst.Verdadeiro,
 		"Falso":      ptst.Falso,
 		"Nulo":       ptst.Nulo,
-		"Inteiro":    ptst.TipoInteiro,
-		"Decimal":    ptst.TipoDecimal,
-		"Texto":      ptst.TipoTexto,
-		// "Lista":      ptst.TipoLista,
-		// "Tupla":      ptst.TipoTupla,
-		// "Mapa":       ptst.TipoMapa,
-		"Booleano": ptst.TipoBooleano,
 	}
+
+	registrarTipos(
+		[]*ptst.Tipo{
+			ptst.TipoInteiro,
+			ptst.TipoDecimal,
+			ptst.TipoTexto,
+			// ptst.TipoLista,
+			// ptst.TipoTupla,
+			// ptst.TipoMapa,
+			ptst.TipoBooleano,
+
+			// Erros
+			ptst.TipoErro,
+			ptst.SintaxeErro,
+			ptst.AtributoErro,
+			ptst.TipagemErro,
+			ptst.NomeErro,
+			ptst.ImportacaoErro,
+			ptst.ValorErro,
+			ptst.IndiceErro,
+			ptst.RuntimeErro,
+			ptst.FimIteracao,
+			ptst.ErroDeAsseguracao,
+			ptst.ConsultaErro,
+			ptst.ChaveErro,
+			ptst.SistemaErro,
+			ptst.ArquivoNaoEncontradoErro,
+		},
+		constantes,
+	)
 
 	metodos := []*ptst.Metodo{
 		_emb_imprima,
