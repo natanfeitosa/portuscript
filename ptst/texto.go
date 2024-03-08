@@ -31,13 +31,16 @@ func NewTexto(arg any) (Objeto, error) {
 		return Texto(obj), nil
 	case Texto:
 		return obj, nil
-	default:
-		if O, ok := obj.(I__texto__); ok {
-			return O.M__texto__()
-		}
 	}
 
-	// FIXME: ?????
+	if met, _ := ObtemAtributoS(arg.(Objeto), "__texto__"); met != nil {
+		return met.(I__chame__).M__chame__(Tupla{})
+	}
+
+	if O, ok := arg.(I__texto__); ok {
+		return O.M__texto__()
+	}
+
 	return nil, nil
 }
 
