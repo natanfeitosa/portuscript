@@ -3,6 +3,8 @@ package playground
 import (
 	"fmt"
 	"os"
+	"os/user"
+	"path"
 	"strings"
 
 	"github.com/natanfeitosa/portuscript/ptst"
@@ -15,71 +17,79 @@ Bem vindos ao Portuscript v%s.
 (%s) [%s]
 `
 
+func homeDirectory() string {
+	usr, err := user.Current()
+	if err == nil {
+		return usr.HomeDir
+	}
+	return os.Getenv("HOME")
+}
+
+func ArquivoHistorico(escrita bool) (arquivo *os.File) {
+	caminho := path.Join(homeDirectory(), ".historico_portuscript")
+
+	if escrita {
+		arquivo, _ = os.OpenFile(caminho, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+		// if err != nil {
+		// 	return err
+		// }
+		return
+	}
+
+	arquivo, _ = os.Open(caminho)
+	defer arquivo.Close()
+	return
+}
+
 func Inicializa(ctx *ptst.Contexto, version, datetime, commit string) {
-	finalizado := false
+	caminho := path.Join(homeDirectory(), ".historico_portuscript")
+	arquivo, _ := os.OpenFile(caminho, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+
+	finalizou := false
 	finalizar := func() {
-		finalizado = true
+		fmt.Printf("Saindo...")
+		finalizou = true
 	}
 
-	mod, _ := ctx.InicializarModulo(&ptst.ModuloImpl{
-		Info: ptst.ModuloInfo{
-			Arquivo: "<playground>",
-		},
-	})
-
-	imprima, err := mod.Contexto.Modulos.Embutidos.M__obtem_attributo__("imprima")
-
-	if err != nil {
+	exec := NovoExecutor(ctx)
+	exec.RegistrarMetodo(ptst.NewMetodoOuPanic("sair", func(_ ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
 		finalizar()
-		ptst.LancarErro(err)
-	}
+		return nil, nil
+	}, ""))
 
-	mod.Escopo.DefinirSimbolo(
-		ptst.NewVarSimbolo(
-			"sair",
-			ptst.NewMetodoOuPanic("sair", func(mod ptst.Objeto, args ptst.Objeto) (ptst.Objeto, error) {
-				finalizar()
-				return nil, nil
-			}, ""),
-		),
-	)
-
-	ptst.Chamar(imprima, ptst.Texto(fmt.Sprintf(strings.Trim(banner, "\n "), version, datetime, commit)))
+	fmt.Println(fmt.Sprintf(strings.Trim(banner, " \n"), version, datetime, commit))
 
 	line := liner.NewLiner()
-	defer line.Close()
+	line.ReadHistory(arquivo)
 
-	for !finalizado {
-		codigo, err := line.Prompt(">>> ")
+	defer func() {
+		line.Close()
+		arquivo.Close()
+		// exec.Terminar()
+	}()
 
+	estado := NewEstado()
+
+	for !finalizou {
+		codigo, err := line.Prompt(string(estado.Indicador))
 		if err != nil {
 			finalizar()
 			fmt.Fprintln(os.Stderr, err)
 		}
 
-		line.AppendHistory(codigo)
-
 		if len(codigo) < 1 {
-			ptst.Chamar(imprima, ptst.Texto("Entrada vazia"))
+			fmt.Println("Entrada vazia")
 			continue
 		}
 
-		ast, err := ctx.StringParaAst(codigo)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			continue
-		}
+		line.AppendHistory(codigo)
+		estado.RecalcularEstado(codigo)
 
-		result, err := ctx.AvaliarAst(ast, mod.Escopo)
-		// fmt.Printf("\n\n%t\n%t\n\n", result, err)
-
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-		}
-
-		if result != nil {
-			result, _ := ptst.NewTexto(result)
-			ptst.Chamar(imprima,result.(ptst.Texto))
+		if !estado.Continua {
+			exec.ExecutarCodigo(estado.Codigo)
+			estado.Codigo = ""
 		}
 	}
+
+	line.WriteHistory(arquivo)
 }
