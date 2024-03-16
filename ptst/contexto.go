@@ -31,6 +31,10 @@ func NewContexto(opcs OpcsContexto) *Contexto {
 		fechado: false,
 	}
 
+	Importe = func(nome string, escopo *Escopo) (Objeto, error) {
+		return MaquinarioImporteModulo(context, nome, escopo)
+	}
+
 	MultiImporteModulo(context, "embutidos")
 	return context
 }
@@ -112,9 +116,7 @@ func (c *Contexto) InicializarModulo(implementacao *ModuloImpl) (*Modulo, error)
 
 func (c *Contexto) adicionarTrabalho() error {
 	if c.fechado {
-		err := NewErro(RuntimeErro, Texto("Contexto já fechado"))
-		err.Contexto = c
-		return err
+		return NewErro(RuntimeErro, Texto("Contexto já fechado"))
 	}
 
 	c.waitgroup.Add(1)
@@ -129,5 +131,8 @@ func (c *Contexto) Terminar() {
 	c.once.Do(func() {
 		c.waitgroup.Wait()
 		c.fechado = true
+		Importe = func(s string, e *Escopo) (Objeto, error) {
+			panic("Antes de usar a função `Importe` você precisa criar um contexto")
+		}
 	})
 }

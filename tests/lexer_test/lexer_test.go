@@ -2,7 +2,7 @@ package lexer_test
 
 import (
 	// "reflect"
-	"fmt"
+
 	"testing"
 
 	"github.com/natanfeitosa/portuscript/lexer"
@@ -174,8 +174,6 @@ func TestLexer(t *testing.T) {
 		token := lex.ProximoToken()
 		if token.Tipo != esperado.Tipo || token.Valor != esperado.Valor {
 			t.Errorf("Esperado: (%v, %s), Obtido: (%v, %s)", esperado.Tipo, esperado.Valor, token.Tipo, token.Valor)
-			fmt.Printf("\ntoken ini: %#v\n", token.Inicio)
-			fmt.Printf("\ntoken fim: %#v\n", token.Fim)
 		}
 	}
 

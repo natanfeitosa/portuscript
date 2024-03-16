@@ -1,7 +1,6 @@
 package parser_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/natanfeitosa/portuscript/parser"
@@ -12,7 +11,7 @@ func TestExpresaoSeSemCorpo(t *testing.T) {
 	esperada.Declaracoes = []parser.BaseNode{
 		&parser.ExpressaoSe{
 			Condicao: &parser.Identificador{Nome: "Verdadeiro"},
-			Corpo: &parser.Bloco{},
+			Corpo:    &parser.Bloco{},
 		},
 	}
 
@@ -21,8 +20,6 @@ func TestExpresaoSeSemCorpo(t *testing.T) {
 	`
 
 	err, ok := createParserAndCompare(code, esperada)
-	
-	fmt.Println(err, ok)
 
 	if !ok {
 		t.Error(err)

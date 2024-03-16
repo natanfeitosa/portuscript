@@ -39,3 +39,7 @@ func MultiImporteModulo(ctx *Contexto, nomes ...string) error {
 
 	return nil
 }
+
+var Importe func(string, *Escopo) (Objeto, error) = func(s string, e *Escopo) (Objeto, error) {
+	panic("Antes de usar a função `Importe` você precisa criar um contexto")
+}
