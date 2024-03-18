@@ -79,7 +79,10 @@ func TestImportacoesRelativas(t *testing.T) {
 	ctx := ptst.NewContexto(ptst.OpcsContexto{})
 	defer ctx.Terminar()
 
-	if _, err := ptst.Importe("./algo", nil); err == nil {
+	escopoTeste := ptst.NewEscopo()
+	escopoTeste.DefinirSimbolo(ptst.NewVarSimbolo("__arquivo__", ptst.Texto(".")))
+
+	if _, err := ptst.Importe("./algo", escopoTeste); err == nil {
 		t.Error("Era esperado um erro, pois `algo.ptst` não existe")
 	}
 }
