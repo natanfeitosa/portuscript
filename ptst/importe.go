@@ -1,6 +1,10 @@
 package ptst
 
-import "path"
+import (
+	"os"
+	"path"
+	"strings"
+)
 
 func MaquinarioImporteModulo(ctx *Contexto, nome string, escopo *Escopo) (Objeto, error) {
 	if modulo, err := ctx.ObterModulo(nome); err == nil {
@@ -11,13 +15,25 @@ func MaquinarioImporteModulo(ctx *Contexto, nome string, escopo *Escopo) (Objeto
 		return ctx.InicializarModulo(impl)
 	}
 
-	// FIXME: lidar com importações começando em `/` como sendo uma importação desde a raiz do cwd
+	if !(strings.HasPrefix(nome, "./") || strings.HasPrefix(nome, "/")) {
+		return nil, NewErroF(ImportacaoErro, "Importações não relativas só estão disponíveis para módulos embutidos, corrija para './%s'", nome)
+	}
+
 	// FIXME: prevenir importação circular
 	// FIXME: adicionar operador para definir quem deve ser público para importar
 	curDir := ""
-	if escopo != nil {
-		arqAtual, err := escopo.ObterValor("__arquivo__")
-		if err == nil {
+
+	if strings.HasPrefix(nome, "/") {
+		// FIXME: vamos apenas ignorar o erro?
+		curDir, _ = os.Getwd()
+	} else if strings.HasPrefix(nome, "./") {
+		if escopo == nil {
+			panic("Um escopo atual é necessário quando usar importação relativa do tipo './modulo'")
+		}
+
+		if arqAtual, err := escopo.ObterValor("__arquivo__"); err != nil {
+			panic("O escopo atual precisa informar um `__arquivo__` para poder montar o caminho relativo")
+		} else if arqAtual != nil {
 			curDir = path.Dir(string(arqAtual.(Texto)))
 		}
 	}
