@@ -31,7 +31,9 @@ func MaquinarioImporteModulo(ctx *Contexto, nome string, escopo *Escopo) (Objeto
 			panic("Um escopo atual é necessário quando usar importação relativa do tipo './modulo'")
 		}
 
-		if arqAtual, err := escopo.ObterValor("__arquivo__"); err == nil {
+		if arqAtual, err := escopo.ObterValor("__arquivo__"); err != nil {
+			panic("O escopo atual precisa informar um `__arquivo__` para poder montar o caminho relativo")
+		} else if arqAtual != nil {
 			curDir = path.Dir(string(arqAtual.(Texto)))
 		}
 	}
