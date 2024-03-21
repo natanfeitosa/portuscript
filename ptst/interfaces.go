@@ -10,6 +10,10 @@ type I__texto__ interface {
 	M__texto__() (Objeto, error)
 }
 
+type I__bytes__ interface {
+	M__bytes__() (Objeto, error)
+}
+
 type I__inteiro__ interface {
 	M__inteiro__() (Objeto, error)
 }
