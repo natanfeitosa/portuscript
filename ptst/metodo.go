@@ -93,6 +93,14 @@ func NewMetodoProxyDeNativo(nome string, chamavel interface{}) (*Metodo, error) 
 		metodo.chamavel = func(_ Objeto, arg Objeto) (Objeto, error) {
 			return fn(arg)
 		}
+	// `__nova_instancia__`
+	case func(*Tipo, Tupla) (Objeto, error):
+		metodo.chamavel = func(inst Objeto, args Tupla) (Objeto, error) {
+			meta := args[0].(*Tipo)
+			args = args[0:]
+
+			return fn(meta, args)
+		}
 	default:
 		// FIXME: adicionar um tipo de erro adequado
 		return nil, fmt.Errorf("não foi possível criar um proxy para o método %T", fn)
