@@ -26,6 +26,7 @@ func init() {
 			// ptst.TipoTupla,
 			// ptst.TipoMapa,
 			ptst.TipoBooleano,
+			ptst.TipoBytes,
 
 			// Erros
 			ptst.TipoErro,

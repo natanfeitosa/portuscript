@@ -69,6 +69,17 @@ func ObtemAtributoRecursivamente(classe Objeto, nome string) Objeto {
 		}
 	}
 
+	if len(nome) > 4 && (strings.HasPrefix(nome, "__") && strings.HasSuffix(nome, "__")) {
+		ref := reflect.ValueOf(classe)
+		m := ref.MethodByName("M" + nome)
+		if m.IsValid() {
+			metodo, err := NewMetodoProxyDeNativo(nome, m.Interface())
+			if err != nil {
+				panic(err)
+			}
+			return metodo
+		}
+	}
 	// if tipo := classe.Tipo(); tipo != nil {
 	// 	if obj, ok := tipo.Mapa[nome]; ok {
 	// 		return obj
@@ -90,17 +101,6 @@ func ObtemAtributoRecursivamente(classe Objeto, nome string) Objeto {
 		}
 	}
 
-	if len(nome) > 4 && (strings.HasPrefix(nome, "__") && strings.HasSuffix(nome, "__")) {
-		ref := reflect.ValueOf(classe)
-		m := ref.MethodByName("M" + nome)
-		if m.IsValid() {
-			metodo, err := NewMetodoProxyDeNativo(nome, m.Interface())
-			if err != nil {
-				panic(err)
-			}
-			return metodo
-		}
-	}
 
 	if tipo := classe.Tipo(); tipo != classe {
 		return ObtemAtributoRecursivamente(tipo, nome)
@@ -196,6 +196,10 @@ func DefineItem(inst, chave, valor Objeto) (Objeto, error) {
 func NovaInstancia(obj Objeto, args Tupla) (Objeto, error) {
 	nova, err := ObtemAtributoS(obj, "__nova_instancia__")
 	if err == nil {
+		if _, ok := args[0].(*Tipo); !ok {
+			args = append(Tupla{obj}, args...)
+		}
+
 		return Chamar(nova, args)
 	}
 
