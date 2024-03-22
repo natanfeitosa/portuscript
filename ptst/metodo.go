@@ -97,7 +97,7 @@ func NewMetodoProxyDeNativo(nome string, chamavel interface{}) (*Metodo, error) 
 	case func(*Tipo, Tupla) (Objeto, error):
 		metodo.chamavel = func(inst Objeto, args Tupla) (Objeto, error) {
 			meta := args[0].(*Tipo)
-			args = args[0:]
+			args = args[1:]
 
 			return fn(meta, args)
 		}
