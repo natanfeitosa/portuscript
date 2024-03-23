@@ -54,8 +54,77 @@ func TestCriacaoDeInstanciaVazia(t *testing.T) {
 }
 
 func TestConversaoPelaChamadaDoConstrutor(t *testing.T) {
-	if _, err := ptst.NovaInstancia(ptst.TipoBytes, ptst.Tupla{ptst.Bytes{}}); err != nil {
+	if _, err := ptst.NovaInstancia(ptst.TipoBytes, ptst.Tupla{&ptst.Bytes{}}); err != nil {
 		t.Error(err)
 	}
-	
+}
+
+func TestComparacaoRica(t *testing.T) {
+	var a, b = &ptst.Bytes{}, &ptst.Bytes{}
+
+	t.Run("`a == b`", func(t *testing.T) {
+		res, err := ptst.Igual(a, b)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if !res.(ptst.Booleano) {
+			t.Error("deveria ser Verdadeiro, mas deu Falso")
+		}
+	})
+
+	t.Run("`a != b`", func(t *testing.T) {
+		res, err := ptst.Diferente(a, b)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if res.(ptst.Booleano) {
+			t.Error("deveria ser Falso, mas deu Verdadeiro")
+		}
+	})
+
+	t.Run("`a >= b`", func(t *testing.T) {
+		res, err := ptst.MaiorOuIgual(a, b)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if !res.(ptst.Booleano) {
+			t.Error("deveria ser Verdadeiro, mas deu Falso")
+		}
+	})
+
+	t.Run("`a > b`", func(t *testing.T) {
+		res, err := ptst.MaiorQue(a, b)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if res.(ptst.Booleano) {
+			t.Error("deveria ser Falso, mas deu Verdadeiro")
+		}
+	})
+
+	t.Run("`a <= b`", func(t *testing.T) {
+		res, err := ptst.MenorOuIgual(a, b)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if !res.(ptst.Booleano) {
+			t.Error("deveria ser Verdadeiro, mas deu Falso")
+		}
+	})
+
+	t.Run("`a < b`", func(t *testing.T) {
+		res, err := ptst.MenorQue(a, b)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if res.(ptst.Booleano) {
+			t.Error("deveria ser Falso, mas deu Verdadeiro")
+		}
+	})
 }

@@ -209,3 +209,11 @@ func NovaInstancia(obj Objeto, args Tupla) (Objeto, error) {
 
 	return nil, NewErroF(TipagemErro, "O objeto '%s' não é instanciável", obj.Tipo().Nome)
 }
+
+func Tamanho(obj Objeto) (Objeto, error) {
+	if I, ok := obj.(I__tamanho__); ok {
+		return I.M__tamanho__()
+	}
+
+	return nil, NewErroF(TipagemErro, "Objeto do tipo '%s' não implementa a interface '__tamanho__'.", obj.Tipo().Nome)
+}
