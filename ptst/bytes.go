@@ -1,6 +1,8 @@
 package ptst
 
-import "reflect"
+import (
+	"bytes"
+)
 
 type Bytes struct {
 	Itens     []byte
@@ -57,7 +59,7 @@ func (b *Bytes) M__igual__(outro Objeto) (Objeto, error) {
 		return Falso, nil
 	}
 
-	return NewBooleano(reflect.DeepEqual(b, outro))
+	return NewBooleano(bytes.Equal(b.Itens, outro.(*Bytes).Itens))
 }
 
 func (b *Bytes) M__maior_ou_igual__(outro Objeto) (Objeto, error) {
