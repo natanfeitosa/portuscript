@@ -58,6 +58,10 @@ func (t Texto) M__texto__() (Objeto, error) {
 	return t, nil
 }
 
+func (t Texto) M__bytes__() (Objeto, error) {
+	return NewBytes(string(t))
+}
+
 func (t Texto) M__booleano__() (Objeto, error) {
 	return NewBooleano(len(t) != 0)
 }
@@ -118,6 +122,7 @@ func (t Texto) String() string {
 // }
 
 var _ I__texto__ = (*Texto)(nil)
+var _ I__bytes__ = (*Texto)(nil)
 var _ I__booleano__ = (*Texto)(nil)
 var _ I__igual__ = (*Texto)(nil)
 
