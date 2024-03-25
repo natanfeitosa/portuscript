@@ -9,11 +9,6 @@ type Bytes struct {
 	Congelado bool
 }
 
-var TipoBytes = TipoObjeto.NewTipo(
-	"Bytes",
-	"Bytes(obj) -> Bytes",
-)
-
 func NewBytes(arg any) (Objeto, error) {
 	switch obj := arg.(type) {
 	case nil:
@@ -106,5 +101,27 @@ func (b *Bytes) M__tamanho__() (Objeto, error) {
 	return NewInteiro(len(b.Itens))
 }
 
+func (b *Bytes) M__booleano__() (Objeto, error) {
+	return NewBooleano(b.Itens != nil && len(b.Itens) > 0)
+}
+
+func (b *Bytes) M__decimal__() (Objeto, error) {
+	panic("unimplemented")
+}
+
+func (b *Bytes) M__inteiro__() (Objeto, error) {
+	panic("unimplemented")
+}
+
+func (b *Bytes) M__texto__() (Objeto, error) {
+	return NewTexto(string(b.Itens))
+}
+
+var TipoBytes = TipoObjeto.NewTipo(
+	"Bytes",
+	"Bytes(obj) -> Bytes",
+)
+
 var _ I_comparacaoRica = (*Bytes)(nil)
 var _ I__tamanho__ = (*Bytes)(nil)
+var _ I_conversaoEntreTipos = (*Bytes)(nil)

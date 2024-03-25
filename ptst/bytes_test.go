@@ -128,3 +128,29 @@ func TestComparacaoRica(t *testing.T) {
 		}
 	})
 }
+
+func TestConversaoDeTipos(t *testing.T) {
+	a := &ptst.Bytes{[]byte("a"), false}
+
+	t.Run("=> booleano", func(t *testing.T) {
+		res, err := ptst.NewBooleano(a)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if !res.(ptst.Booleano) {
+			t.Error("deveria ser Verdadeiro, mas deu Falso")
+		}
+	})
+
+	t.Run("=> texto", func(t *testing.T) {
+		text, err := ptst.NewTexto(a)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if res, _ := ptst.Igual(ptst.Texto("a"), text); !res.(ptst.Booleano) {
+			t.Error("a comparação com o tipo convertido não deu verdadeiro")
+		}
+	})
+}
