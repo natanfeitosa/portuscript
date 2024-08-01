@@ -36,3 +36,6 @@ bin
 
 .vscode/*
 !.vscode/settings.json
+
+# custom
+__*
