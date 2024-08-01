@@ -289,6 +289,8 @@ func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) 
 		return Ou(esquerda, direita)
 	case "e":
 		return E(esquerda, direita)
+	case "em":
+		return Em(direita, esquerda)
 	}
 
 	return nil, NewErroF(TipagemErro, "A operação '%s' não é suportada entre os tipos '%s' e '%s'", node.Operador, esquerda.Tipo().Nome, direita.Tipo().Nome)

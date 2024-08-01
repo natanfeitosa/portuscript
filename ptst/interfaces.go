@@ -174,5 +174,9 @@ type I__nova_instancia__ interface {
 }
 
 type I__inicializa__ interface {
-	M__inicializa__(args Tupla) (error)
+	M__inicializa__(args Tupla) error
+}
+
+type I__contem__ interface {
+	M__contem__(args Objeto) (Objeto, error)
 }
