@@ -131,6 +131,9 @@ const (
 	TokenClasse
 
 	TokenAssegura
+
+	// decl em decl2
+	TokenEm
 )
 
 type PosicaoToken struct {

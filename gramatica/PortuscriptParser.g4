@@ -84,10 +84,11 @@ comparacao:
 		(
 			IGUAL_IGUAL
 			| DIFERENTE
-			| MENOR_QUE
 			| MENOR_OU_IGUAL
-			| MAIOR_QUE
+			| MENOR_QUE
 			| MAIOR_OU_IGUAL
+			| MAIOR_QUE
+			| EM
 		) ou_bitabit
 	)?;
 

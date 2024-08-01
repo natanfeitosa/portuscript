@@ -547,10 +547,11 @@ func (p *Parser) parseComparacao() (BaseNode, error) {
 	switch token.Tipo {
 	case lexer.TokenIgualIgual,
 		lexer.TokenDiferente,
-		lexer.TokenMenorQue,
 		lexer.TokenMenorOuIgual,
+		lexer.TokenMenorQue,
+		lexer.TokenMaiorOuIgual,
 		lexer.TokenMaiorQue,
-		lexer.TokenMaiorOuIgual:
+		lexer.TokenEm:
 		p.avancar()
 		direita, err := p.parseComparacao()
 		if err != nil {

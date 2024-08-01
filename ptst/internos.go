@@ -142,22 +142,6 @@ func Nao(obj Objeto) (Objeto, error) {
 	return nil, nil
 }
 
-func Proximo(obj Objeto) (Objeto, error) {
-	if iter, ok := obj.(I__proximo__); ok {
-		return iter.M__proximo__()
-	}
-
-	return nil, NewErroF(TipagemErro, "O objeto do tipo '%s' não implementa a interface do iterador", obj.Tipo().Nome)
-}
-
-func Iter(obj Objeto) (Objeto, error) {
-	if iter, ok := obj.(I__iter__); ok {
-		return iter.M__iter__()
-	}
-
-	return nil, NewErroF(TipagemErro, "O objeto do tipo '%s' não implementa a interface do iterador", obj.Tipo().Nome)
-}
-
 // FIXME: esta não é a melhor assinatura possível
 func InstanciaDe(obj Objeto, tipos any) (Booleano, error) {
 	switch tipo_tupla := tipos.(type) {
