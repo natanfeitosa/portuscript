@@ -37,11 +37,16 @@ func (l *Lista) M__define_item__(chave, valor Objeto) (Objeto, error) {
 	return l, nil
 }
 
+func (l *Lista) M__contem__(obj Objeto) (Objeto, error) {
+	return l.Itens.M__contem__(obj)
+}
+
 var _ I__iter__ = (*Lista)(nil)
 var _ I__texto__ = (*Lista)(nil)
 var _ I__tamanho__ = (*Lista)(nil)
 var _ I__obtem_item__ = (*Lista)(nil)
 var _ I__define_item__ = (*Lista)(nil)
+var _ I__contem__ = (*Lista)(nil)
 
 func (l *Lista) Adiciona(item Objeto) (Objeto, error) {
 	l.Itens = append(l.Itens, item)
@@ -84,7 +89,7 @@ func (l *Lista) Pop(indice Inteiro) (Objeto, error) {
 
 		novaTupla = append(novaTupla, item)
 	}
-	
+
 	l.Itens = novaTupla
 	return removido, nil
 }
