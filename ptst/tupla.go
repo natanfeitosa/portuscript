@@ -62,8 +62,19 @@ func (t Tupla) M__define_item__(chave, valor Objeto) (Objeto, error) {
 	return t.DefineItem(chave, valor, t.Tipo().Nome)
 }
 
+func (t Tupla) M__contem__(obj Objeto) (Objeto, error) {
+	for _, item := range t {
+		if igual, _ := Igual(item, obj); igual == Verdadeiro {
+			return Verdadeiro, nil
+		}
+	}
+
+	return Falso, nil
+}
+
 var _ I__iter__ = Tupla(nil)
 var _ I__texto__ = Tupla(nil)
 var _ I__tamanho__ = Tupla(nil)
 var _ I__obtem_item__ = Tupla(nil)
 var _ I__define_item__ = Tupla(nil)
+var _ I__contem__ = Tupla(nil)

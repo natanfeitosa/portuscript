@@ -117,9 +117,17 @@ func (t Texto) String() string {
 	return string(t)
 }
 
-// func (t Texto) ObtemMapa() Mapa {
-// 	return t.Tipo().Mapa
-// }
+func (t Texto) M__contem__(obj Objeto) (Objeto, error) {
+	if other, err := NewTexto(obj); err != nil {
+		return nil, err
+	} else if other != nil {
+		if strings.Contains(string(t), string(other.(Texto))) {
+			return Verdadeiro, nil
+		}
+	}
+
+	return Falso, nil
+}
 
 var _ I__texto__ = (*Texto)(nil)
 var _ I__bytes__ = (*Texto)(nil)
@@ -136,6 +144,8 @@ var _ I__multiplica__ = (*Texto)(nil)
 // var _ I__divide__ = (*Texto)(nil)
 // var _ I_Mapa = (*Texto)(nil)
 var _ I__tamanho__ = (*Texto)(nil)
+
+var _ I__contem__ = (*Texto)(nil)
 
 func init() {
 	TipoTexto.Mapa["junta"] = NewMetodoOuPanic("junta", func(inst Objeto, iter Objeto) (Objeto, error) {
