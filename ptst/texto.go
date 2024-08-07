@@ -9,7 +9,6 @@ import (
 
 type Texto string
 
-// FIXME: adicionar construtor
 var TipoTexto = TipoObjeto.NewTipo(
 	"Texto",
 	`Texto(obj) -> Texto
@@ -74,8 +73,6 @@ func (t Texto) M__igual__(outro Objeto) (Objeto, error) {
 	return NewBooleano(t == outro.(Texto))
 }
 
-// func (t Texto) M__ou__(outro Objeto) (Objeto, error) {}
-
 func (t Texto) M__adiciona__(outro Objeto) (Objeto, error) {
 	if !MesmoTipo(t, outro) {
 		return nil, NewErroF(TipagemErro, "Não é possível concatenar o tipo '%s' com '%s'", t.Tipo().Nome, outro.Tipo().Nome)
@@ -134,7 +131,6 @@ var _ I__bytes__ = (*Texto)(nil)
 var _ I__booleano__ = (*Texto)(nil)
 var _ I__igual__ = (*Texto)(nil)
 
-// var _ I__ou__ = (*Texto)(nil)
 // var _ I__inteiro__ = (*Texto)(nil)
 // var _ I__decimal__ = (*Texto)(nil)
 var _ I__adiciona__ = (*Texto)(nil)
@@ -142,7 +138,6 @@ var _ I__multiplica__ = (*Texto)(nil)
 
 // var _ I__subtrai__ = (*Texto)(nil)
 // var _ I__divide__ = (*Texto)(nil)
-// var _ I_Mapa = (*Texto)(nil)
 var _ I__tamanho__ = (*Texto)(nil)
 
 var _ I__contem__ = (*Texto)(nil)

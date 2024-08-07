@@ -181,33 +181,22 @@ func (i Inteiro) M__maior_ou_igual__(b Objeto) (Objeto, error) {
 }
 
 func (i Inteiro) M__ou__(b Objeto) (Objeto, error) {
-	booleano, err := i.M__booleano__()
-	if err != nil {
-		return nil, err
+	if MesmoTipo(i, b) {
+		return NewInteiro(i | b.(Inteiro))
 	}
 
-	if booleano.(Booleano) {
-		return i, nil
-	}
-
-	return b, nil
+	return NaoImplementado, nil
 }
 
 func (i Inteiro) M__e__(b Objeto) (Objeto, error) {
-	booleano, err := i.M__booleano__()
-	if err != nil {
-		return nil, err
+	if MesmoTipo(i, b) {
+		return NewInteiro(i & b.(Inteiro))
 	}
 
-	if booleano.(Booleano) {
-		return b, nil
-	}
-
-	return i, nil
+	return NaoImplementado, nil
 }
 
 var _ I_conversaoEntreTipos = (*Inteiro)(nil)
 var _ I_aritmeticaMatematica = (*Inteiro)(nil)
 var _ I_comparacaoRica = (*Inteiro)(nil)
 var _ I_aritmeticaBooleana = (*Inteiro)(nil)
-// var _ I_Mapa = (*Inteiro)(nil)

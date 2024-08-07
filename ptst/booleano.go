@@ -74,16 +74,61 @@ func (b Booleano) M__diferente__(a Objeto) (Objeto, error) {
 	return Nao(igual)
 }
 
+func (b Booleano) M__decimal__() (Objeto, error) {
+	if b == Verdadeiro {
+		return Decimal(1.0), nil
+	}
+
+	return Decimal(0), nil
+}
+
+func (b Booleano) M__inteiro__() (Objeto, error) {
+	if b == Verdadeiro {
+		return Inteiro(1), nil
+	}
+
+	return Inteiro(0), nil
+}
+
 func (b Booleano) M__ou__(a Objeto) (Objeto, error) {
-	return b || a.(Booleano), nil
+	if MesmoTipo(b, a) {
+		var bi, ai Objeto
+		var err error
+
+		if bi, err = NewInteiro(b); err != nil {
+			return nil, err
+		}
+
+		if ai, err = NewInteiro(a); err != nil {
+			return nil, err
+		}
+
+		return NewBooleano(bi.(Inteiro) | ai.(Inteiro))
+	}
+
+	return NaoImplementado, nil
 }
 
 func (b Booleano) M__e__(a Objeto) (Objeto, error) {
-	return b && a.(Booleano), nil
+	if MesmoTipo(b, a) {
+		var bi, ai Objeto
+		var err error
+
+		if bi, err = NewInteiro(b); err != nil {
+			return nil, err
+		}
+
+		if ai, err = NewInteiro(a); err != nil {
+			return nil, err
+		}
+
+		return NewBooleano(bi.(Inteiro) & ai.(Inteiro))
+	}
+
+	return NaoImplementado, nil
 }
 
-var _ I__texto__ = (*Booleano)(nil)
-var _ I__booleano__ = (*Booleano)(nil)
+var _ I_conversaoEntreTipos = (*Booleano)(nil)
 var _ I__igual__ = (*Booleano)(nil)
 var _ I__diferente__ = (*Booleano)(nil)
-var _ I__ou__ = (*Booleano)(nil)
+var _ I_aritmeticaBooleana = (*Booleano)(nil)
