@@ -27,22 +27,25 @@ func init() {
 		},
 		"",
 	)
+
+	NaoImplementado = NewErro(NaoImplementadoErro, nil)
 }
 
 var (
 	TipoErro = BaseErro.NewTipo("Erro", "Base comum para todos os erros que não são de saída.")
 
-	SintaxeErro       = TipoErro.NewTipo("SintaxeErro", "Sintaxe Invalida.")
-	ReatribuicaoErro  = TipoErro.NewTipo("ReatribuicaoErro", "Proibido redeclarar.")
-	AtributoErro      = TipoErro.NewTipo("AtributoErro", "Atributo não encontrado.")
-	TipagemErro       = TipoErro.NewTipo("TipagemErro", "Tipo de argumento inapropriado.")
-	NomeErro          = TipoErro.NewTipo("NomeErro", "Erro de nome que não pode ser achado.")
-	ImportacaoErro    = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
-	ValorErro         = TipoErro.NewTipo("ValorErro", "O valor é inapropriádo ou sua ocorrencia não existe")
-	IndiceErro        = TipoErro.NewTipo("IndiceErro", "O indice está fora do range aceito")
-	RuntimeErro       = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
-	FimIteracao       = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
-	ErroDeAsseguracao = TipoErro.NewTipo("ErroDeAsseguracao", "Erro lançado em um `assegura obj`")
+	SintaxeErro         = TipoErro.NewTipo("SintaxeErro", "Sintaxe Invalida.")
+	ReatribuicaoErro    = TipoErro.NewTipo("ReatribuicaoErro", "Proibido redeclarar.")
+	AtributoErro        = TipoErro.NewTipo("AtributoErro", "Atributo não encontrado.")
+	TipagemErro         = TipoErro.NewTipo("TipagemErro", "Tipo de argumento inapropriado.")
+	NomeErro            = TipoErro.NewTipo("NomeErro", "Erro de nome que não pode ser achado.")
+	ImportacaoErro      = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
+	ValorErro           = TipoErro.NewTipo("ValorErro", "O valor é inapropriádo ou sua ocorrencia não existe")
+	IndiceErro          = TipoErro.NewTipo("IndiceErro", "O indice está fora do range aceito")
+	RuntimeErro         = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
+	FimIteracao         = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
+	ErroDeAsseguracao   = TipoErro.NewTipo("ErroDeAsseguracao", "Erro lançado em um `assegura obj`")
+	NaoImplementadoErro = TipoErro.NewTipo("NaoImplementadoErro", "O método ou função não foi implementada/o ainda")
 
 	ConsultaErro = TipoErro.NewTipo("ConsultaErro", "Classe base para erros que envolem chave ou indice em elementos")
 	ChaveErro    = ConsultaErro.NewTipo("ChaveErro", "Lançado quando a chave de um mapa não existe ou é inválida")
@@ -53,6 +56,8 @@ var (
 	// Apenas para fins de controle, não são necessariamente erros
 	ErroContinue = TipoErro.NewTipo("ErroContinue", "Erro utilizado para representar a instrução 'continue' em loops")
 	ErroPare     = TipoErro.NewTipo("ErroPare", "Erro utilizado para representar a instrução 'pare' em loops")
+
+	NaoImplementado Objeto
 )
 
 func NewErro(tipo *Tipo, mensagem Objeto) *Erro {
