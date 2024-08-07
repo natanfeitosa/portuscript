@@ -56,6 +56,7 @@ func init() {
 		_emb_texto,
 		_emb_tamanho,
 		_emb_instanciaDe,
+		_emb_sequencia,
 		_emb_mesmoTipo,
 		ptst.NewMetodoOuPanic(
 			"tipo",
