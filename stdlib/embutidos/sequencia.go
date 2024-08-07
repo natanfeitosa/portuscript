@@ -19,7 +19,11 @@ func (sn *SequenciaNumerica) M__iter__() (ptst.Objeto, error) {
 }
 
 func (sn *SequenciaNumerica) M__proximo__() (ptst.Objeto, error) {
-	if sn.Atual >= sn.Fim {
+	if sn.Passo > 0 && sn.Atual >= sn.Fim {
+		return nil, ptst.NewErro(ptst.FimIteracao, ptst.Nulo)
+	}
+
+	if sn.Passo < 0 && sn.Atual <= sn.Fim {
 		return nil, ptst.NewErro(ptst.FimIteracao, ptst.Nulo)
 	}
 
@@ -54,6 +58,8 @@ func met_emb_sequencia(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 
 		if passo, err = ptst.NewInteiro(args[2]); err != nil {
 			return nil, err
+		} else if passo.(ptst.Inteiro) == 0 {
+			return nil, ptst.NewErroF(ptst.ValorErro, "O valor de passo da sequência deve ser diferente de zero")
 		}
 
 	case 2:
@@ -75,8 +81,8 @@ func met_emb_sequencia(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 		Inicio: inicio.(ptst.Inteiro),
 		Fim:    fim.(ptst.Inteiro),
 		Passo:  passo.(ptst.Inteiro),
+		Atual:  0,
 	}
-	sn.Atual = -sn.Passo
 	return sn, nil
 }
 
