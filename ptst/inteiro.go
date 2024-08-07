@@ -20,6 +20,8 @@ func NewInteiro(obj any) (Objeto, error) {
 	switch b := obj.(type) {
 	case nil:
 		return Inteiro(0), nil
+	case int:
+		return Inteiro(b), nil
 	case Inteiro:
 		return b, nil
 	case Texto:
@@ -33,8 +35,7 @@ func NewInteiro(obj any) (Objeto, error) {
 			return O.M__inteiro__()
 		}
 
-		// FIXME: isso está certo?
-		return nil, nil
+		return nil, NewErroF(TipagemErro, "O argumento do construtor do tipo Inteiro deve ser uma string, Texto ou um outro tipo que implemente o método __inteiro__()")
 	}
 }
 
