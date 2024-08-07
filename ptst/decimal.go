@@ -20,6 +20,10 @@ func NewDecimal(obj any) (Objeto, error) {
 	switch b := obj.(type) {
 	case nil:
 		return Decimal(0), nil
+	case float64:
+		return Decimal(b), nil
+	case float32:
+		return Decimal(b), nil
 	case Decimal:
 		return b, nil
 	case Texto:
@@ -33,8 +37,7 @@ func NewDecimal(obj any) (Objeto, error) {
 			return O.M__decimal__()
 		}
 
-		// FIXME: isso está certo?
-		return nil, nil
+		return nil, NewErroF(TipagemErro, "O argumento do construtor do tipo Decimal deve ser uma string, Texto ou um outro tipo que implemente o método __decimal__()")
 	}
 }
 
