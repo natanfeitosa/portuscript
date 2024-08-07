@@ -285,12 +285,28 @@ func (i *Interpretador) visiteOpBinaria(node *parser.OpBinaria) (Objeto, error) 
 		return MaiorQue(esquerda, direita)
 	case ">=":
 		return MenorOuIgual(esquerda, direita)
-	case "ou":
+	case "|":
 		return Ou(esquerda, direita)
-	case "e":
+	case "&":
 		return E(esquerda, direita)
 	case "em":
 		return Em(direita, esquerda)
+	case "ou":
+		if v, err := NewBooleano(esquerda); err != nil {
+			return nil, err
+		} else if v.(Booleano) {
+			return esquerda, nil
+		}
+
+		return direita, nil
+	case "e":
+		if v, err := NewBooleano(esquerda); err != nil {
+			return nil, err
+		} else if !v.(Booleano) {
+			return esquerda, nil
+		}
+
+		return direita, nil
 	}
 
 	return nil, NewErroF(TipagemErro, "A operação '%s' não é suportada entre os tipos '%s' e '%s'", node.Operador, esquerda.Tipo().Nome, direita.Tipo().Nome)

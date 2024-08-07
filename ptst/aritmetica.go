@@ -186,10 +186,12 @@ func Ou(a, b Objeto) (Objeto, error) {
 			return nil, err
 		}
 
-		return res, nil
+		if res != NaoImplementado {
+			return res, nil
+		}
 	}
 
-	return nil, NewErroF(TipagemErro, "A operação 'ou' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+	return nil, NewErroF(TipagemErro, "A operação '|' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
 func E(a, b Objeto) (Objeto, error) {
@@ -199,11 +201,13 @@ func E(a, b Objeto) (Objeto, error) {
 		if err != nil {
 			return nil, err
 		}
-
-		return res, nil
+		
+		if res != NaoImplementado {
+			return res, nil
+		}
 	}
 
-	return nil, NewErroF(TipagemErro, "A operação 'e' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+	return nil, NewErroF(TipagemErro, "A operação '&' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
 func Neg(a Objeto) (Objeto, error) {
@@ -212,7 +216,7 @@ func Neg(a Objeto) (Objeto, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		return res, nil
 	}
 
@@ -225,7 +229,7 @@ func Pos(a Objeto) (Objeto, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		return res, nil
 	}
 
