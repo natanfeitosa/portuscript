@@ -1,7 +1,6 @@
 package ptst
 
 // Interfaces para fins de tipagem como a seguinte devem, começar com "I" e seus métodos internos com "M" de "Método"
-
 type I__chame__ interface {
 	M__chame__(args Tupla) (Objeto, error)
 }
@@ -58,20 +57,40 @@ type I__adiciona__ interface {
 	M__adiciona__(outro Objeto) (Objeto, error)
 }
 
+type I__adiciona_e_atribui__ interface {
+	M__adiciona_e_atribui__(outro Objeto) (Objeto, error)
+}
+
 type I__multiplica__ interface {
 	M__multiplica__(outro Objeto) (Objeto, error)
+}
+
+type I__multiplica_e_atribui__ interface {
+	M__multiplica_e_atribui__(outro Objeto) (Objeto, error)
 }
 
 type I__subtrai__ interface {
 	M__subtrai__(outro Objeto) (Objeto, error)
 }
 
+type I__subtrai_e_atribui__ interface {
+	M__subtrai_e_atribui__(outro Objeto) (Objeto, error)
+}
+
 type I__divide__ interface {
 	M__divide__(outro Objeto) (Objeto, error)
 }
 
+type I__divide_e_atribui__ interface {
+	M__divide_e_atribui__(outro Objeto) (Objeto, error)
+}
+
 type I__divide_inteiro__ interface {
 	M__divide_inteiro__(outro Objeto) (Objeto, error)
+}
+
+type I__divide_inteiro_e_atribui__ interface {
+	M__divide_inteiro_e_atribui__(outro Objeto) (Objeto, error)
 }
 
 type I__mod__ interface {

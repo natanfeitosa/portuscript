@@ -341,15 +341,15 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 	// FIXME: provavelmente nao seria melhor criar métodos específicos para operações implace e usar estes como fallback??
 	switch node.Operador {
 	case "+=":
-		valor, err = Adiciona(esquerda, direita)
+		valor, err = AdicionaEAtribui(esquerda, direita)
 	case "*=":
-		valor, err = Multiplica(esquerda, direita)
+		valor, err = MultiplicaEAtribui(esquerda, direita)
 	case "-=":
-		valor, err = Subtrai(esquerda, direita)
+		valor, err = SubtraiEAtribui(esquerda, direita)
 	case "/=":
-		valor, err = Divide(esquerda, direita)
+		valor, err = DivideEAtribui(esquerda, direita)
 	case "//=":
-		valor, err = DivideInteiro(esquerda, direita)
+		valor, err = DivideInteiroEAtribui(esquerda, direita)
 	default:
 		valor = direita
 	}
