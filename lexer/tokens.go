@@ -103,6 +103,8 @@ const (
 	TokenAsteriscoIgual
 	// /=
 	TokenBarraIgual
+	// //=
+	TokenBarraBarraIgual
 
 	// Operadores booleanos
 	TokenBoolOu

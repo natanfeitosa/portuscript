@@ -32,6 +32,7 @@ var tokensSimples = map[string]TokenType{
 	"-=": TokenMenosIgual,
 	"*=": TokenAsteriscoIgual,
 	"/=": TokenBarraIgual,
+	"//=": TokenBarraBarraIgual,
 
 	"|":  TokenBitABitOu,
 	"^":  TokenBitABitExOu,
