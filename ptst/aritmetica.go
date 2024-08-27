@@ -14,6 +14,18 @@ func Adiciona(a, b Objeto) (Objeto, error) {
 	return nil, NewErroF(TipagemErro, "A operação '+' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
+func AdicionaEAtribui(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__adiciona_e_atribui__); ok {
+		if res, err := A.M__adiciona_e_atribui__(b); err != nil {
+			return nil, err
+		} else if res != NaoImplementado {
+			return res, nil
+		}
+	}
+
+	return Adiciona(a, b)
+}
+
 func Multiplica(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__multiplica__); ok {
 		res, err := A.M__multiplica__(b)
@@ -26,6 +38,18 @@ func Multiplica(a, b Objeto) (Objeto, error) {
 	}
 
 	return nil, NewErroF(TipagemErro, "A operação '*' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+}
+
+func MultiplicaEAtribui(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__multiplica_e_atribui__); ok {
+		if res, err := A.M__multiplica_e_atribui__(b); err != nil {
+			return nil, err
+		} else if res != NaoImplementado {
+			return res, nil
+		}
+	}
+
+	return Multiplica(a, b)
 }
 
 func Subtrai(a, b Objeto) (Objeto, error) {
@@ -42,6 +66,18 @@ func Subtrai(a, b Objeto) (Objeto, error) {
 	return nil, NewErroF(TipagemErro, "A operação '-' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
+func SubtraiEAtribui(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__subtrai_e_atribui__); ok {
+		if res, err := A.M__subtrai_e_atribui__(b); err != nil {
+			return nil, err
+		} else if res != NaoImplementado {
+			return res, nil
+		}
+	}
+
+	return Subtrai(a, b)
+}
+
 func Divide(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__divide__); ok {
 		res, err := A.M__divide__(b)
@@ -56,6 +92,18 @@ func Divide(a, b Objeto) (Objeto, error) {
 	return nil, NewErroF(TipagemErro, "A operação '/' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
 }
 
+func DivideEAtribui(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__divide_e_atribui__); ok {
+		if res, err := A.M__divide_e_atribui__(b); err != nil {
+			return nil, err
+		} else if res != NaoImplementado {
+			return res, nil
+		}
+	}
+
+	return Divide(a, b)
+}
+
 func DivideInteiro(a, b Objeto) (Objeto, error) {
 	if A, ok := a.(I__divide_inteiro__); ok {
 		res, err := A.M__divide_inteiro__(b)
@@ -68,6 +116,19 @@ func DivideInteiro(a, b Objeto) (Objeto, error) {
 	}
 
 	return nil, NewErroF(TipagemErro, "A operação '//' não é suportada entre os tipos '%s' e '%s'", a.Tipo().Nome, b.Tipo().Nome)
+}
+
+func DivideInteiroEAtribui(a, b Objeto) (Objeto, error) {
+	if A, ok := a.(I__divide_inteiro_e_atribui__); ok {
+		if res, err := A.M__divide_inteiro_e_atribui__(b); err != nil {
+			return nil, err
+		} else if res != NaoImplementado {
+
+			return res, nil
+		}
+	}
+
+	return DivideInteiro(a, b)
 }
 
 func Mod(a, b Objeto) (Objeto, error) {
@@ -201,7 +262,7 @@ func E(a, b Objeto) (Objeto, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		if res != NaoImplementado {
 			return res, nil
 		}
