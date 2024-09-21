@@ -46,6 +46,7 @@ var (
 	FimIteracao         = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
 	ErroDeAsseguracao   = TipoErro.NewTipo("ErroDeAsseguracao", "Erro lançado em um `assegura obj`")
 	NaoImplementadoErro = TipoErro.NewTipo("NaoImplementadoErro", "O método ou função não foi implementada/o ainda")
+	DivisaoPorZeroErro  = TipoErro.NewTipo("DivisaoPorZeroErro", "A divisão de algum número por zero não é possível")
 
 	ConsultaErro = TipoErro.NewTipo("ConsultaErro", "Classe base para erros que envolem chave ou indice em elementos")
 	ChaveErro    = ConsultaErro.NewTipo("ChaveErro", "Lançado quando a chave de um mapa não existe ou é inválida")
