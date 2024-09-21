@@ -100,6 +100,10 @@ func (d Decimal) M__subtrai__(outro Objeto) (Objeto, error) {
 
 // FIXME: adicionar erro de divisão por zero
 func (d Decimal) M__divide__(outro Objeto) (Objeto, error) {
+	if talvezZero := TalvezLanceErroDivisaoPorZero(outro); talvezZero != nil {
+		return nil, talvezZero
+	}
+
 	outroDec, err := NewDecimal(outro)
 	if err != nil {
 		return nil, err
@@ -110,6 +114,10 @@ func (d Decimal) M__divide__(outro Objeto) (Objeto, error) {
 
 // FIXME: adicionar erro de divisão por zero
 func (d Decimal) M__divide_inteiro__(b Objeto) (Objeto, error) {
+	if talvezZero := TalvezLanceErroDivisaoPorZero(b); talvezZero != nil {
+		return nil, talvezZero
+	}
+
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err

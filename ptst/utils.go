@@ -87,3 +87,22 @@ func ResolveArquivoPtst(caminhoArqOuMod string, bases []string, curDir string) (
 	// FIXME: talvez isso não seja algo legal de fazer
 	return "", nil
 }
+
+func TalvezLanceErroDivisaoPorZero(obj Objeto) error {
+	switch t := obj.(type) {
+	case Inteiro:
+		if t == 0 {
+			return NewErroF(DivisaoPorZeroErro, "Não é possível dividir por zero")
+		}
+		return nil
+	case Decimal:
+		if t == 0.0 {
+			return NewErroF(DivisaoPorZeroErro, "Não é possível dividir pelo decimal 0.0")
+		}
+
+		return nil
+	default:
+		return nil
+	}
+
+}
