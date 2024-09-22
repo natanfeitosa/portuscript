@@ -330,11 +330,42 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 	var direita, esquerda, valor Objeto
 	var err error
 
-	if esquerda, err = i.visite(node.Objeto); err != nil {
+	// fmt.Printf("%#v\n", node.Objeto.(*parser.Indexacao).Argumento)
+
+	if direita, err = i.visite(node.Expressao); err != nil {
 		return nil, err
 	}
 
-	if direita, err = i.visite(node.Expressao); err != nil {
+	if esquerda, err = i.visite(node.Objeto); err != nil {
+
+		// TODO: pode ser melhorado
+		// 
+		if obj, ok := node.Objeto.(*parser.Indexacao); ok && node.Operador == "=" {
+			nodePai := obj.Objeto
+			nodeFilho := obj.Argumento
+
+			for {
+				if a, ok := nodeFilho.(*parser.Indexacao); ok {
+					nodePai = a.Objeto
+					nodeFilho = a.Argumento
+					continue
+				}
+
+				break
+			}
+
+			var pai, filho Objeto
+			if pai, err = i.visite(nodePai); err != nil {
+				return nil, err
+			}
+
+			if filho, err = i.visite(nodeFilho); err != nil {
+				return nil, err
+			}
+
+			return DefineItem(pai, filho, direita)
+		}
+
 		return nil, err
 	}
 
@@ -350,8 +381,6 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 		valor, err = DivideEAtribui(esquerda, direita)
 	case "//=":
 		valor, err = DivideInteiroEAtribui(esquerda, direita)
-	default:
-		valor = direita
 	}
 
 	if err != nil {
