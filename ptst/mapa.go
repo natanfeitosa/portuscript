@@ -93,7 +93,7 @@ var _ I__tamanho__ = (*Mapa)(nil)
 var _ I__obtem_item__ = (*Mapa)(nil)
 var _ I__define_item__ = (*Mapa)(nil)
 
-func (m Mapa) Chaves() (Objeto, error) {
+func (m Mapa) Chaves() (Tupla, error) {
 	if len(m) == 0 {
 		return Tupla(nil), nil
 	}
@@ -107,7 +107,7 @@ func (m Mapa) Chaves() (Objeto, error) {
 	return chaves, nil
 }
 
-func (m Mapa) Valores() (Objeto, error) {
+func (m Mapa) Valores() (Tupla, error) {
 	if len(m) == 0 {
 		return Tupla(nil), nil
 	}
@@ -121,6 +121,20 @@ func (m Mapa) Valores() (Objeto, error) {
 	return valores, nil
 }
 
+func (m Mapa) Atualizar(outro Mapa, ignoreExistentes Booleano) (Mapa, error) {
+	for c, v := range outro {
+		if ignoreExistentes {
+			if _, existe := m[c]; existe {
+				continue
+			}
+		}
+
+		m[c] = v
+	}
+
+	return m, nil
+}
+
 func init() {
 	TipoMapa.Mapa["chaves"] = NewMetodoOuPanic("chaves", func(inst Objeto) (Objeto, error) {
 		return inst.(Mapa).Chaves()
@@ -129,4 +143,29 @@ func init() {
 	TipoMapa.Mapa["valores"] = NewMetodoOuPanic("valores", func(inst Objeto) (Objeto, error) {
 		return inst.(Mapa).Valores()
 	}, `Retorna uma tupla contendo todos os valores do mapa`)
+
+	TipoMapa.Mapa["atualizar"] = NewMetodoOuPanic("atualizar", func(inst Objeto, args Tupla) (Objeto, error) {
+		if err := VerificaNumeroArgumentos("atualizar", true, args, 1, 2); err != nil {
+			return nil, err
+		}
+
+		ignoreExistentes := Falso
+		novoMapa := args[0]
+
+		if _, ok := novoMapa.(Mapa); !ok {
+			return nil, NewErroF(TipagemErro, "Era esperado o tipo 'Mapa', mas ao invés disso foi recebido o tipo '%s'", novoMapa.Tipo().Nome)
+		}
+
+		if len(args) == 2 {
+			if ignore, ok := args[1].(Booleano); ok {
+				ignoreExistentes = ignore
+			} else if !ok {
+				return nil, NewErroF(TipagemErro, "Era esperado o tipo 'Booleano', mas ao invés disso foi recebido o tipo '%s'", args[1].Tipo().Nome)
+			}
+		}
+
+		return inst.(Mapa).Atualizar(novoMapa.(Mapa), ignoreExistentes)
+	}, `mapa.atualizar(outroMapa, ignoreExistentes?) -> Mapa
+Atualiza o mapa atual com as chaves/valores do outro, se o parâmetro ignoreExistentes for Verdadeiro,
+as chaves que se repetem serão mantidas com o valor atual do mapa que chamou o método.`)
 }
