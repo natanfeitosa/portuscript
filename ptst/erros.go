@@ -41,6 +41,7 @@ var (
 	NomeErro            = TipoErro.NewTipo("NomeErro", "Erro de nome que não pode ser achado.")
 	ImportacaoErro      = TipoErro.NewTipo("ImportacaoErro", "Não é possível encontrar o módulo ou símbolo nele")
 	ValorErro           = TipoErro.NewTipo("ValorErro", "O valor é inapropriádo ou sua ocorrencia não existe")
+	ErroDeLimite        = ValorErro.NewTipo("ErroDeLimite", "O valor está fora do intervalo permitido.")
 	IndiceErro          = TipoErro.NewTipo("IndiceErro", "O indice está fora do range aceito")
 	RuntimeErro         = TipoErro.NewTipo("RuntimeErro", "Erro no ambiente de execução")
 	FimIteracao         = TipoErro.NewTipo("FimIteracao", "Sinaliza o fim da iteração quando `objeto.__proximo__() não retorna mais nada")
@@ -51,8 +52,8 @@ var (
 	ConsultaErro = TipoErro.NewTipo("ConsultaErro", "Classe base para erros que envolem chave ou indice em elementos")
 	ChaveErro    = ConsultaErro.NewTipo("ChaveErro", "Lançado quando a chave de um mapa não existe ou é inválida")
 
-	SistemaErro              = TipoErro.NewTipo("SistemaErro", "Erro relacionado ao sistema operacional")
-	ArquivoNaoEncontradoErro = SistemaErro.NewTipo("ArquivoNaoEncontradoErro", "O arquivo não pôde ser encontrado")
+	ErroDeSistema            = TipoErro.NewTipo("ErroDeSistema", "Erro relacionado a operações do sistema operacional.")
+	ArquivoNaoEncontradoErro = ErroDeSistema.NewTipo("ArquivoNaoEncontradoErro", "O arquivo não pôde ser encontrado")
 
 	// Apenas para fins de controle, não são necessariamente erros
 	ErroContinue = TipoErro.NewTipo("ErroContinue", "Erro utilizado para representar a instrução 'continue' em loops")

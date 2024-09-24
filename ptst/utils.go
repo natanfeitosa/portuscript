@@ -70,7 +70,7 @@ func ResolveArquivoPtst(caminhoArqOuMod string, bases []string, curDir string) (
 				continue
 			}
 
-			return "", NewErroF(SistemaErro, "Erro ao acessar '%s': %s", caminho, err)
+			return "", NewErroF(ErroDeSistema, "Erro ao acessar '%s': %s", caminho, err)
 		}
 
 		// if !strings.HasSuffix(caminho, ".ptst") {
@@ -104,5 +104,4 @@ func TalvezLanceErroDivisaoPorZero(obj Objeto) error {
 	default:
 		return nil
 	}
-
 }
