@@ -58,7 +58,7 @@ func (c *Contexto) TransformarEmAst(caminhoInicial string, useSysPaths bool, cur
 	var codigo []byte
 	codigo, err = os.ReadFile(caminho)
 	if err != nil {
-		err = NewErroF(SistemaErro, "Erro ao acessar '%s': %s", caminho, err)
+		err = NewErroF(ErroDeSistema, "Erro ao acessar '%s': %s", caminho, err)
 		return
 	}
 

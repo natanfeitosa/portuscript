@@ -42,7 +42,7 @@ func init() {
 			ptst.ErroDeAsseguracao,
 			ptst.ConsultaErro,
 			ptst.ChaveErro,
-			ptst.SistemaErro,
+			ptst.ErroDeSistema,
 			ptst.ArquivoNaoEncontradoErro,
 		},
 		constantes,
