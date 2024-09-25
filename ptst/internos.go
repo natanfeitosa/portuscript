@@ -101,7 +101,6 @@ func ObtemAtributoRecursivamente(classe Objeto, nome string) Objeto {
 		}
 	}
 
-
 	if tipo := classe.Tipo(); tipo != classe {
 		return ObtemAtributoRecursivamente(tipo, nome)
 	}
