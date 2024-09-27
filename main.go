@@ -32,7 +32,7 @@ func init() {
 func main() {
 	rootCmd := &cobra.Command{
 		Use:     "portuscript [arquivo]",
-		Short:   "Portuscript é uma linguagem programação completamente em Português",
+		Short:   "Portuscript é uma linguagem de programação completamente em Português",
 		Long:    strings.ReplaceAll(strings.Trim(LongDescription, "\n "), "\t", "    "),
 		Version: Version,
 	}
