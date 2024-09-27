@@ -1,7 +1,10 @@
 package embutidos
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/natanfeitosa/portuscript/ptst"
 )
@@ -22,9 +25,12 @@ func met_emb_leia(mod ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 		fmt.Printf("%s", texto)
 	}
 
-	var leitura string
-	fmt.Scan(&leitura)
-	return ptst.Texto(leitura), nil
+	reader := bufio.NewReader(os.Stdin)
+	leitura, err := reader.ReadString('\n')
+	if err != nil {
+		return nil, ptst.NewErroF(ptst.ErroDeSistema, "Erro ao ler a entrada: %v", err)
+	}
+	return ptst.Texto(strings.TrimRight(leitura, "\n")), nil
 }
 
 var _emb_leia = ptst.NewMetodoOuPanic(
