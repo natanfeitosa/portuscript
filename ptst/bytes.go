@@ -122,6 +122,20 @@ func (b *Bytes) M__texto__() (Objeto, error) {
 	return Texto(b.Itens), nil
 }
 
+func (b *Bytes) M__adiciona__(outro Objeto) (Objeto, error) {
+	if !MesmoTipo(b, outro) {
+		return nil, NewErroF(TipagemErro, "Não é possível concatenar o tipo '%s' com '%s'", b.Tipo().Nome, outro.Tipo().Nome)
+	}
+
+	bytes, err := NewBytes(outro)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Bytes{Itens: append(b.Itens, bytes.(*Bytes).Itens...)}, nil
+}
+
 var _ I_comparacaoRica = (*Bytes)(nil)
 var _ I__tamanho__ = (*Bytes)(nil)
 var _ I_conversaoEntreTipos = (*Bytes)(nil)
