@@ -1,0 +1,37 @@
+de "soquete" importe Soquete;
+
+# AF_INET, SOCK_STREAM
+const soq = nova Soquete(2, 1);
+
+# SOL_SOCKET, SO_REUSEADDR, 1
+soq.definir_opcoes(1, 2, 1)
+soq.definir_bloqueante(Verdadeiro)
+
+soq.associar("127.0.0.1", 3000)
+
+
+soq.escutar()
+
+imprima("Parece que nosso soquete Portuscript está ouvindo em http://127.0.0.1:3000")
+
+enquanto (Verdadeiro) {
+    var cliente = soq.aceitar();
+
+    # cliente.enviar(nova Bytes("Portuscript respondeu!!"))
+
+    enquanto(Verdadeiro) {
+        const dados = cliente.receber(1024);
+
+        se(nao dados) {
+            imprima("Conexão encerrada pelo cliente.")
+            pare;
+        }
+        
+        cliente.enviar(dados)
+    }
+    cliente.fechar()
+    imprima("fechou")
+}
+
+soq.fechar()
+imprima("saindo")

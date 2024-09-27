@@ -242,6 +242,8 @@ func (i *Interpretador) visiteOpUnaria(node *parser.OpUnaria) (Objeto, error) {
 		return Neg(operando)
 	case "+":
 		return Pos(operando)
+	case "nao":
+		return Nao(operando)
 	}
 
 	return nil, NewErroF(TipagemErro, "A operação '%s' não é suportada para o tipo '%s'", node.Operador, operando.Tipo().Nome)
@@ -339,7 +341,7 @@ func (i *Interpretador) visiteReatribuicao(node *parser.Reatribuicao) (Objeto, e
 	if esquerda, err = i.visite(node.Objeto); err != nil {
 
 		// TODO: pode ser melhorado
-		// 
+		//
 		if obj, ok := node.Objeto.(*parser.Indexacao); ok && node.Operador == "=" {
 			nodePai := obj.Objeto
 			nodeFilho := obj.Argumento

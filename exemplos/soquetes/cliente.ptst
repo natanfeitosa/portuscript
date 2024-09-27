@@ -1,0 +1,31 @@
+de "soquete" importe Soquete;
+de "soquete" importe AF_INET, SOCK_STREAM;
+de "colorize" importe imprimac, TEXTO;
+
+const soq = nova Soquete(AF_INET, SOCK_STREAM);
+soq.conectar("localhost", 3000)
+# soq.conectar("www.google.com", 80)
+
+imprima("conectou")
+
+const entrada = leia("O que você pretende enviar? Digite: ");
+# const entrada = "Opa";
+soq.enviar(nova Bytes(entrada))
+# soq.enviar(nova Bytes("GET / HTTP/1.1\r\nHost: www.google.com\r\nConnection: close\r\n\r\n"))
+
+var dados = nova Bytes("");
+
+enquanto(Verdadeiro) {
+    const temporario = soq.receber(1024);
+
+    se(nao temporario) {
+        imprimac(TEXTO.vermelho("não recebeu mais nada"))
+        pare;
+    }
+
+    dados += temporario;
+}
+
+imprima("O servidor respondeu:", dados)
+
+soq.fechar()
