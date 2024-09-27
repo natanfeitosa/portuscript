@@ -8,8 +8,9 @@ import (
 
 var familia = ptst.Mapa{
 	"AF_INET":     ptst.Inteiro(syscall.AF_INET),
-	"AF_INET6":     ptst.Inteiro(syscall.AF_INET6),
+	"AF_INET6":    ptst.Inteiro(syscall.AF_INET6),
 	"SOCK_STREAM": ptst.Inteiro(syscall.SOCK_STREAM),
+	"SOCK_DGRAM":  ptst.Inteiro(syscall.SOCK_DGRAM),
 }
 
 func init() {
