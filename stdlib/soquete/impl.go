@@ -55,7 +55,7 @@ func NewSoquete(familia, tipo, protocolo ptst.Inteiro) (ptst.Objeto, error) {
 	return s, nil
 }
 
-func (s *Soquete) DefinirBloqueante(naobloqueante ptst.Booleano) (ptst.Objeto, error) {
+func (s *Soquete) DefinirNaoBloqueante(naobloqueante ptst.Booleano) (ptst.Objeto, error) {
 	if err := unix.SetNonblock(s.descritorDoSoquete, bool(naobloqueante)); err != nil {
 		panic(err)
 	}
@@ -309,12 +309,12 @@ func init() {
 		return inst.(*Soquete).Conectar(args[0].(ptst.Texto), args[1].(ptst.Inteiro))
 	}, "")
 
-	TipoSoquete.Mapa["definir_bloqueante"] = ptst.NewMetodoOuPanic("definir_bloqueante", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("definir_bloqueante", true, args, 1, 1); err != nil {
+	TipoSoquete.Mapa["def_nao_bloqueante"] = ptst.NewMetodoOuPanic("def_nao_bloqueante", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("def_nao_bloqueante", true, args, 1, 1); err != nil {
 			return nil, err
 		}
 
-		return inst.(*Soquete).DefinirBloqueante(args[0].(ptst.Booleano))
+		return inst.(*Soquete).DefinirNaoBloqueante(args[0].(ptst.Booleano))
 	}, "")
 
 	TipoSoquete.Mapa["definir_opcoes"] = ptst.NewMetodoOuPanic("definir_opcoes", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
