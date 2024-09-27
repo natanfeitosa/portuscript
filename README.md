@@ -36,19 +36,25 @@ A CLI do PortuScript oferece as seguintes funcionalidades:
 
 - **Abrir o Playground**: Se nenhum argumento for passado, a CLI abrirá o Playground interativo.
 ```bash
-portuscript
+portuscript exec
 ```
 
 - **Executar Arquivo `*.ptst`**: Se o caminho de um arquivo `.ptst` for fornecido como argumento, o PortuScript executará o script contido no arquivo.
 
 ```bash
-portuscript caminho/do/arquivo.ptst
+portuscript exec caminho/do/arquivo.ptst
 ```
 
 - **Executar Código Inline**: Se a flag `-c` ou `--codigo` for usada, é possível executar código inline diretamente na linha de comando.
 
 ```bash
-portuscript -c "seu código aqui"
+portuscript exec -c "seu código aqui"
+```
+
+- **Atualizar:** Também é possível atualizar para a versão mais recente (não funciona se tiver instalado a build local)
+
+```bash
+portuscript atualize
 ```
 
 ## Exemplos de Uso
