@@ -96,7 +96,7 @@ func (s *Soquete) AssociarSoquete(ip ptst.Texto, porta ptst.Inteiro) (ptst.Objet
 }
 
 // Escuta por conexões em um soquete
-func (s *Soquete) EscutarSoquete(backlog ptst.Inteiro) (ptst.Objeto, error) {
+func (s *Soquete) OuvirSoquete(backlog ptst.Inteiro) (ptst.Objeto, error) {
 	if err := unix.Listen(s.descritorDoSoquete, int(backlog)); err != nil {
 		return nil, ptst.NewErroF(ptst.ErroDeSistema, "Erro ao escutar soquete: %s", err)
 	}
@@ -259,8 +259,8 @@ func init() {
 		return inst.(*Soquete).AssociarSoquete(args[0].(ptst.Texto), args[1].(ptst.Inteiro))
 	}, "")
 
-	TipoSoquete.Mapa["escutar"] = ptst.NewMetodoOuPanic("escutar", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("escutar", true, args, 0, 1); err != nil {
+	TipoSoquete.Mapa["ouvir"] = ptst.NewMetodoOuPanic("ouvir", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("ouvir", true, args, 0, 1); err != nil {
 			return nil, err
 		}
 
@@ -269,7 +269,7 @@ func init() {
 			backlog = args[0].(ptst.Inteiro)
 		}
 
-		return inst.(*Soquete).EscutarSoquete(backlog)
+		return inst.(*Soquete).OuvirSoquete(backlog)
 	}, "")
 
 	TipoSoquete.Mapa["aceitar"] = ptst.NewMetodoOuPanic("aceitar", func(inst ptst.Objeto) (ptst.Objeto, error) {
