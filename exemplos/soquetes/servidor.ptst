@@ -10,7 +10,7 @@ soq.def_nao_bloqueante(Verdadeiro)
 soq.associar("127.0.0.1", 3000)
 
 
-soq.escutar()
+soq.ouvir()
 
 imprima("Parece que nosso soquete Portuscript está ouvindo em http://127.0.0.1:3000")
 
