@@ -5,7 +5,7 @@ const soq = nova Soquete(2, 1);
 
 # SOL_SOCKET, SO_REUSEADDR, 1
 soq.definir_opcoes(1, 2, 1)
-soq.definir_bloqueante(Verdadeiro)
+soq.def_nao_bloqueante(Verdadeiro)
 
 soq.associar("127.0.0.1", 3000)
 
