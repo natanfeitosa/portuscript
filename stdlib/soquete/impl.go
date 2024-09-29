@@ -38,7 +38,6 @@ func (s *Soquete) Tipo() *ptst.Tipo {
 	return TipoSoquete
 }
 
-// Cria um soquete
 func NewSoquete(familia, tipo, protocolo ptst.Inteiro) (ptst.Objeto, error) {
 	fd, err := unix.Socket(int(familia), int(tipo), int(protocolo))
 	if err != nil {
@@ -63,7 +62,7 @@ func (s *Soquete) DefinirNaoBloqueante(naobloqueante ptst.Booleano) (ptst.Objeto
 	return ptst.Nulo, nil
 }
 
-func (s *Soquete) DefinirOpcoes(nivel, opcao, valor ptst.Inteiro) (ptst.Objeto, error) {
+func (s *Soquete) DefineOpcoes(nivel, opcao, valor ptst.Inteiro) (ptst.Objeto, error) {
 	if err := unix.SetsockoptInt(s.descritorDoSoquete, int(nivel), int(opcao), int(valor)); err != nil {
 		panic(fmt.Sprintf("Erro ao definir opções do socket: %s", err))
 	}
@@ -71,7 +70,7 @@ func (s *Soquete) DefinirOpcoes(nivel, opcao, valor ptst.Inteiro) (ptst.Objeto, 
 	return ptst.Nulo, nil
 }
 
-func (s *Soquete) Fechar() (ptst.Objeto, error) {
+func (s *Soquete) Fecha() (ptst.Objeto, error) {
 	if !s.fechado {
 		s.fechado = ptst.Verdadeiro
 
@@ -83,8 +82,7 @@ func (s *Soquete) Fechar() (ptst.Objeto, error) {
 	return ptst.Nulo, nil
 }
 
-// Associa um soquete a um endereço
-func (s *Soquete) AssociarSoquete(ip ptst.Texto, porta ptst.Inteiro) (ptst.Objeto, error) {
+func (s *Soquete) AssociaSoquete(ip ptst.Texto, porta ptst.Inteiro) (ptst.Objeto, error) {
 	addr := &unix.SockaddrInet4{Port: int(porta)}
 	copy(addr.Addr[:], net.ParseIP(string(ip)).To16())
 
@@ -95,20 +93,17 @@ func (s *Soquete) AssociarSoquete(ip ptst.Texto, porta ptst.Inteiro) (ptst.Objet
 	return ptst.Nulo, nil
 }
 
-// Escuta por conexões em um soquete
-func (s *Soquete) OuvirSoquete(backlog ptst.Inteiro) (ptst.Objeto, error) {
+func (s *Soquete) OuveSoquete(backlog ptst.Inteiro) (ptst.Objeto, error) {
 	if err := unix.Listen(s.descritorDoSoquete, int(backlog)); err != nil {
-		return nil, ptst.NewErroF(ptst.ErroDeSistema, "Erro ao escutar soquete: %s", err)
+		return nil, ptst.NewErroF(ptst.ErroDeSistema, "Erro ao ouvir soquete: %s", err)
 	}
 
 	return ptst.Nulo, nil
 }
 
-// Aceita uma conexão
-func (s *Soquete) AceitarConexao() (*Soquete, error) {
+func (s *Soquete) AceitaConexao() (*Soquete, error) {
 	for {
-		// Poll para verificar eventos
-		_, err := unix.Poll(s.pollFd, 1000) // Timeout de 1 segundo
+		_, err := unix.Poll(s.pollFd, 1000)
 		if err != nil {
 			return nil, ptst.NewErroF(ptst.ErroDeSistema, "Erro no poll: %s", err)
 		}
@@ -119,7 +114,6 @@ func (s *Soquete) AceitarConexao() (*Soquete, error) {
 				return nil, ptst.NewErroF(ptst.ErroDeSistema, "Erro ao aceitar conexão: %s", err)
 			}
 
-			// Adiciona o novo socket ao pollFd
 			s.pollFd = append(s.pollFd, unix.PollFd{Fd: int32(fd), Events: unix.POLLIN})
 
 			soq := &Soquete{
@@ -133,18 +127,16 @@ func (s *Soquete) AceitarConexao() (*Soquete, error) {
 			}
 			return soq, nil
 		}
-		time.Sleep(10 * time.Millisecond) // Ajusta a espera entre as tentativas
+		time.Sleep(10 * time.Millisecond)
 	}
 }
 
-// Lê dados de uma conexão
-func (s *Soquete) ReceberDados(tamanhoBuffer ptst.Inteiro) (*ptst.Bytes, error) {
+func (s *Soquete) RecebeDados(tamanhoBuffer ptst.Inteiro) (*ptst.Bytes, error) {
 	buffer := make([]byte, int(tamanhoBuffer))
 
 	// loop := 0
-	// Usar poll para verificar dados prontos para leitura
 	for {
-		n, err := unix.Poll(s.pollFd, 1) // Timeout de 0 para não bloquear
+		n, err := unix.Poll(s.pollFd, 1)
 		if err != nil {
 			if err == unix.EINTR {
 				// if loop > 0 {
@@ -165,7 +157,7 @@ func (s *Soquete) ReceberDados(tamanhoBuffer ptst.Inteiro) (*ptst.Bytes, error) 
 			}
 
 			if n <= 0 {
-				return &ptst.Bytes{}, nil // Retorna vazio se não houver dados
+				return &ptst.Bytes{}, nil
 			}
 			val := &ptst.Bytes{Itens: buffer[:n]}
 			return val, nil
@@ -176,8 +168,7 @@ func (s *Soquete) ReceberDados(tamanhoBuffer ptst.Inteiro) (*ptst.Bytes, error) 
 	return &ptst.Bytes{}, nil
 }
 
-// Envia dados para uma conexão
-func (s *Soquete) EnviarDados(dados *ptst.Bytes) (ptst.Objeto, error) {
+func (s *Soquete) EnviaDados(dados *ptst.Bytes) (ptst.Objeto, error) {
 	_, err := unix.Write(s.descritorDoSoquete, dados.Itens)
 	if err != nil {
 		return nil, ptst.NewErroF(ptst.ErroDeSistema, "erro ao enviar dados: %v", err)
@@ -186,8 +177,7 @@ func (s *Soquete) EnviarDados(dados *ptst.Bytes) (ptst.Objeto, error) {
 	return ptst.Nulo, nil
 }
 
-// Conecta-se a um servidor
-func (s *Soquete) Conectar(endereco ptst.Texto, porta ptst.Inteiro) (ptst.Objeto, error) {
+func (s *Soquete) Conecta(endereco ptst.Texto, porta ptst.Inteiro) (ptst.Objeto, error) {
 	addr, err := s.resolveEndereco(string(endereco), int(porta))
 	if err != nil {
 		return nil, err
@@ -251,16 +241,16 @@ func init() {
 		return NewSoquete(familia, tipo, protocolo)
 	}
 
-	TipoSoquete.Mapa["associar"] = ptst.NewMetodoOuPanic("associar", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("associar", true, args, 2, 2); err != nil {
+	TipoSoquete.Mapa["associa"] = ptst.NewMetodoOuPanic("associa", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("associa", true, args, 2, 2); err != nil {
 			return nil, err
 		}
 
-		return inst.(*Soquete).AssociarSoquete(args[0].(ptst.Texto), args[1].(ptst.Inteiro))
-	}, "soquete.associar(ip, porta) -> Nulo\n\nAssocia um soquete a um endereço IP e porta.")
+		return inst.(*Soquete).AssociaSoquete(args[0].(ptst.Texto), args[1].(ptst.Inteiro))
+	}, "soquete.associa(ip, porta) -> Nulo\n\nAssocia um soquete a um endereço IP e porta.")
 
-	TipoSoquete.Mapa["ouvir"] = ptst.NewMetodoOuPanic("ouvir", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("ouvir", true, args, 0, 1); err != nil {
+	TipoSoquete.Mapa["ouve"] = ptst.NewMetodoOuPanic("ouve", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("ouve", true, args, 0, 1); err != nil {
 			return nil, err
 		}
 
@@ -269,19 +259,19 @@ func init() {
 			backlog = args[0].(ptst.Inteiro)
 		}
 
-		return inst.(*Soquete).OuvirSoquete(backlog)
-	}, "soquete.ouvir(backlog?) -> Nulo\n\nInicia a escuta por conexões em um soquete.\nSe não for passado o backlog, que é o número máximo de conexões pendentes na fila, por padrão será 1.")
+		return inst.(*Soquete).OuveSoquete(backlog)
+	}, "soquete.ouve(backlog?) -> Nulo\n\nInicia a escuta por conexões em um soquete.\nSe não for passado o backlog, que é o número máximo de conexões pendentes na fila, por padrão será 1.")
 
-	TipoSoquete.Mapa["aceitar"] = ptst.NewMetodoOuPanic("aceitar", func(inst ptst.Objeto) (ptst.Objeto, error) {
-		return inst.(*Soquete).AceitarConexao()
-	}, "soquete.aceitar() -> Soquete\n\nAceita uma nova conexão em um soquete que está escutando e retorna o soquete referente ao cliente.")
+	TipoSoquete.Mapa["aceita"] = ptst.NewMetodoOuPanic("aceita", func(inst ptst.Objeto) (ptst.Objeto, error) {
+		return inst.(*Soquete).AceitaConexao()
+	}, "soquete.aceita() -> Soquete\n\nAceita uma nova conexão em um soquete que está escutando e retorna o soquete referente ao cliente.")
 
-	TipoSoquete.Mapa["fechar"] = ptst.NewMetodoOuPanic("fechar", func(inst ptst.Objeto) (ptst.Objeto, error) {
-		return inst.(*Soquete).Fechar()
-	}, "soquete.fechar() -> Nulo\n\nFecha o soquete.")
+	TipoSoquete.Mapa["fecha"] = ptst.NewMetodoOuPanic("fecha", func(inst ptst.Objeto) (ptst.Objeto, error) {
+		return inst.(*Soquete).Fecha()
+	}, "soquete.fecha() -> Nulo\n\nFecha o soquete.")
 
-	TipoSoquete.Mapa["receber"] = ptst.NewMetodoOuPanic("receber", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("receber", true, args, 0, 1); err != nil {
+	TipoSoquete.Mapa["recebe"] = ptst.NewMetodoOuPanic("recebe", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("recebe", true, args, 0, 1); err != nil {
 			return nil, err
 		}
 
@@ -290,24 +280,24 @@ func init() {
 			tamanhoBuffer = args[0].(ptst.Inteiro)
 		}
 
-		return inst.(*Soquete).ReceberDados(tamanhoBuffer)
-	}, "soquete.receber(tamanhoBuffer?) -> Bytes\n\nRecebe os dados de uma conexão e retorna no tipo Bytes\nSe não for definido um tamanho de buffer, o padrão será 0")
+		return inst.(*Soquete).RecebeDados(tamanhoBuffer)
+	}, "soquete.recebe(tamanhoBuffer?) -> Bytes\n\nRecebe os dados de uma conexão e retorna no tipo Bytes\nSe não for definido um tamanho de buffer, o padrão será 0")
 
-	TipoSoquete.Mapa["enviar"] = ptst.NewMetodoOuPanic("enviar", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("enviar", true, args, 1, 1); err != nil {
+	TipoSoquete.Mapa["envia"] = ptst.NewMetodoOuPanic("envia", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("envia", true, args, 1, 1); err != nil {
 			return nil, err
 		}
 
-		return inst.(*Soquete).EnviarDados(args[0].(*ptst.Bytes))
-	}, "soquete.enviar(dados) -> Nulo\n\nEnvia um objeto do tipo Bytes para o outro lado da conexão")
+		return inst.(*Soquete).EnviaDados(args[0].(*ptst.Bytes))
+	}, "soquete.envia(dados) -> Nulo\n\nEnvia um objeto do tipo Bytes para o outro lado da conexão")
 
-	TipoSoquete.Mapa["conectar"] = ptst.NewMetodoOuPanic("conectar", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("conectar", true, args, 2, 2); err != nil {
+	TipoSoquete.Mapa["conecta"] = ptst.NewMetodoOuPanic("conecta", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("conecta", true, args, 2, 2); err != nil {
 			return nil, err
 		}
 
-		return inst.(*Soquete).Conectar(args[0].(ptst.Texto), args[1].(ptst.Inteiro))
-	}, "soquete.conectar(endereco, porta) -> Nulo\n\nSe conecta a um servidor pela porta e endereço informado.\nO endereço pode ser um IP ou nome de domínio como: exemplo.com")
+		return inst.(*Soquete).Conecta(args[0].(ptst.Texto), args[1].(ptst.Inteiro))
+	}, "soquete.conecta(endereco, porta) -> Nulo\n\nSe conecta a um servidor pela porta e endereço informado.\nO endereço pode ser um IP ou nome de domínio como: exemplo.com")
 
 	TipoSoquete.Mapa["def_nao_bloqueante"] = ptst.NewMetodoOuPanic("def_nao_bloqueante", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
 		if err := ptst.VerificaNumeroArgumentos("def_nao_bloqueante", true, args, 1, 1); err != nil {
@@ -317,8 +307,8 @@ func init() {
 		return inst.(*Soquete).DefinirNaoBloqueante(args[0].(ptst.Booleano))
 	}, "soquete.def_nao_bloqueante(naoBloqueante) -> Nulo\n\nDefine se o soquete deve operar em modo não bloqueante")
 
-	TipoSoquete.Mapa["definir_opcoes"] = ptst.NewMetodoOuPanic("definir_opcoes", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
-		if err := ptst.VerificaNumeroArgumentos("definir_opcoes", true, args, 2, 3); err != nil {
+	TipoSoquete.Mapa["define_opcoes"] = ptst.NewMetodoOuPanic("define_opcoes", func(inst ptst.Objeto, args ptst.Tupla) (ptst.Objeto, error) {
+		if err := ptst.VerificaNumeroArgumentos("define_opcoes", true, args, 2, 3); err != nil {
 			return nil, err
 		}
 
@@ -328,6 +318,6 @@ func init() {
 			valor = args[2].(ptst.Inteiro)
 		}
 
-		return inst.(*Soquete).DefinirOpcoes(args[0].(ptst.Inteiro), args[1].(ptst.Inteiro), valor)
-	}, "soquete.definir_opcoes(nivel, opcao, valor) -> Nulo\n\nDefine opções para o soquete.")
+		return inst.(*Soquete).DefineOpcoes(args[0].(ptst.Inteiro), args[1].(ptst.Inteiro), valor)
+	}, "soquete.define_opcoes(nivel, opcao, valor) -> Nulo\n\nDefine opções para o soquete.")
 }
