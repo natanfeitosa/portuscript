@@ -2,6 +2,7 @@ package ptst
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -124,6 +125,58 @@ func (t Texto) M__contem__(obj Objeto) (Objeto, error) {
 	}
 
 	return Falso, nil
+}
+
+func (t Texto) M__mod__(obj Objeto) (res Objeto, err error) {
+	copia := string(t)
+	var args Tupla
+
+	if tupla, ok := obj.(Tupla); ok {
+		args = tupla
+	} else {
+		args = Tupla{obj}
+	}
+
+	maximo := len(args)
+	atual := 0
+
+	re := regexp.MustCompile(`%(\w)`)
+	copia = re.ReplaceAllStringFunc(copia, func(s string) string {
+		if atual >= maximo {
+			return s
+		}
+
+		var conversor FuncaoComErro[any] = NewTexto
+
+		switch s[1] {
+		case 'i':
+			conversor = NewInteiro
+		case 'd':
+			conversor = NewDecimal
+		case 'b':
+			conversor = NewBooleano
+		}
+
+		arg := args[atual]
+		atual += 1
+
+		return string(
+			RetornaOuPanic(
+				NewTexto,
+				RetornaOuPanic(conversor, arg.(any)).(any),
+			).(Texto),
+		)
+	})
+
+	defer func() {
+		if erroRecuperado := recover(); erroRecuperado != nil {
+			err = erroRecuperado.(error)
+			res = nil
+		}
+	}()
+
+	res, err = NewTexto(copia)
+	return
 }
 
 var _ I__texto__ = (*Texto)(nil)
