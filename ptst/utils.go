@@ -105,3 +105,13 @@ func TalvezLanceErroDivisaoPorZero(obj Objeto) error {
 		return nil
 	}
 }
+
+type FuncaoComErro[T any] func(T) (Objeto, error)
+
+func RetornaOuPanic[T any](f FuncaoComErro[T], arg T) Objeto {
+	result, err := f(arg)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
