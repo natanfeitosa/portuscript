@@ -70,30 +70,45 @@ func (i Inteiro) M__decimal__() (Objeto, error) {
 }
 
 func (i Inteiro) M__adiciona__(b Objeto) (Objeto, error) {
-	bInt, err := NewInteiro(b)
-	if err != nil {
+	if ok, err := InstanciaDe(b, Tupla{TipoInteiro, TipoDecimal}); !ok {
+		return NaoImplementado, nil
+	} else if err != nil {
 		return nil, err
 	}
 
-	return i + bInt.(Inteiro), nil
+	if bi, ok := b.(Inteiro); ok {
+		return NewInteiro(i + bi)
+	}
+
+	return NewDecimal(Decimal(i) + b.(Decimal))
 }
 
 func (i Inteiro) M__multiplica__(b Objeto) (Objeto, error) {
-	bInt, err := NewInteiro(b)
-	if err != nil {
+	if ok, err := InstanciaDe(b, Tupla{TipoInteiro, TipoDecimal}); !ok {
+		return NaoImplementado, nil
+	} else if err != nil {
 		return nil, err
 	}
 
-	return i * bInt.(Inteiro), nil
+	if bi, ok := b.(Inteiro); ok {
+		return NewInteiro(i * bi)
+	}
+
+	return NewDecimal(Decimal(i) * b.(Decimal))
 }
 
 func (i Inteiro) M__subtrai__(b Objeto) (Objeto, error) {
-	bInt, err := NewInteiro(b)
-	if err != nil {
+	if ok, err := InstanciaDe(b, Tupla{TipoInteiro, TipoDecimal}); !ok {
+		return NaoImplementado, nil
+	} else if err != nil {
 		return nil, err
 	}
 
-	return i - bInt.(Inteiro), nil
+	if bi, ok := b.(Inteiro); ok {
+		return NewInteiro(i - bi)
+	}
+
+	return NewDecimal(Decimal(i) - b.(Decimal))
 }
 
 // FIXME: adicionar erro de divisão por zero
@@ -115,7 +130,7 @@ func (i Inteiro) M__divide_inteiro__(b Objeto) (Objeto, error) {
 	if talvezZero := TalvezLanceErroDivisaoPorZero(b); talvezZero != nil {
 		return nil, talvezZero
 	}
-	
+
 	bInt, err := NewInteiro(b)
 	if err != nil {
 		return nil, err
